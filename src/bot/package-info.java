@@ -1,5 +1,5 @@
 /**
- * Package, containing classes for wikipedia bot.
+ * Package, containing all classes for Wikipedia bot.
  * 
  * @author Mir4ik
  * @version 0.1 20.10.2014
