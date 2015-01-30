@@ -1,82 +1,100 @@
 package bot;
 
-import java.io.File;
-import java.io.FilenameFilter;
-
-import bot.core.ApplicationException;
-import bot.core.ArticleTemplate;
-import bot.core.ArticlesCreator;
-import bot.io.FilesFacade;
-import bot.io.XMLFacade;
-import bot.nlp.TextFragment;
+import java.util.Scanner;
 
 /**
- * Class for starting application. See <code>main(String[] args)</code> method 
- * documentation for arguments using.
+ * Class, containing code for system commands interpreter. Note, that system 
+ * was created in UNIX style: as set of small parts and every program make only
+ * one task. All operations are listed below:
+ * <li>exit - stop work with interpreter
+ * <li>help - view detailed info
+ * TODO add more here
  * 
  * @author Mir4ik
- * @version 0.1 22.1.2015
+ * @version 0.1 12.11.2014
+ */
+/*
+ * TODO
+ * 1. make Strings loaded from file
  */
 public class Runner {
 
-	private static class TXTFilter implements FilenameFilter {
-
-		@Override
-		public boolean accept(File dir, String name) {
-			if (name.endsWith(".txt")) {
-				return true;
-			} else {
-				return false;
+	public static void main(String[] args) {
+		System.out.println("Welcome! I am robot for text manipulating and "
+				+ "working with Wikipedia. \r\nWhat can I do for you?");
+		System.out.println("Shh! Need some help? Enter \"help\" below...");
+		Scanner input = new Scanner(System.in);
+		while (true) {
+			System.out.print("> ");
+			String currLine = input.nextLine();
+			String[] tokens = currLine.split(" ");
+			String command = tokens.length != 0 ? tokens[0] : currLine;
+			switch (command) {
+			case "exit":
+				input.close();
+				handleExit();
+				break;
+			case "help":
+				handleHelp(tokens);
+				break;
+			//TODO add more here
+			default:
+				System.err.println("Can not find command \"" + command + "\"!");
 			}
 		}
 	}
-
-	/**
-	 * Method for application start-up.
-	 * 
-	 * @param args	array with 3 parameters: directory with source files for 
-	 * 				article, template file for article skeleton and article 
-	 * 				file to save result. Note, that source files can be 
-	 * 				divided into two parts: text fragment and source (for 
-	 * 				example URL to it) using special divider characters: "---".
-	 * @throws ApplicationException	if some error occurs
-	 */
-	public static void main(String[] args) throws ApplicationException {
-		if (args.length != 3) {
-			System.err.println("Usage: <src directory> <template> <article>");
-			System.exit(1);
-		}
-		String srcDir = args[0];
-		String templateFile = args[1];
-		String articleFile = args[2];
-		File source = new File(srcDir);
-		File template = new File(templateFile);
-		File article = new File(articleFile);
-		if (source.isFile() || template.isDirectory() || article.isDirectory()) {
-			System.err.println("Wrong parameters!");
-			System.exit(1);
-		}
-		File[] srcFiles = source.listFiles(new TXTFilter());
-		TextFragment[] fragments = new TextFragment[srcFiles.length];
-		int i = 0;
-		for (File file : srcFiles) {
-			String[] fileContent = FilesFacade.read(file).split("---");
-			try {
-				fragments[i] = new TextFragment(fileContent[0], fileContent[1]);
-			} catch (ArrayIndexOutOfBoundsException e) {
-				throw new ApplicationException(
-						"Wrong file \"" + file + "\" format!", e);
+	
+	private static void handleExit() {
+		System.out.println("Thanks for using! Goodbye!");
+		System.exit(0);
+	}
+	
+	private static void handleHelp(String[] tokens) {
+		if (tokens.length == 1) System.out.println("This is second "
+				+ "version of Wikipedia bot.");
+		final String template = "NAME\r\n\t%s\r\n"
+				+ "USAGE\r\n\t%s\r\n"
+				+ "DESCRIPTION\r\n\t%s\r\n"
+				+ "EXAMPLES\r\n\t%s\r\n"
+				+ "SEE ALSO\r\n\t%s";
+		for (int i = 1; i < tokens.length; i++) {
+			switch (tokens[i]) {
+			case "list":
+				System.out.println("Now you can use: exit\r\nhelp\r\n");
+				//TODO add more here
+				break;
+			case "exit":
+				System.out.println(String.format(template,
+						"exit - stop the application",
+						"exit",
+						"Command stops the application. No options are "
+								+ "available.",
+						"> exit",
+						"None"));
+				break;
+			case "help":
+				System.out.println(String.format(template,
+						"help - display documentation pages",
+						"help\r\n\thelp <command name>\r\n\thelp <command name>"
+								+ " <command name> ... <command name>\r\n\thelp"
+								+ " list",
+						"Outputs information about every command. Can be used "
+								+ "without parameters, \r\n\tthen displays "
+								+ "general info about software. When multiply "
+								+ "parameters used, \r\n\tcommand will show "
+								+ "information about every command, named in "
+								+ "parameters. \r\n\tCommand write warnings, "
+								+ "when some parameters are unknown. When "
+								+ "parameter \r\n\t\"list\" used, command "
+								+ "displays list of all available commands.",
+						"> help enabled\r\n\t> help help\r\n\t> help help exit",
+						"None"));
+				break;
+				//TODO add more here
+			default:
+				System.err.println("Can not find command \"" +
+						tokens[i] + "\"!");
 			}
-			i++;
 		}
-		ArticleTemplate at = null;
-		try {
-			at = (ArticleTemplate) XMLFacade.read(template);
-		} catch (ClassCastException e) {
-			throw new ApplicationException(
-					"Wrong file \"" + template + "\" format!", e);
-		}
-		ArticlesCreator ac = new ArticlesCreator(fragments, at);
-		FilesFacade.write(articleFile, ac.createArticle());
 	}
 }
