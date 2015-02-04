@@ -2,7 +2,7 @@ package bot.nlp.processors;
 
 import java.util.StringTokenizer;
 
-import bot.nlp.TextFragment;
+import bot.nlp.Snippet;
 
 /**
  * 
@@ -12,13 +12,13 @@ import bot.nlp.TextFragment;
 public class SenceTokenizerProcessor extends TextProcessor {
 	
 	@Override
-	public void process(TextFragment tf) {
-		String fragment = tf.getText();
+	public void process(Snippet snippet) {
+		String fragment = snippet.getText();
 		StringTokenizer st = new StringTokenizer(fragment, "\r\n");
-		result = new TextFragment[st.countTokens()];
+		result = new Snippet[st.countTokens()];
 		int i = 0;
 		while (st.hasMoreTokens()) {
-			result[i] = new TextFragment(st.nextToken(), tf.getSource());
+			result[i] = new Snippet(st.nextToken(), snippet.getSource());
 			i++;
 		}
 	}

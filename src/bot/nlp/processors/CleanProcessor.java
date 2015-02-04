@@ -1,6 +1,6 @@
 package bot.nlp.processors;
 
-import bot.nlp.TextFragment;
+import bot.nlp.Snippet;
 
 /**
  * 
@@ -11,8 +11,8 @@ import bot.nlp.TextFragment;
 public class CleanProcessor extends TextProcessor {
 
 	@Override
-	public void process(TextFragment tf) {
-		String text = tf.getText();
+	public void process(Snippet snippet) {
+		String text = snippet.getText();
 		text = text.replace(" - ", " $ ");
 		text = text.replace(".\r\n", ".~");
 		// ^ replacement for savings
@@ -24,7 +24,7 @@ public class CleanProcessor extends TextProcessor {
 		// replacement returning
 		text = text.replace(" $ ", " - ");
 		text = text.replace(".~", ".\r\n ");
-		result = new TextFragment[1];
-		result[0] = new TextFragment(text, tf.getSource());
+		result = new Snippet[1];
+		result[0] = new Snippet(text, snippet.getSource());
 	}
 }

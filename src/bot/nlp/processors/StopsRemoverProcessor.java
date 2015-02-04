@@ -1,6 +1,6 @@
 package bot.nlp.processors;
 
-import bot.nlp.TextFragment;
+import bot.nlp.Snippet;
 
 /**
  * 
@@ -11,8 +11,8 @@ import bot.nlp.TextFragment;
 public class StopsRemoverProcessor extends TextProcessor {
 
 	@Override
-	public void process(TextFragment tf) {
-		String fragment = tf.getText();
+	public void process(Snippet snippet) {
+		String fragment = snippet.getText();
 		fragment = fragment.replace(".", "");
 		fragment = fragment.replace(",", "");
 		fragment = fragment.replace(":", "");
@@ -23,7 +23,7 @@ public class StopsRemoverProcessor extends TextProcessor {
 		fragment = fragment.replace(")", "");
 		fragment = fragment.replace(" — ", " ");
 		fragment = fragment.replace("_", "");
-		result = new TextFragment[1];
-		result[0] = new TextFragment(fragment, tf.getSource());
+		result = new Snippet[1];
+		result[0] = new Snippet(fragment, snippet.getSource());
 	}
 }

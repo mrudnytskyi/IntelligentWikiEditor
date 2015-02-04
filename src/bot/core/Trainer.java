@@ -10,8 +10,8 @@ import java.util.Set;
 
 import bot.nlp.StopWordsHolder;
 import bot.nlp.StringArrayList;
-import bot.nlp.TextFragment;
-import bot.nlp.TextFragmentTopic;
+import bot.nlp.Snippet;
+import bot.nlp.SnippetTopic;
 import bot.nlp.processors.CleanProcessor;
 import bot.nlp.processors.StopsRemoverProcessor;
 import bot.nlp.processors.TextProcessor;
@@ -27,32 +27,32 @@ public class Trainer {
 
 	private final StringArrayList[] template;
 	
-	private final Map<TextFragment, TextFragmentTopic> trainSet;
+	private final Map<Snippet, SnippetTopic> trainSet;
 	
-	public Trainer(Map<TextFragment, TextFragmentTopic> trainSet) {
+	public Trainer(Map<Snippet, SnippetTopic> trainSet) {
 		Objects.requireNonNull(trainSet, "Train set can not be null!");
 		this.trainSet = trainSet;
-		template = new StringArrayList[TextFragmentTopic.count()];
+		template = new StringArrayList[SnippetTopic.count()];
 		for (int i = 0; i < template.length; i++) {
 			template[i] = new StringArrayList();
 		}
 	}
 	
-	private String prepareTextFragment(TextFragment tf) {
+	private String prepareTextFragment(Snippet snippet) {
 		TextProcessor cleaner = new CleanProcessor();
-		cleaner.process(tf);
+		cleaner.process(snippet);
 		TextProcessor stopsRemover = new StopsRemoverProcessor();
-		stopsRemover.process(cleaner.getResultFragment());
-		return stopsRemover.getResultFragment().getText();
+		stopsRemover.process(cleaner.getResultSnippet());
+		return stopsRemover.getResultSnippet().getText();
 	}
 	
 	public void train() {
-		Iterator<Entry<TextFragment, TextFragmentTopic>> trainIter = 
+		Iterator<Entry<Snippet, SnippetTopic>> trainIter = 
 				trainSet.entrySet().iterator();
 		while (trainIter.hasNext()) {
-			Entry<TextFragment, TextFragmentTopic> entry = 
+			Entry<Snippet, SnippetTopic> entry = 
 					trainIter.next();
-			TextFragmentTopic topic = entry.getValue();
+			SnippetTopic topic = entry.getValue();
 			String text = prepareTextFragment(entry.getKey());
 			String[] words = text.split(" ");
 			StringArrayList currentList = template[topic.ordinal()];

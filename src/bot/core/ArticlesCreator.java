@@ -2,7 +2,7 @@ package bot.core;
 
 import java.util.Objects;
 
-import bot.nlp.TextFragment;
+import bot.nlp.Snippet;
 import bot.nlp.processors.CleanProcessor;
 import bot.nlp.processors.SenceTokenizerProcessor;
 import bot.nlp.processors.StopsRemoverProcessor;
@@ -21,11 +21,11 @@ public class ArticlesCreator {
 	
 	private static final boolean DEBUG = true;
 	
-	private final TextFragment[] src;
+	private final Snippet[] src;
 	
 	private final Classifier classifier;
 	
-	public ArticlesCreator(TextFragment[] src, ArticleTemplate template) {
+	public ArticlesCreator(Snippet[] src, ArticleTemplate template) {
 		Objects.requireNonNull(src, "Text fragments array can not be null!");
 		this.src = src;
 		this.classifier = new Classifier(template);
@@ -33,18 +33,18 @@ public class ArticlesCreator {
 	
 	public String createArticle() {
 		Article at = new Article();
-		for (TextFragment tf : src) {
+		for (Snippet s : src) {
 			//refactore
 			TextProcessor cleaner = new CleanProcessor();
-			cleaner.process(tf);
-			TextFragment ntf = cleaner.getResultFragment();
+			cleaner.process(s);
+			Snippet ntf = cleaner.getResultSnippet();
 			TextProcessor tokenizer = new SenceTokenizerProcessor();
 			tokenizer.process(ntf);
-			TextFragment[] nntf = tokenizer.getResult();
-			for (TextFragment curr : nntf) {
+			Snippet[] nntf = tokenizer.getResult();
+			for (Snippet curr : nntf) {
 				TextProcessor rem = new StopsRemoverProcessor();
 				rem.process(curr);
-				TextFragment fin = rem.getResultFragment();
+				Snippet fin = rem.getResultSnippet();
 				at.add(curr, classifier.classify(fin));
 			}	
 		}

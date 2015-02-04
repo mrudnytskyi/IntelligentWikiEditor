@@ -1,11 +1,11 @@
 package bot.nlp.processors;
 
-import bot.nlp.TextFragment;
+import bot.nlp.Snippet;
 
 /**
  * Abstract class provides interface for every class, transforming 
- * {@link TextFragment} data. Interface provide 2 methods for getting results:
- * in array or as single {@code TextFragment} object.
+ * {@link Snippet} data. Interface provide 2 methods for getting results:
+ * in array or as single {@code Snippet} object.
  * 
  * @author Mir4ik
  * @version 0.1 20.1.2015
@@ -16,15 +16,15 @@ import bot.nlp.TextFragment;
  */
 public abstract class TextProcessor {
 	
-	protected TextFragment[] result;
+	protected Snippet[] result;
 	
-	public abstract void process(TextFragment tf);
+	public abstract void process(Snippet snippet);
 	
-	public TextFragment getResultFragment() {
+	public Snippet getResultSnippet() {
 		return result[0];
 	}
 	
-	public TextFragment[] getResult() {
+	public Snippet[] getResult() {
 		return result;
 	}
 }

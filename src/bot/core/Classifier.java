@@ -12,12 +12,12 @@ import java.util.Objects;
 
 import bot.nlp.StopWordsHolder;
 import bot.nlp.StringArrayList;
-import bot.nlp.TextFragment;
-import bot.nlp.TextFragmentTopic;
+import bot.nlp.Snippet;
+import bot.nlp.SnippetTopic;
 
 /**
  * Class, created to classify text fragment using types, defined in 
- * {@link TextFragmentTopic}. First of all, text is divided into words. Than
+ * {@link SnippetTopic}. First of all, text is divided into words. Than
  * all stop words will be found and removed. Than words will be stemmed and 
  * counted. After all, it will determine type of fragment counting how often
  * key words (stored in {@link ArticleTemplate} object) will be found in the
@@ -95,11 +95,11 @@ public class Classifier {
 		this.at = at;
 	}
 	
-	public TextFragmentTopic classify(TextFragment fragment) {
-		String text = fragment.getText();
+	public SnippetTopic classify(Snippet snippet) {
+		String text = snippet.getText();
 		Map<String, Integer> wordsUsingMap = createWordsUsageMap(text);
 		List<String> wordsList = createOftenWordsList(wordsUsingMap);
-		int[] results = new int[TextFragmentTopic.values().length];
+		int[] results = new int[SnippetTopic.values().length];
 		for (String word : wordsList) {
 			if (word.length() == 0) continue;
 			if (Character.isDigit(word.charAt(0))) {
@@ -120,7 +120,7 @@ public class Classifier {
 			}
 		}
 		int maxPos = maximumPosition(results);
-		return TextFragmentTopic.values()[maxPos];
+		return SnippetTopic.values()[maxPos];
 	}
 	
 	private Map<String, Integer> createWordsUsageMap(String text) {

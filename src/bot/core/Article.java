@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import bot.nlp.TextFragment;
-import bot.nlp.TextFragmentTopic;
+import bot.nlp.Snippet;
+import bot.nlp.SnippetTopic;
 
 /**
  * 
@@ -20,27 +20,27 @@ import bot.nlp.TextFragmentTopic;
  */
 public class Article {
 	
-	private Map<TextFragmentTopic, List<TextFragment>> content =
-			new HashMap<TextFragmentTopic, List<TextFragment>>();
+	private Map<SnippetTopic, List<Snippet>> content =
+			new HashMap<SnippetTopic, List<Snippet>>();
 	
-	public void add(TextFragment tf, TextFragmentTopic topic) {
+	public void add(Snippet snippet, SnippetTopic topic) {
 		if (content.get(topic) == null) {
-			content.put(topic, new ArrayList<TextFragment>());
+			content.put(topic, new ArrayList<Snippet>());
 		}
-		content.get(topic).add(tf);
+		content.get(topic).add(snippet);
 	}
 	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		Iterator<Entry<TextFragmentTopic, List<TextFragment>>> i = 
+		Iterator<Entry<SnippetTopic, List<Snippet>>> i = 
 				content.entrySet().iterator();
 		while (i.hasNext()) {
-			Entry<TextFragmentTopic, List<TextFragment>> current = i.next();
+			Entry<SnippetTopic, List<Snippet>> current = i.next();
 			sb.append("\r\n== ");
 			sb.append(current.getKey());
 			sb.append(" ==\r\n");
-			Iterator<TextFragment> iter = current.getValue().iterator();
+			Iterator<Snippet> iter = current.getValue().iterator();
 			while (iter.hasNext()) {
 				sb.append(iter.next().getText());
 			}
