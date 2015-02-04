@@ -5,6 +5,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.XStreamException;
+
 import bot.core.ApplicationException;
 
 /**
@@ -21,11 +24,11 @@ public final class FilesFacade {
 	
 	private FilesFacade() {}
 
-	public static String read(String file) throws ApplicationException {
-		return read(new File(file));
+	public static String readTXT(String file) throws ApplicationException {
+		return readTXT(new File(file));
 	}
 	
-	public static String read(File file) throws ApplicationException {
+	public static String readTXT(File file) throws ApplicationException {
 		StringBuilder sb = new StringBuilder();
 		try {
 			FileReader txtInput = new FileReader(file);
@@ -45,11 +48,11 @@ public final class FilesFacade {
 		return sb.substring(0, sb.length() - 1).toString();
 	}
 	
-	public static void write(String f, String str) throws ApplicationException {
-		write(new File(f), str);
+	public static void writeTXT(String f, String str) throws ApplicationException {
+		writeTXT(new File(f), str);
 	}
 	
-	public static void write(File file, String s) throws ApplicationException {
+	public static void writeTXT(File file, String s) throws ApplicationException {
 		try {
 			FileWriter writer = new FileWriter(file);
 			try {
@@ -61,5 +64,33 @@ public final class FilesFacade {
 			throw new ApplicationException(
 					"Exception while writing to " + file + " : ", e);
 		}	
+	}
+	
+	public static Object readXML(String file) throws ApplicationException {
+		return readXML(new File(file));
+	}
+	
+	public static Object readXML(File file) throws ApplicationException {
+		try {
+			XStream stream = new XStream();
+			return stream.fromXML(file);
+		} catch (XStreamException e) {
+			throw new ApplicationException(
+					"Exception while reading " + file + " : ", e);
+		}
+	}
+	
+	public static void writeXML(String f, Object o) throws ApplicationException {
+		writeXML(new File(f), o);
+	}
+	
+	public static void writeXML(File f, Object o) throws ApplicationException {
+		try {
+			XStream stream = new XStream();
+			stream.toXML(o, new FileWriter(f));
+		} catch (Exception e) {
+			throw new ApplicationException(
+					"Exception while writing to " + f + " : ", e);
+		}
 	}
 }

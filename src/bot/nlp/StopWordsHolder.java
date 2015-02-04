@@ -21,7 +21,7 @@ public class StopWordsHolder {
 	public StopWordsHolder() {
 		String file = "stop_words_uk.txt";
 		try {
-			STOP_WORDS.addAll(new StringArrayList(FilesFacade.read(file)));
+			STOP_WORDS.addAll(new StringArrayList(FilesFacade.readTXT(file)));
 		} catch (ApplicationException e) {
 			// ignore ?
 		}

@@ -7,7 +7,6 @@ import bot.core.ApplicationException;
 import bot.core.ArticleTemplate;
 import bot.core.ArticlesCreator;
 import bot.io.FilesFacade;
-import bot.io.XMLFacade;
 import bot.nlp.TextFragment;
 
 /**
@@ -60,7 +59,7 @@ public class RunnerClassifier {
 		TextFragment[] fragments = new TextFragment[srcFiles.length];
 		int i = 0;
 		for (File file : srcFiles) {
-			String[] fileContent = FilesFacade.read(file).split("---");
+			String[] fileContent = FilesFacade.readTXT(file).split("---");
 			try {
 				fragments[i] = new TextFragment(fileContent[0], fileContent[1]);
 			} catch (ArrayIndexOutOfBoundsException e) {
@@ -71,12 +70,12 @@ public class RunnerClassifier {
 		}
 		ArticleTemplate at = null;
 		try {
-			at = (ArticleTemplate) XMLFacade.read(template);
+			at = (ArticleTemplate) FilesFacade.readXML(template);
 		} catch (ClassCastException e) {
 			throw new ApplicationException(
 					"Wrong file \"" + template + "\" format!", e);
 		}
 		ArticlesCreator ac = new ArticlesCreator(fragments, at);
-		FilesFacade.write(articleFile, ac.createArticle());
+		FilesFacade.writeTXT(articleFile, ac.createArticle());
 	}
 }

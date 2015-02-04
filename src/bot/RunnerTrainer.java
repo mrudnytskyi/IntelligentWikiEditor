@@ -8,7 +8,6 @@ import java.util.Map;
 import bot.core.ApplicationException;
 import bot.core.Trainer;
 import bot.io.FilesFacade;
-import bot.io.XMLFacade;
 import bot.nlp.TextFragment;
 import bot.nlp.TextFragmentTopic;
 
@@ -50,12 +49,12 @@ public class RunnerTrainer {
 		Map<TextFragment, TextFragmentTopic> map = 
 				new HashMap<TextFragment, TextFragmentTopic>();
 		for (File file : srcFiles) {
-			String[] fileContent = FilesFacade.read(file).split("---");
+			String[] fileContent = FilesFacade.readTXT(file).split("---");
 			map.put(new TextFragment(fileContent[0], ""), 
 					TextFragmentTopic.valueOf(fileContent[1]));
 		}
 		Trainer t = new Trainer(map);
 		t.train();
-		XMLFacade.write(templateFile, t.getTemplate());
+		FilesFacade.writeXML(templateFile, t.getTemplate());
 	}
 }
