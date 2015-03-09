@@ -30,16 +30,11 @@ public final class FilesFacade {
 	
 	public static String readTXT(File file) throws ApplicationException {
 		StringBuilder sb = new StringBuilder();
-		try {
-			FileReader txtInput = new FileReader(file);
+		try (FileReader txtInput = new FileReader(file)) {
 			int c = 0;
-			try {
-				while (c != -1) {
-					c = txtInput.read();
-					sb.append((char) c);
-				}
-			} finally {
-				txtInput.close();
+			while (c != -1) {
+				c = txtInput.read();
+				sb.append((char) c);
 			}
 		} catch (IOException e) {
 			throw new ApplicationException(
@@ -53,13 +48,8 @@ public final class FilesFacade {
 	}
 	
 	public static void writeTXT(File file, String s) throws ApplicationException {
-		try {
-			FileWriter writer = new FileWriter(file);
-			try {
-				writer.write(s);
-			} finally {
-				writer.close();
-			}
+		try (FileWriter writer = new FileWriter(file)) {
+			writer.write(s);
 		} catch (IOException e) {
 			throw new ApplicationException(
 					"Exception while writing to " + file + " : ", e);
@@ -85,9 +75,9 @@ public final class FilesFacade {
 	}
 	
 	public static void writeXML(File f, Object o) throws ApplicationException {
-		try {
+		try (FileWriter writer = new FileWriter(f)) {
 			XStream stream = new XStream();
-			stream.toXML(o, new FileWriter(f));
+			stream.toXML(o, writer);
 		} catch (Exception e) {
 			throw new ApplicationException(
 					"Exception while writing to " + f + " : ", e);
