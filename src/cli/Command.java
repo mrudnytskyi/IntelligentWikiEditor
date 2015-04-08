@@ -1,5 +1,7 @@
 package cli;
 
+import gui.MainFrame;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -176,8 +178,28 @@ public abstract class Command {
 				+ "information about every command, named in parameters. Also "
 				+ "it write warnings, when some arguments are unknown. When "
 				+ "parameter \"-a\" is used, command displays list of all "
-				+ "available.",
-				"> help\n\t> help -a help exit", "None"};
+				+ "available.", "> help\n\t> help -a help exit", "None"};
 		}	
+	}
+	
+	@Parameters
+	public static class GUICommand extends Command {
+
+		@Override
+		public String getName() {
+			return "gui";
+		}
+
+		@Override
+		protected void act() {
+			new MainFrame().setVisible(true);
+		}
+
+		@Override
+		public String[] getHelp() {
+			return new String[] {getName(), "opens graphical user interface",
+					"gui", "Opens main frame of wiki editor. No options for "
+							+ "this command are available.", "> gui", "None"};
+		}
 	}
 }
