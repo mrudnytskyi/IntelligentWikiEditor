@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
@@ -192,7 +195,13 @@ public abstract class Command {
 
 		@Override
 		protected void act() {
-			new MainFrame().setVisible(true);
+			String theme = "com.jtattoo.plaf.texture.TextureLookAndFeel";
+			try {
+				UIManager.setLookAndFeel(theme);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			SwingUtilities.invokeLater(() -> new MainFrame().setVisible(true));
 		}
 
 		@Override
