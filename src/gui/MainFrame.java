@@ -25,9 +25,10 @@ import bot.core.ApplicationException;
 import bot.io.FilesFacade;
 
 /**
+ * MainFrame of application.
  * 
  * @author Mir4ik
- * @version 0.1 28.08.2014
+ * @version 0.2 28.08.2014
  */
 public class MainFrame extends JFrame implements PropertyChangeListener {
 
@@ -44,6 +45,9 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 	
 	private final MessagesFrame messager = new MessagesFrame(this);
 	
+	/**
+	 * Constructs MainFrame with specified content and title.
+	 */
 	public MainFrame() {
 		super("Wiki Editor 1.0");
 		setLayout(new BorderLayout());
@@ -110,6 +114,10 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 		return content;
 	}
 
+	/**
+	 * Method provides code for frame actions.
+	 */
+	//TODO: add i18n
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		switch (evt.getPropertyName()) {
@@ -124,6 +132,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 					text = FilesFacade.readTXT(chooserOpen.getSelectedFile());
 				} catch (ApplicationException e) {
 					messager.showError(e.toString());
+					messages.error(e.toString());
 				}
 				article.setText(text);
 			}
@@ -139,11 +148,13 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 							chooserSave.getSelectedFile(), article.getText());
 				} catch (ApplicationException e) {
 					messager.showError(e.toString());
+					messages.error(e.toString());
 				}
 			}
 			break;
 		case "Exit":
 			if (messager.showQuestion("Do you want to exit?")) {
+				messages.info("Goodbye!");
 				System.exit(0);
 			}
 			break;
@@ -151,10 +162,11 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 			String link = messager.showInput("Input article name");
 			if (link != null) {
 				if (article.getSelectedText() == null) {
-					article.insert("[[" + link + "]]", article.getCaretPosition());
+					article.insert("[[" + link + "]]", 
+							article.getCaretPosition());
 				} else {
-					String name = article.getSelectedText();
-					article.replaceSelection("[[" + link + "|" + name + "]]");
+					article.replaceSelection("[[" + link + "|" + 
+							article.getSelectedText() + "]]");
 				}
 			}
 			break;
@@ -168,16 +180,22 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 		case "Insert template":
 			String template = messager.showInput("Input template name");
 			if (template != null) {
-				article.insert("{{" + template + "}}\r\n", article.getCaretPosition());
+				article.insert("{{" + template + "}}\r\n", 
+						article.getCaretPosition());
 			}
 			break;
 		case "About":
 			messager.showInfo("Written by Myroslav Rudnytskyi, 2015.");
 			break;
 		}
-		
 	}
 	
+	/**
+	 * Text files filter for using in {@link JFileChooser}s.
+	 * 
+	 * @author Mir4ik
+	 * @version 0.1 16.03.2015
+	 */
 	private class TXTFileFilter extends FileFilter {
 
 		@Override
@@ -199,7 +217,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 		}
 	}
 	
-	// TODO This is code for debug application starting. Will be moved later!
+	// TODO: this is code for debug application starting. Will be removed later!
 	public static void main(String[] args) throws Exception {
 		UIManager.setLookAndFeel("com.jtattoo.plaf.texture.TextureLookAndFeel");
 		SwingUtilities.invokeLater(() -> new MainFrame().setVisible(true));
