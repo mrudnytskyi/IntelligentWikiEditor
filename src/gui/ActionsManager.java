@@ -14,8 +14,8 @@ import javax.swing.text.DefaultEditorKit;
 /**
  * Class, created to manage all actions in application. To avoid creating a
  * lot of small {@link AbstractAction} objects, we invoke special method
- * {@link ActionsManager#getAction(String)} to get them, using unique action
- * <code>name</code>.
+ * {@link ActionsManager#getAction(String) getAction()} to get them, using 
+ * unique action <code>name</code>.
  * 
  * @author Mir4ik
  * @version 0.2 29.08.2014
@@ -38,7 +38,8 @@ public class ActionsManager {
 		 * <code>listener</code> and <code>name</code> parameters.
 		 * 
 		 * @param listener	necessary listener. For details, see
-		 * 					{@link Action#actionPerformed(ActionEvent)}
+		 * 					{@link Action#actionPerformed(ActionEvent) 
+		 * 					actionPerformed()} method
 		 * @param name		necessary unique action name
 		 * @param desc		action description, used to show tips
 		 * @param icon		path to small icon, used in menus
@@ -117,6 +118,12 @@ public class ActionsManager {
 		actions.add(parametizeAction(new DefaultEditorKit.PasteAction(), "Paste",
 				"Paste text fragment", "res\\paste.png",
 				"res\\paste_big.png", new Integer(KeyEvent.VK_P)));
+		actions.add(new Action(mainFrame, "Insert heading", "Insert heading",
+				"res\\heading.png", "res\\heading_big.png",
+				new Integer(KeyEvent.VK_H)));
+		actions.add(new Action(mainFrame, "Insert external link",
+				"Insert link to external resources", "res\\link.png",
+				"res\\link_big.png", new Integer(KeyEvent.VK_E)));
 		this.actions = actions.toArray(new AbstractAction[actions.size()]);
 	}
 

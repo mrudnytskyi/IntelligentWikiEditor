@@ -46,9 +46,14 @@ public class MessagesFrame {
 	}
 	
 	public String showInput(String msg) {
+		return showInput(msg, null, null);
+	}
+	
+	public String showInput(String msg, Object[] values, Object value) {
 		String path = "res\\question_big.png";
 		Object o = JOptionPane.showInputDialog(parent, msg, "Input",
-				JOptionPane.QUESTION_MESSAGE, new ImageIcon(path), null, null);
-		return o == null ? null : o.toString();
+				JOptionPane.QUESTION_MESSAGE, new ImageIcon(path),
+				values, value);
+		return o == null ? null : o.toString();		
 	}
 }

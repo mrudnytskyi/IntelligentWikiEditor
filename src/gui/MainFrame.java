@@ -5,7 +5,7 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
+import java.io.IOException;
 
 import javax.swing.Box;
 import javax.swing.JFileChooser;
@@ -19,13 +19,12 @@ import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.filechooser.FileFilter;
 
-import bot.core.ApplicationException;
+import utils.MutableString;
 import bot.io.FilesFacade;
 
 /**
- * MainFrame of application.
+ * Main frame of application.
  * 
  * @author Mir4ik
  * @version 0.2 28.08.2014
@@ -45,8 +44,12 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 	
 	private final MessagesFrame messager = new MessagesFrame(this);
 	
+	private static final String LINE = System.getProperty("line.separator");
+	
+	private final FileFiltersManager filters = new FileFiltersManager();
+	
 	/**
-	 * Constructs MainFrame with specified content and title.
+	 * Constructs main frame with specified content and title.
 	 */
 	public MainFrame() {
 		super("Wiki Editor 1.0");
@@ -69,16 +72,18 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 		edit.add(actions.getAction("Cut"));
 		edit.add(actions.getAction("Copy"));
 		edit.add(actions.getAction("Paste"));
-		JMenu article = new JMenu("Article");
-		article.add(actions.getAction("Insert link"));
-		article.add(actions.getAction("Insert category"));
-		article.add(actions.getAction("Insert template"));
+		JMenu insert = new JMenu("Insert");
+		insert.add(actions.getAction("Insert link"));
+		insert.add(actions.getAction("Insert category"));
+		insert.add(actions.getAction("Insert template"));
+		insert.add(actions.getAction("Insert heading"));
+		insert.add(actions.getAction("Insert external link"));
 		JMenu help = new JMenu("?");
 		help.add(actions.getAction("About"));
 		JMenuBar menu = new JMenuBar();
 		menu.add(file);
 		menu.add(edit);
-		menu.add(article);
+		menu.add(insert);
 		menu.add(Box.createHorizontalGlue());
 		menu.add(help);
 		return menu;
@@ -96,11 +101,14 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 		toolbar.add(actions.getAction("Insert link"));
 		toolbar.add(actions.getAction("Insert category"));
 		toolbar.add(actions.getAction("Insert template"));
+		toolbar.add(actions.getAction("Insert heading"));
+		toolbar.add(actions.getAction("Insert external link"));
 		return toolbar;
 	}
 	
 	private JPanel createContent() {
 		article.setFont(new Font("Consolas", Font.PLAIN, 14));
+		article.setLineWrap(true);
 		JPanel content = new JPanel(new BorderLayout());
 		JSplitPane splitRight = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
 				new JScrollPane(article), new JScrollPane(messages));
@@ -117,71 +125,102 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 	/**
 	 * Method provides code for frame actions.
 	 */
-	//TODO: add i18n
+	//TODO: add i18n, divide into separate methods
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		switch (evt.getPropertyName()) {
 		case "Open":
 			JFileChooser chooserOpen = new JFileChooser(".");
-			chooserOpen.setFileFilter(new TXTFileFilter());
-			chooserOpen.setSelectedFile(new File("temp.txt"));
+			chooserOpen.setFileFilter(filters.getFilter("txt"));
 			int resultOpen = chooserOpen.showOpenDialog(MainFrame.this);
 			if (resultOpen == JFileChooser.APPROVE_OPTION) {
-				String text = "";
 				try {
-					text = FilesFacade.readTXT(chooserOpen.getSelectedFile());
-				} catch (ApplicationException e) {
-					messager.showError(e.toString());
+					article.setText(FilesFacade.readTXT(
+							chooserOpen.getSelectedFile().getPath()));
+				} catch (IOException e) {
 					messages.error(e.toString());
+					messager.showError(e.toString());
 				}
-				article.setText(text);
 			}
 			break;
 		case "Save as":
 			JFileChooser chooserSave = new JFileChooser(".");
-			chooserSave.setFileFilter(new TXTFileFilter());
-			chooserSave.setSelectedFile(new File("temp.txt"));
+			chooserSave.setFileFilter(filters.getFilter("txt"));
 			int resultSave = chooserSave.showSaveDialog(MainFrame.this);
 			if (resultSave == JFileChooser.APPROVE_OPTION) {
 				try {
-					FilesFacade.writeTXT(
-							chooserSave.getSelectedFile(), article.getText());
-				} catch (ApplicationException e) {
-					messager.showError(e.toString());
+					FilesFacade.writeTXT(chooserSave.getSelectedFile().getPath(),
+							article.getText());
+				} catch (IOException e) {
 					messages.error(e.toString());
+					messager.showError(e.toString());
 				}
 			}
 			break;
 		case "Exit":
 			if (messager.showQuestion("Do you want to exit?")) {
-				messages.info("Goodbye!");
 				System.exit(0);
 			}
 			break;
 		case "Insert link":
-			String link = messager.showInput("Input article name");
-			if (link != null) {
+			String articleName = messager.showInput("Input article name");
+			if (articleName != null) {
+				MutableString ms = new MutableString(articleName.length() + 10);
 				if (article.getSelectedText() == null) {
-					article.insert("[[" + link + "]]", 
-							article.getCaretPosition());
+					ms.append("[[", articleName, "]]");
+					article.insert(ms.toString(), article.getCaretPosition());
 				} else {
-					article.replaceSelection("[[" + link + "|" + 
-							article.getSelectedText() + "]]");
+					ms.append("[[", articleName, "|",
+							article.getSelectedText(), "]]");
+					article.replaceSelection(ms.toString());
 				}
 			}
 			break;
 		case "Insert category":
-			String category = messager.showInput("Input category name");
-			if (category != null) {
-				article.insert("\r\n[[Категорія:" + category + "]]\r\n", 
-						article.getText().length());
+			String categoryName = messager.showInput("Input category name");
+			if (categoryName != null) {
+				MutableString ms = new MutableString(categoryName.length() + 20);
+				ms.append(LINE, "[[Категорія:", categoryName, "]]", LINE);
+				article.insert(ms.toString(), article.getText().length());
 			}
 			break;
 		case "Insert template":
-			String template = messager.showInput("Input template name");
-			if (template != null) {
-				article.insert("{{" + template + "}}\r\n", 
-						article.getCaretPosition());
+			String templateName = messager.showInput("Input template name");
+			if (templateName != null) {
+				MutableString ms = new MutableString(templateName.length() + 10);
+				ms.append("{{", templateName, "}}", LINE);
+				article.insert(ms.toString(), article.getCaretPosition());
+			}
+			break;
+		case "Insert heading":
+			String stringHeadingType = messager.showInput("Input heading type",
+					new Integer[] {2, 3, 4, 5, 6}, 2);
+			if (stringHeadingType != null) {
+				int headingType = Integer.parseInt(stringHeadingType);
+				MutableString ms = new MutableString(2*headingType + 10);
+				String heading = ms.append('=', headingType).toString();
+				ms.clear();
+				if (article.getSelectedText() == null) {
+					ms.append(LINE, heading, "  ", heading, LINE);
+					article.insert(ms.toString(), article.getCaretPosition());
+				} else {
+					ms.append(heading, article.getSelectedText(), heading);
+					article.replaceSelection(ms.toString());
+				}
+			}
+			break;
+		case "Insert external link":
+			String resourceName = messager.showInput("Input resource name");
+			if (resourceName != null) {
+				MutableString ms = new MutableString(resourceName.length() + 5);
+				if (article.getSelectedText() == null) {
+					ms.append("[", resourceName, "]");
+					article.insert(ms.toString(), article.getCaretPosition());
+				} else {
+					ms.append("[", resourceName, " ", 
+							article.getSelectedText(), "]");
+					article.replaceSelection(ms.toString());
+				}
 			}
 			break;
 		case "About":
@@ -189,34 +228,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 			break;
 		}
 	}
-	
-	/**
-	 * Text files filter for using in {@link JFileChooser}s.
-	 * 
-	 * @author Mir4ik
-	 * @version 0.1 16.03.2015
-	 */
-	private class TXTFileFilter extends FileFilter {
 
-		@Override
-		public boolean accept(File file) {
-			boolean isFile = file.isFile();
-			boolean isDir = file.isDirectory();
-			String fileName = file.getName();
-			boolean filterNameLower = fileName.endsWith("TXT");
-			boolean filterNameUpper = fileName.endsWith("txt");
-			if (isDir || (isFile) && (filterNameLower || filterNameUpper)) {
-				return true;
-			}
-			return false;
-		}
-
-		@Override
-		public String getDescription() {
-			return "TeXT files (TXT)";
-		}
-	}
-	
 	// TODO: this is code for debug application starting. Will be removed later!
 	public static void main(String[] args) throws Exception {
 		UIManager.setLookAndFeel("com.jtattoo.plaf.texture.TextureLookAndFeel");
