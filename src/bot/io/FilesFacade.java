@@ -1,86 +1,89 @@
 package bot.io;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.XStreamException;
-
-import bot.core.ApplicationException;
+import com.thoughtworks.xstream.io.StreamException;
 
 /**
- * Utility class for reading files.
+ * Class, created for reading and writing files with different formats: plain
+ * text and XML. Note, that all it's methods can throw {@link IOException}.
  * 
  * @author Mir4ik
- * @version 0.1 17.1.2015
- */
-/*
- * TODO:
- * 1. readTXT() works only with UTF-8 files. Add encoding?
+ * @version 0.2 17.01.2015
  */
 public final class FilesFacade {
 	
+	/**
+	 * do not instantiate this class
+	 */
 	private FilesFacade() {}
-
-	public static String readTXT(String file) throws ApplicationException {
-		return readTXT(new File(file));
+	
+	/**
+	 * Reads plain text from specified file.
+	 * <p>
+	 * Note, that {@link StandardCharsets#UTF_8 UTF-8} {@link Charset charset}
+	 * is used to decode bytes.
+	 * 
+	 * @param file				path to file
+	 * @return					file content in {@link String} representation
+	 * @throws IOException		if an I/O error occurs
+	 */
+	public static String readTXT(String file) throws IOException {
+		return new String(Files.readAllBytes(Paths.get(file)),
+				StandardCharsets.UTF_8);
 	}
 	
-	public static String readTXT(File file) throws ApplicationException {
-		StringBuilder sb = new StringBuilder();
-		try (FileReader txtInput = new FileReader(file)) {
-			int c = 0;
-			while (c != -1) {
-				c = txtInput.read();
-				sb.append((char) c);
-			}
-		} catch (IOException e) {
-			throw new ApplicationException(
-					"Exception while reading " + file + " : ", e);
-		}
-		return sb.substring(0, sb.length() - 1).toString();
+	/**
+	 * Writes plain text to specified file.
+	 * <p>
+	 * Note, that {@link StandardOpenOption#CREATE CREATE},
+	 * {@link StandardOpenOption#TRUNCATE_EXISTING TRUNCATE_EXISTING} and 
+	 * {@link StandardOpenOption#WRITE WRITE} 
+	 * {@link StandardOpenOption open options} is used to open file.
+	 * 
+	 * @param file				path to file
+	 * @param str				plain text in {@link String} representation
+	 * @throws IOException		if an I/O error occurs
+	 */
+	public static void writeTXT(String file, String str) throws IOException {
+		Files.write(Paths.get(file), str.getBytes());
 	}
 	
-	public static void writeTXT(String f, String str) throws ApplicationException {
-		writeTXT(new File(f), str);
-	}
-	
-	public static void writeTXT(File file, String s) throws ApplicationException {
-		try (FileWriter writer = new FileWriter(file)) {
-			writer.write(s);
-		} catch (IOException e) {
-			throw new ApplicationException(
-					"Exception while writing to " + file + " : ", e);
-		}	
-	}
-	
-	public static Object readXML(String file) throws ApplicationException {
-		return readXML(new File(file));
-	}
-	
-	public static Object readXML(File file) throws ApplicationException {
+	/**
+	 * Reads object from specified XML file.
+	 * 
+	 * @param file				path to file
+	 * @return					deserialized from XML object 
+	 * @throws IOException		if an I/O error occurs
+	 */
+	public static Object readXML(String file) throws IOException {
 		try {
 			XStream stream = new XStream();
-			return stream.fromXML(file);
-		} catch (XStreamException e) {
-			throw new ApplicationException(
-					"Exception while reading " + file + " : ", e);
+			return stream.fromXML(new File(file));
+		} catch (StreamException e) {
+			throw new IOException(e);
 		}
 	}
 	
-	public static void writeXML(String f, Object o) throws ApplicationException {
-		writeXML(new File(f), o);
-	}
-	
-	public static void writeXML(File f, Object o) throws ApplicationException {
-		try (FileWriter writer = new FileWriter(f)) {
+	/**
+	 * Writes specified object to specified XML file.
+	 * 
+	 * @param file				path to file
+	 * @param obj				object to serialize in XML
+	 * @throws IOException		if an I/O error occurs
+	 */
+	public static void writeXML(String file, Object obj) throws IOException {
+		try (FileWriter writer = new FileWriter(file)) {
 			XStream stream = new XStream();
-			stream.toXML(o, writer);
-		} catch (Exception e) {
-			throw new ApplicationException(
-					"Exception while writing to " + f + " : ", e);
+			stream.toXML(obj, writer);
 		}
 	}
 }
