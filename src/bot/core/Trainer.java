@@ -8,10 +8,10 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
-import bot.nlp.StopWordsHolder;
-import bot.nlp.StringArrayList;
+import utils.StringArrayList;
 import bot.nlp.Snippet;
 import bot.nlp.SnippetTopic;
+import bot.nlp.StopWordsHolder;
 import bot.nlp.processors.CleanProcessor;
 import bot.nlp.processors.StopsRemoverProcessor;
 import bot.nlp.processors.TextProcessor;
@@ -19,7 +19,7 @@ import bot.nlp.processors.TextProcessor;
 /**
  * 
  * @author Mir4ik
- * @version 0.1 25.1.2015
+ * @version 0.1 25.01.2015
  */
 public class Trainer {
 	

@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
-import bot.nlp.StopWordsHolder;
-import bot.nlp.StringArrayList;
+import utils.StringArrayList;
 import bot.nlp.Snippet;
 import bot.nlp.SnippetTopic;
+import bot.nlp.StopWordsHolder;
 
 /**
  * Class, created to classify text fragment using types, defined in 
@@ -24,11 +24,9 @@ import bot.nlp.SnippetTopic;
  * most used words in the fragment.
  * 
  * @author Mir4ik
- * @version 0.1 20.1.2015
+ * @version 0.1 20.01.2015
  */
-/*
- * TODO separate class Stemmer?
- */
+// TODO: separate class Stemmer?
 public class Classifier {
 	
 	private class EntryComparator implements Comparator<Entry<String, Integer>> {

@@ -2,12 +2,12 @@ package bot.core;
 
 import java.util.Objects;
 
-import bot.nlp.StringArrayList;
+import utils.StringArrayList;
 
 /**
  * 
  * @author Mir4ik
- * @version 0.1 19.1.2015
+ * @version 0.1 19.01.2015
  */
 public class ArticleTemplate {
 	

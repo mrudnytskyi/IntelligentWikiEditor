@@ -1,19 +1,17 @@
 package bot.nlp;
 
+import java.io.IOException;
 import java.util.List;
 
-import bot.core.ApplicationException;
+import utils.StringArrayList;
 import bot.io.FilesFacade;
 
 /**
  * 
  * @author Mir4ik
- * @version 0.1 25.1.2015
+ * @version 0.1 25.01.2015
  */
-/*
- * TODO:
- * 1. Languages support?
- */
+// TODO: Languages support?
 public class StopWordsHolder {
 	
 	private final List<String> STOP_WORDS = new StringArrayList();
@@ -22,8 +20,8 @@ public class StopWordsHolder {
 		String file = "stop_words_uk.txt";
 		try {
 			STOP_WORDS.addAll(new StringArrayList(FilesFacade.readTXT(file)));
-		} catch (ApplicationException e) {
-			// ignore ?
+		} catch (IOException e) {
+			//throw new ApplicationException(e);
 		}
 	}
 	
