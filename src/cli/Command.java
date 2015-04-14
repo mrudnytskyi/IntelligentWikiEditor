@@ -17,12 +17,9 @@ import com.beust.jcommander.Parameters;
  * subclasses of these class and place them in these file.
  * 
  * @author Mir4ik
- * @version 0.1 25.1.2015
+ * @version 0.1 25.01.2015
  */
-/*
- * TODO
- * 1. write commands classes
- */
+// TODO: add i18n
 public abstract class Command {
 	
 	/**
@@ -104,7 +101,7 @@ public abstract class Command {
 		
 		private static String makePretty(String ... args) {
 			final int STRING_WIDTH = 70;
-			String[] changedArgs = new String[args.length];
+			Object[] changedArgs = new Object[args.length];
 			int k = 0;
 			for (String s : args) {
 				if (s.length() <= STRING_WIDTH) {
@@ -135,7 +132,7 @@ public abstract class Command {
 			}
 			final String helpTemplate = "NAME\n\t%s -- %s\nUSAGE\n\t%s\n" + 
 					"DESCRIPTION\n\t%s\nEXAMPLES\n\t%s\nSEE ALSO\n\t%s";
-			return String.format(helpTemplate, Arrays.asList(changedArgs));
+			return String.format(helpTemplate, changedArgs);
 		}
 
 		@Override
@@ -151,10 +148,10 @@ public abstract class Command {
 			if (available) {
 				System.out.print("Now you can use: ");
 				System.out.println(Arrays.deepToString(
-						CommandsFactory.getAvailable()));
+						CommandsManager.getAvailable()));
 			}
 			for (String commandName : args) {
-				Command currCommand = CommandsFactory.getCommand(commandName);
+				Command currCommand = CommandsManager.getCommand(commandName);
 				if (currCommand == null) {
 					System.err.println("Can not find command \"" + 
 							commandName + "\"!");

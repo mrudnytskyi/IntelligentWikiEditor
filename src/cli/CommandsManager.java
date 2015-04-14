@@ -5,15 +5,15 @@ package cli;
  * create new command, write subclass of {@link Command} class in those file.
  * 
  * @author Mir4ik
- * @version 0.1 7.2.2015
+ * @version 0.1 07.02.2015
  */
-public class CommandsFactory {
+public class CommandsManager {
 	
 	private static final Command[] available;
 	
 	private static final String[] availableNames;
 	
-	private CommandsFactory() {}
+	private CommandsManager() {}
 	
 	static {
 		Class<?>[] declaredClasses = Command.class.getDeclaredClasses();

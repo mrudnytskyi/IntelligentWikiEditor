@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 import cli.Command;
-import cli.CommandsFactory;
+import cli.CommandsManager;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
@@ -28,7 +28,7 @@ public class Runner {
 			String currLine = input.nextLine();
 			String[] tokens = currLine.split(" ");
 			String command = tokens.length != 0 ? tokens[0] : currLine;
-			Command currCommand = CommandsFactory.getCommand(command);
+			Command currCommand = CommandsManager.getCommand(command);
 			if (currCommand == null) {
 				System.err.println("Can not find command \"" + command + 
 						"\"!\r\nShh! Do not know how to work with me? "
