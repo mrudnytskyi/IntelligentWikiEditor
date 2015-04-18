@@ -21,6 +21,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import utils.MutableString;
+import bot.io.DatabaseFacade;
 import bot.io.FilesFacade;
 
 /**
@@ -60,6 +61,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 		setJMenuBar(createMenu());
 		add(createToolbar(), BorderLayout.NORTH);
 		add(createContent(), BorderLayout.CENTER);
+		initDatabase();
 	}
 	
 	private JMenuBar createMenu() {
@@ -121,112 +123,165 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 		content.add(splitLeft, BorderLayout.CENTER);
 		return content;
 	}
+	
+	private void initDatabase() {
+		try {
+			if (!DatabaseFacade.existReplacementTable()) {
+				DatabaseFacade.createReplacementTable();
+			}
+		} catch (IOException e) {
+			messages.error(e.toString());
+			messager.showError(e.toString());
+		}
+	}
 
 	/**
 	 * Method provides code for frame actions.
 	 */
-	//TODO: add i18n, divide into separate methods
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		switch (evt.getPropertyName()) {
 		case "Open":
-			JFileChooser chooserOpen = new JFileChooser(".");
-			chooserOpen.setFileFilter(filters.getFilter("txt"));
-			int resultOpen = chooserOpen.showOpenDialog(MainFrame.this);
-			if (resultOpen == JFileChooser.APPROVE_OPTION) {
-				try {
-					article.setText(FilesFacade.readTXT(
-							chooserOpen.getSelectedFile().getPath()));
-				} catch (IOException e) {
-					messages.error(e.toString());
-					messager.showError(e.toString());
-				}
-			}
+			open();
 			break;
 		case "Save as":
-			JFileChooser chooserSave = new JFileChooser(".");
-			chooserSave.setFileFilter(filters.getFilter("txt"));
-			int resultSave = chooserSave.showSaveDialog(MainFrame.this);
-			if (resultSave == JFileChooser.APPROVE_OPTION) {
-				try {
-					FilesFacade.writeTXT(chooserSave.getSelectedFile().getPath(),
-							article.getText());
-				} catch (IOException e) {
-					messages.error(e.toString());
-					messager.showError(e.toString());
-				}
-			}
+			save();
 			break;
 		case "Exit":
-			if (messager.showQuestion("Do you want to exit?")) {
-				System.exit(0);
-			}
+			exit();
 			break;
 		case "Insert link":
-			String articleName = messager.showInput("Input article name");
-			if (articleName != null) {
+			insertLink();
+			break;
+		case "Insert category":
+			insertCategory();
+			break;
+		case "Insert template":
+			insertTemplate();
+			break;
+		case "Insert heading":
+			insertHeading();
+			break;
+		case "Insert external link":
+			insertExternalLink();
+			break;
+		case "About":
+			about();
+			break;
+		}
+	}
+	
+	private void open() {
+		JFileChooser chooserOpen = new JFileChooser(".");
+		chooserOpen.setFileFilter(filters.getFilter("txt"));
+		int resultOpen = chooserOpen.showOpenDialog(MainFrame.this);
+		if (resultOpen == JFileChooser.APPROVE_OPTION) {
+			try {
+				article.setText(FilesFacade.readTXT(
+						chooserOpen.getSelectedFile().getPath()));
+			} catch (IOException e) {
+				messages.error(e.toString());
+				messager.showError(e.toString());
+			}
+		}
+	}
+	
+	private void save() {
+		JFileChooser chooserSave = new JFileChooser(".");
+		chooserSave.setFileFilter(filters.getFilter("txt"));
+		int resultSave = chooserSave.showSaveDialog(MainFrame.this);
+		if (resultSave == JFileChooser.APPROVE_OPTION) {
+			try {
+				FilesFacade.writeTXT(chooserSave.getSelectedFile().getPath(),
+						article.getText());
+			} catch (IOException e) {
+				messages.error(e.toString());
+				messager.showError(e.toString());
+			}
+		}
+	}
+	
+	private void exit() {
+		if (messager.showQuestion("Do you want to exit?")) {
+			System.exit(0);
+		}
+	}
+	
+	private void insertLink() {
+		String articleName = messager.showInput("Input article name");
+		if (articleName != null) {
+			try {
 				MutableString ms = new MutableString(articleName.length() + 10);
 				if (article.getSelectedText() == null) {
 					ms.append("[[", articleName, "]]");
 					article.insert(ms.toString(), article.getCaretPosition());
+					DatabaseFacade.addReplacement(articleName, articleName);
 				} else {
-					ms.append("[[", articleName, "|",
-							article.getSelectedText(), "]]");
+					String selectedText = article.getSelectedText();
+					ms.append("[[", articleName, "|", selectedText, "]]");
 					article.replaceSelection(ms.toString());
+					DatabaseFacade.addReplacement(selectedText, articleName);
 				}
+			} catch (IOException e) {
+				messages.error(e.toString());
+				messager.showError(e.toString());
 			}
-			break;
-		case "Insert category":
-			String categoryName = messager.showInput("Input category name");
-			if (categoryName != null) {
-				MutableString ms = new MutableString(categoryName.length() + 20);
-				ms.append(LINE, "[[Категорія:", categoryName, "]]", LINE);
-				article.insert(ms.toString(), article.getText().length());
-			}
-			break;
-		case "Insert template":
-			String templateName = messager.showInput("Input template name");
-			if (templateName != null) {
-				MutableString ms = new MutableString(templateName.length() + 10);
-				ms.append("{{", templateName, "}}", LINE);
-				article.insert(ms.toString(), article.getCaretPosition());
-			}
-			break;
-		case "Insert heading":
-			String stringHeadingType = messager.showInput("Input heading type",
-					new Integer[] {2, 3, 4, 5, 6}, 2);
-			if (stringHeadingType != null) {
-				int headingType = Integer.parseInt(stringHeadingType);
-				MutableString ms = new MutableString(2*headingType + 10);
-				String heading = ms.append('=', headingType).toString();
-				ms.clear();
-				if (article.getSelectedText() == null) {
-					ms.append(LINE, heading, "  ", heading, LINE);
-					article.insert(ms.toString(), article.getCaretPosition());
-				} else {
-					ms.append(heading, article.getSelectedText(), heading);
-					article.replaceSelection(ms.toString());
-				}
-			}
-			break;
-		case "Insert external link":
-			String resourceName = messager.showInput("Input resource name");
-			if (resourceName != null) {
-				MutableString ms = new MutableString(resourceName.length() + 5);
-				if (article.getSelectedText() == null) {
-					ms.append("[", resourceName, "]");
-					article.insert(ms.toString(), article.getCaretPosition());
-				} else {
-					ms.append("[", resourceName, " ", 
-							article.getSelectedText(), "]");
-					article.replaceSelection(ms.toString());
-				}
-			}
-			break;
-		case "About":
-			messager.showInfo("Written by Myroslav Rudnytskyi, 2015.");
-			break;
 		}
+	}
+	
+	private void insertCategory() {
+		String categoryName = messager.showInput("Input category name");
+		if (categoryName != null) {
+			MutableString ms = new MutableString(categoryName.length() + 20);
+			ms.append(LINE, "[[Категорія:", categoryName, "]]", LINE);
+			article.insert(ms.toString(), article.getText().length());
+		}
+	}
+	
+	private void insertTemplate() {
+		String templateName = messager.showInput("Input template name");
+		if (templateName != null) {
+			MutableString ms = new MutableString(templateName.length() + 10);
+			ms.append("{{", templateName, "}}", LINE);
+			article.insert(ms.toString(), article.getCaretPosition());
+		}
+	}
+	
+	private void insertHeading() {
+		String stringHeadingType = messager.showInput("Input heading type",
+				new Integer[] {2, 3, 4, 5, 6}, 2);
+		if (stringHeadingType != null) {
+			int headingType = Integer.parseInt(stringHeadingType);
+			MutableString ms = new MutableString(2*headingType + 10);
+			String heading = ms.append('=', headingType).toString();
+			ms.clear();
+			if (article.getSelectedText() == null) {
+				ms.append(LINE, heading, "  ", heading, LINE);
+				article.insert(ms.toString(), article.getCaretPosition());
+			} else {
+				ms.append(heading, article.getSelectedText(), heading);
+				article.replaceSelection(ms.toString());
+			}
+		}
+	}
+	
+	private void insertExternalLink() {
+		String resourceName = messager.showInput("Input resource name");
+		if (resourceName != null) {
+			MutableString ms = new MutableString(resourceName.length() + 5);
+			if (article.getSelectedText() == null) {
+				ms.append("[", resourceName, "]");
+				article.insert(ms.toString(), article.getCaretPosition());
+			} else {
+				ms.append("[", resourceName, " ", 
+						article.getSelectedText(), "]");
+				article.replaceSelection(ms.toString());
+			}
+		}
+	}
+	
+	private void about() {
+		messager.showInfo("Written by Myroslav Rudnytskyi, 2015.");
 	}
 
 	// TODO: this is code for debug application starting. Will be removed later!
