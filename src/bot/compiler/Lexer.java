@@ -1,3 +1,17 @@
+/*
+ * Lexer.java	26.10.2014
+ * Copyright (C) 2014 Myroslav Rudnytskyi
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ */
 package bot.compiler;
 
 import java.util.ArrayList;
@@ -10,13 +24,10 @@ import java.util.StringTokenizer;
  * Class for dividing char streams to {@link Token}s and 
  * making lexical analysis for Wikipedia article.
  * 
- * @author Mir4ik
+ * @author Myroslav Rudnytskyi
  * @version 0.1 26.10.2014
  */
-/*
- * TODO
- * 1. write glueTokens()
- */
+// TODO: write glueTokens()
 public class Lexer implements Tokenizer {
 	
 	private static final String DIVIDERS = "*#<>!-[]{}'=";
