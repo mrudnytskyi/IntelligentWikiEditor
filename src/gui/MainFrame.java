@@ -15,16 +15,17 @@
 package gui;
 
 import java.awt.BorderLayout;
-
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -34,10 +35,12 @@ import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.text.DefaultEditorKit;
 
 import utils.MutableString;
 import bot.io.DatabaseFacade;
 import bot.io.FilesFacade;
+import bot.nlp.Snippet;
 
 /**
  * Main frame of application.
@@ -45,84 +48,36 @@ import bot.io.FilesFacade;
  * @author Myroslav Rudnytskyi
  * @version 0.2 18.04.2015
  */
-public class MainFrame extends JFrame implements PropertyChangeListener {
+public class MainFrame extends ApplicationFrame {
 
 	private static final long serialVersionUID = -3904199062763114676L;
 
 	private final JTextArea article = new JTextArea();
-	
+
 	private final MessagesPane messages = new MessagesPane();
-	
+
 	private final JPanel toolpane = new JPanel();
-	
-	private final ActionsManager actions = new ActionsManager(
-			new PropertyChangeListener[] {this});
-	
+
 	private final MessagesFrame messager = new MessagesFrame(this);
-	
+
 	private static final String LINE = System.getProperty("line.separator");
-	
+
 	private final FileFiltersManager filters = new FileFiltersManager();
-	
+
 	/**
-	 * Constructs main frame with specified content and title.
+	 * Constructs new frame with specified content and title.
 	 */
 	public MainFrame() {
 		super("Wiki Editor 1.0");
 		setLayout(new BorderLayout());
 		setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		setExtendedState(MAXIMIZED_BOTH);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setJMenuBar(createMenu());
-		add(createToolbar(), BorderLayout.NORTH);
 		add(createContent(), BorderLayout.CENTER);
+		add(createToolbar(), BorderLayout.NORTH);
 		initDatabase();
 	}
-	
-	private JMenuBar createMenu() {
-		JMenu file = new JMenu("File");
-		file.add(actions.getAction("Open"));
-		file.add(actions.getAction("Save as"));
-		file.addSeparator();
-		file.add(actions.getAction("Exit"));
-		JMenu edit = new JMenu("Edit");
-		edit.add(actions.getAction("Cut"));
-		edit.add(actions.getAction("Copy"));
-		edit.add(actions.getAction("Paste"));
-		JMenu insert = new JMenu("Insert");
-		insert.add(actions.getAction("Insert link"));
-		insert.add(actions.getAction("Insert category"));
-		insert.add(actions.getAction("Insert template"));
-		insert.add(actions.getAction("Insert heading"));
-		insert.add(actions.getAction("Insert external link"));
-		JMenu help = new JMenu("?");
-		help.add(actions.getAction("About"));
-		JMenuBar menu = new JMenuBar();
-		menu.add(file);
-		menu.add(edit);
-		menu.add(insert);
-		menu.add(Box.createHorizontalGlue());
-		menu.add(help);
-		return menu;
-	}
-	
-	private JToolBar createToolbar() {
-		JToolBar toolbar = new JToolBar();
-		toolbar.add(actions.getAction("Open"));
-		toolbar.add(actions.getAction("Save as"));
-		toolbar.addSeparator();
-		toolbar.add(actions.getAction("Cut"));
-		toolbar.add(actions.getAction("Copy"));
-		toolbar.add(actions.getAction("Paste"));
-		toolbar.addSeparator();
-		toolbar.add(actions.getAction("Insert link"));
-		toolbar.add(actions.getAction("Insert category"));
-		toolbar.add(actions.getAction("Insert template"));
-		toolbar.add(actions.getAction("Insert heading"));
-		toolbar.add(actions.getAction("Insert external link"));
-		return toolbar;
-	}
-	
+
 	private JPanel createContent() {
 		article.setFont(new Font("Consolas", Font.PLAIN, 14));
 		article.setLineWrap(true);
@@ -131,14 +86,112 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 				new JScrollPane(article), new JScrollPane(messages));
 		JSplitPane splitLeft = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 				toolpane, splitRight);
-		splitRight.setDividerLocation(getHeight()/2 + getHeight()/4);
+		splitRight.setDividerLocation(getHeight() / 2 + getHeight() / 4);
 		splitRight.setOneTouchExpandable(true);
-		splitLeft.setDividerLocation(getWidth()/6);
+		splitLeft.setDividerLocation(getWidth() / 6);
 		splitLeft.setOneTouchExpandable(true);
 		content.add(splitLeft, BorderLayout.CENTER);
 		return content;
 	}
-	
+
+	/**
+	 * Returns array, initialized by actions objects.
+	 */
+	@Override
+	protected AbstractAction[] createActions() {
+		List<AbstractAction> actions = new ArrayList<AbstractAction>();
+		actions.add(new Action(this, "Open", "open", "Open article file",
+				"res\\open.png", "res\\open_big.png",
+				new Integer(KeyEvent.VK_O)));
+		actions.add(new Action(this, "Save as", "save-as",
+				"Save article to file", "res\\save.png", "res\\save_big.png",
+				new Integer(KeyEvent.VK_S)));
+		actions.add(new Action(this, "Exit", "exit", "Exit the application",
+				"res\\exit.png", "res\\exit_big.png",
+				new Integer(KeyEvent.VK_E)));
+		actions.add(new Action(this, "Insert link", "insert-link",
+				"Insert link to another Wikipedia page", "res\\wikilink.png",
+				"res\\wikilink_big.png", new Integer(KeyEvent.VK_L)));
+		actions.add(new Action(this, "Insert category", "insert-category",
+				"Insert category", "res\\category.png",
+				"res\\category_big.png", new Integer(KeyEvent.VK_C)));
+		actions.add(new Action(this, "Insert template", "insert-template",
+				"Insert template", "res\\template.png",
+				"res\\template_big.png", new Integer(KeyEvent.VK_T)));
+		actions.add(new Action(this, "About", "about",
+				"Show information about software", "res\\info.png",
+				"res\\info_big.png", new Integer(KeyEvent.VK_A)));
+		actions.add(parametizeAction(new DefaultEditorKit.CutAction(), "Cut",
+				"cut", "Cut selected text fragment", "res\\cut.png",
+				"res\\cut_big.png", new Integer(KeyEvent.VK_T)));
+		actions.add(parametizeAction(new DefaultEditorKit.CopyAction(), "Copy",
+				"copy", "Copy selected text fragment", "res\\copy.png",
+				"res\\copy_big.png", new Integer(KeyEvent.VK_C)));
+		actions.add(parametizeAction(new DefaultEditorKit.PasteAction(),
+				"Paste", "paste", "Paste text fragment", "res\\paste.png",
+				"res\\paste_big.png", new Integer(KeyEvent.VK_P)));
+		actions.add(new Action(this, "Insert heading", "insert-heading",
+				"Insert heading", "res\\heading.png", "res\\heading_big.png",
+				new Integer(KeyEvent.VK_H)));
+		actions.add(new Action(this, "Insert external link",
+				"insert-external-link", "Insert link to external resources",
+				"res\\link.png", "res\\link_big.png",
+				new Integer(KeyEvent.VK_E)));
+		actions.add(new Action(this, "Add snippet", "show-add-snippet",
+				"Add snippet to sources", "res\\add-snippet.png",
+				"res\\add-snippet_big.png", new Integer(KeyEvent.VK_A)));
+		return actions.toArray(new AbstractAction[actions.size()]);
+	}
+
+	private JMenuBar createMenu() {
+		JMenu file = new JMenu("File");
+		file.add(getAction("open"));
+		file.add(getAction("save-as"));
+		file.addSeparator();
+		file.add(getAction("exit"));
+		JMenu edit = new JMenu("Edit");
+		edit.add(getAction("cut"));
+		edit.add(getAction("copy"));
+		edit.add(getAction("paste"));
+		JMenu insert = new JMenu("Insert");
+		insert.add(getAction("insert-link"));
+		insert.add(getAction("insert-category"));
+		insert.add(getAction("insert-template"));
+		insert.add(getAction("insert-heading"));
+		insert.add(getAction("insert-external-link"));
+		JMenu article = new JMenu("Article");
+		article.add(getAction("show-add-snippet"));
+		JMenu help = new JMenu("?");
+		help.add(getAction("about"));
+		JMenuBar menu = new JMenuBar();
+		menu.add(file);
+		menu.add(edit);
+		menu.add(insert);
+		menu.add(article);
+		menu.add(Box.createHorizontalGlue());
+		menu.add(help);
+		return menu;
+	}
+
+	private JToolBar createToolbar() {
+		JToolBar toolbar = new JToolBar();
+		toolbar.add(getAction("open"));
+		toolbar.add(getAction("save-as"));
+		toolbar.addSeparator();
+		toolbar.add(getAction("cut"));
+		toolbar.add(getAction("copy"));
+		toolbar.add(getAction("paste"));
+		toolbar.addSeparator();
+		toolbar.add(getAction("insert-link"));
+		toolbar.add(getAction("insert-category"));
+		toolbar.add(getAction("insert-template"));
+		toolbar.add(getAction("insert-heading"));
+		toolbar.add(getAction("insert-external-link"));
+		toolbar.addSeparator();
+		toolbar.add(getAction("show-add-snippet"));
+		return toolbar;
+	}
+
 	private void initDatabase() {
 		try {
 			if (!DatabaseFacade.existReplacementTable()) {
@@ -156,51 +209,59 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		switch (evt.getPropertyName()) {
-		case "Open":
+		case "open":
 			open();
 			break;
-		case "Save as":
+		case "save-as":
 			save();
 			break;
-		case "Exit":
-			exit();
+		case "exit":
+			if (messager.showQuestion("Do you want to exit?")) {
+				System.exit(0);
+			}
 			break;
-		case "Insert link":
+		case "insert-link":
 			insertLink();
 			break;
-		case "Insert category":
+		case "insert-category":
 			insertCategory();
 			break;
-		case "Insert template":
+		case "insert-template":
 			insertTemplate();
 			break;
-		case "Insert heading":
+		case "insert-heading":
 			insertHeading();
 			break;
-		case "Insert external link":
+		case "insert-external-link":
 			insertExternalLink();
 			break;
-		case "About":
-			about();
+		case "about":
+			messager.showInfo("Written by Myroslav Rudnytskyi, 2015.");
+			break;
+		case "show-add-snippet":
+			new AddSnippetFrame(this).setVisible(true);
+			break;
+		case "add-snippet":
+			OKAddSnippetFrame((Snippet) evt.getNewValue());
 			break;
 		}
 	}
-	
+
 	private void open() {
 		JFileChooser chooserOpen = new JFileChooser(".");
 		chooserOpen.setFileFilter(filters.getFilter("txt"));
 		int resultOpen = chooserOpen.showOpenDialog(MainFrame.this);
 		if (resultOpen == JFileChooser.APPROVE_OPTION) {
 			try {
-				article.setText(FilesFacade.readTXT(
-						chooserOpen.getSelectedFile().getPath()));
+				article.setText(FilesFacade.readTXT(chooserOpen
+						.getSelectedFile().getPath()));
 			} catch (IOException e) {
 				messages.error(e.toString());
 				messager.showError(e.toString());
 			}
 		}
 	}
-	
+
 	private void save() {
 		JFileChooser chooserSave = new JFileChooser(".");
 		chooserSave.setFileFilter(filters.getFilter("txt"));
@@ -215,13 +276,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 			}
 		}
 	}
-	
-	private void exit() {
-		if (messager.showQuestion("Do you want to exit?")) {
-			System.exit(0);
-		}
-	}
-	
+
 	private void insertLink() {
 		String articleName = messager.showInput("Input article name");
 		if (articleName != null) {
@@ -243,7 +298,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 			}
 		}
 	}
-	
+
 	private void insertCategory() {
 		String categoryName = messager.showInput("Input category name");
 		if (categoryName != null) {
@@ -252,7 +307,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 			article.insert(ms.toString(), article.getText().length());
 		}
 	}
-	
+
 	private void insertTemplate() {
 		String templateName = messager.showInput("Input template name");
 		if (templateName != null) {
@@ -261,13 +316,13 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 			article.insert(ms.toString(), article.getCaretPosition());
 		}
 	}
-	
+
 	private void insertHeading() {
 		String stringHeadingType = messager.showInput("Input heading type",
-				new Integer[] {2, 3, 4, 5, 6}, 2);
+				new Integer[] { 2, 3, 4, 5, 6 }, 2);
 		if (stringHeadingType != null) {
 			int headingType = Integer.parseInt(stringHeadingType);
-			MutableString ms = new MutableString(2*headingType + 10);
+			MutableString ms = new MutableString(2 * headingType + 10);
 			String heading = ms.append('=', headingType).toString();
 			ms.clear();
 			if (article.getSelectedText() == null) {
@@ -279,7 +334,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 			}
 		}
 	}
-	
+
 	private void insertExternalLink() {
 		String resourceName = messager.showInput("Input resource name");
 		if (resourceName != null) {
@@ -288,15 +343,20 @@ public class MainFrame extends JFrame implements PropertyChangeListener {
 				ms.append("[", resourceName, "]");
 				article.insert(ms.toString(), article.getCaretPosition());
 			} else {
-				ms.append("[", resourceName, " ", 
-						article.getSelectedText(), "]");
+				ms.append("[", resourceName, " ", article.getSelectedText(),
+						"]");
 				article.replaceSelection(ms.toString());
 			}
 		}
 	}
-	
-	private void about() {
-		messager.showInfo("Written by Myroslav Rudnytskyi, 2015.");
+
+	private void OKAddSnippetFrame(Snippet snippet) {
+		try {
+			FilesFacade.writeXML(snippet.hashCode() + ".xml", snippet);
+		} catch (IOException e) {
+			messages.error(e.toString());
+			messager.showError(e.toString());
+		}
 	}
 
 	// TODO: this is code for debug application starting. Will be removed later!
