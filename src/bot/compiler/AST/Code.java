@@ -1,19 +1,31 @@
+/*
+ * Code.java	19.11.2014
+ * Copyright (C) 2014 Myroslav Rudnytskyi
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ */
 package bot.compiler.AST;
 
 import java.util.Objects;
 
+import utils.MutableString;
 import bot.compiler.Visitor;
 
 /**
  * Class represents AST node of code snippet.
  * 
- * @author Mir4ik
+ * @author Myroslav Rudnytskyi
  * @version 0.1 19.11.2014
  */
-/*
- * TODO
- * 1. make language recognizing mechanism
- */
+// TODO: make language recognizing mechanism
 public class Code extends Characters {
 	
 	public enum Language {
@@ -34,17 +46,13 @@ public class Code extends Characters {
 	
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		if (language.equals(Language.UNKNOWN)) {
-			sb.append("<source");
-		} else {
-			sb.append("<source lang = ");
-			sb.append(language.toString().toLowerCase());
+		MutableString ms = new MutableString();
+		ms.append("<source");
+		if (!language.equals(Language.UNKNOWN)) {
+			ms.append(" lang = ", language.toString().toLowerCase());
 		}
-		sb.append('>');
-		sb.append(super.toString());
-		sb.append("</source>");
-		return sb.toString();
+		ms.append(">", super.toString(), "</source>");
+		return ms.toString();
 	}
 	
 	@Override

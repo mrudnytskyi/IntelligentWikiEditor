@@ -1,3 +1,17 @@
+/*
+ * RunnerClassifier.java	22.01.2015
+ * Copyright (C) 2015 Myroslav Rudnytskyi
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ */
 package bot;
 
 import java.io.File;
@@ -13,9 +27,10 @@ import bot.nlp.Snippet;
  * Class for starting application. See <code>main(String[] args)</code> method 
  * documentation for arguments using.
  * 
- * @author Mir4ik
- * @version 0.1 22.1.2015
+ * @author Myroslav Rudnytskyi
+ * @version 0.1 22.01.2015
  */
+// TODO: will be removed later!
 public class RunnerClassifier {
 
 	private static class TXTFilter implements FilenameFilter {
@@ -38,9 +53,9 @@ public class RunnerClassifier {
 	 * 				file to save result. Note, that source files can be 
 	 * 				divided into two parts: text fragment and source (for 
 	 * 				example URL to it) using special divider characters: "---".
-	 * @throws ApplicationException	if some error occurs
+	 * @throws Exception	if some error occurs
 	 */
-	public static void main(String[] args) throws ApplicationException {
+	public static void main(String[] args) throws Exception {
 		if (args.length != 3) {
 			System.err.println("Usage: <src directory> <template> <article>");
 			System.exit(1);
@@ -59,9 +74,9 @@ public class RunnerClassifier {
 		Snippet[] snippets = new Snippet[srcFiles.length];
 		int i = 0;
 		for (File file : srcFiles) {
-			String[] fileContent = FilesFacade.readTXT(file).split("---");
+			String[] fileContent = FilesFacade.readTXT(file.getPath()).split("---");
 			try {
-				snippets[i] = new Snippet(fileContent[0], fileContent[1]);
+				snippets[i] = new Snippet(fileContent[0], fileContent[1], null);
 			} catch (ArrayIndexOutOfBoundsException e) {
 				throw new ApplicationException(
 						"Wrong file \"" + file + "\" format!", e);
@@ -70,7 +85,7 @@ public class RunnerClassifier {
 		}
 		ArticleTemplate at = null;
 		try {
-			at = (ArticleTemplate) FilesFacade.readXML(template);
+			at = (ArticleTemplate) FilesFacade.readXML(template.getPath());
 		} catch (ClassCastException e) {
 			throw new ApplicationException(
 					"Wrong file \"" + template + "\" format!", e);

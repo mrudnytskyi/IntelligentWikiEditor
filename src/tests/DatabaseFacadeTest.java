@@ -1,5 +1,5 @@
 /*
- * MediaWikiFacadeTest.java	14.04.2015
+ * DatabaseFacadeTest.java	18.04.2015
  * Copyright (C) 2015 Myroslav Rudnytskyi
  * 
  * This program is free software; you can redistribute it and/or
@@ -16,34 +16,36 @@ package tests;
 
 import java.io.IOException;
 
-import org.junit.Assert;
+import junit.framework.Assert;
+
 import org.junit.Test;
 
-import bot.io.FilesFacade;
-import bot.io.MediaWikiFacade;
-import bot.io.MediaWikiFacade.Language;
+import bot.io.DatabaseFacade;
 
 /**
- * Class for testing {@link MediaWikiFacade} class.
+ * Class for testing {@link DatabaseFacade} class.
  * 
  * @author Myroslav Rudnytskyi
- * @version 0.1 14.04.2015
+ * @version 0.1 18.04.2015
  * @see Test
  * @see Assert
  */
-public class MediaWikiFacadeTest {
+public class DatabaseFacadeTest {
 	
 	@Test
 	public void test() {
-		MediaWikiFacade.setLanguage(Language.UKRAINIAN);
-		String text = null;
-		String file = "articleTestFile.txt";
+		String[] result = new String[] {};
 		try {
-			text = MediaWikiFacade.getArticleText(FilesFacade.readTXT(file));
+			//DatabaseFacade.deleteReplacementTable();
+			if (!DatabaseFacade.existReplacementTable()) {
+				DatabaseFacade.createReplacementTable();
+				DatabaseFacade.addReplacement("test", "test_link");
+			}
+			result = DatabaseFacade.getReplacement("test");
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
-		Assert.assertNotNull(text);
-		System.out.println(text);
+		Assert.assertEquals(1, result.length);
+		Assert.assertEquals("test_link", result[0]);
 	}
 }

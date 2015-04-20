@@ -1,3 +1,17 @@
+/*
+ * WikiRulesFactory.java	04.09.2014
+ * Copyright (C) 2014 Myroslav Rudnytskyi
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ */
 package bot.business;
 
 import bot.core.ApplicationException;
@@ -7,13 +21,10 @@ import bot.core.WikiArticle;
  * Class, containing set of rules for checking article. To create new rule,
  * write subclass of {@link AbstractWikiRule} in these file.
  * 
- * @author Mir4ik
+ * @author Myroslav Rudnytskyi
  * @version 0.1 04.09.2014
  */
-/*
- * TODO
- * 1. write rules classes
- */
+// TODO: write rules classes
 public class WikiRulesFactory {
 	
 	private final AbstractWikiRule[] rules; 

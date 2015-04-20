@@ -1,11 +1,26 @@
+/*
+ * Math.java	13.11.2014
+ * Copyright (C) 2014 Myroslav Rudnytskyi
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ */
 package bot.compiler.AST;
 
+import utils.MutableString;
 import bot.compiler.Visitor;
 
 /**
  * Class represents AST node of mathematics expression.
  * 
- * @author Mir4ik
+ * @author Myroslav Rudnytskyi
  * @version 0.1 13.11.2014
  */
 public class Math extends Characters {
@@ -16,11 +31,9 @@ public class Math extends Characters {
 	
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("<math>");
-		sb.append(super.toString());
-		sb.append("</math>");
-		return sb.toString();
+		MutableString ms = new MutableString("<math>", super.toString(),
+				"</math>");
+		return ms.toString();
 	}
 	
 	@Override
