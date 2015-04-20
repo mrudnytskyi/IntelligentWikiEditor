@@ -239,7 +239,8 @@ public class MainFrame extends ApplicationFrame {
 			messager.showInfo("Written by Myroslav Rudnytskyi, 2015.");
 			break;
 		case "show-add-snippet":
-			new AddSnippetFrame(this).setVisible(true);
+			String[] topics = new String[] { "LOL", "LIL", "LEL" };
+			new AddSnippetFrame(this, topics).setVisible(true);
 			break;
 		case "add-snippet":
 			OKAddSnippetFrame((Snippet) evt.getNewValue());
