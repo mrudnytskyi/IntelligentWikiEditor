@@ -20,9 +20,9 @@ import utils.MutableString;
 
 /**
  * Class, created to encapsulate information about text fragment (snippet),
- * source, where it was taken and it's topic.
+ * source, where it was taken and it's tags.
  * <p>
- * Note, that snippet topic is represented as {@link String} array, containing
+ * Note, that snippet tags is represented as {@link String} array, containing
  * names of categories, which can be used to describe this text fragment.
  * 
  * @author Myroslav Rudnytskyi
@@ -34,22 +34,22 @@ public class Snippet {
 	
 	private final String source;
 	
-	private final String[] topic;
+	private final String[] tags;
 	
 	/**
 	 * Constructs snippet using specified information about text, source and 
-	 * topic. Note, that <code>source</code> and <code>topic</code> can be
+	 * tags. Note, that <code>source</code> and <code>tags</code> can be
 	 * <code>null</code>, but try to fill all fields, please.
 	 * 
 	 * @param text		text fragment, also called snippet
 	 * @param source	source, where snippet was taken
-	 * @param topic		array of tags to categorize this snippet
+	 * @param tags		array of tags to categorize this snippet
 	 */
-	public Snippet(String text, String source, String[] topic) {
+	public Snippet(String text, String source, String[] tags) {
 		Objects.requireNonNull(text, "Text fragment can not be null!");
 		this.text = text;
 		this.source = source;
-		this.topic = topic;
+		this.tags = tags;
 	}
 	
 	public String getText() {
@@ -60,15 +60,15 @@ public class Snippet {
 		return source;
 	}
 	
-	public String[] getTopic() {
-		return topic;
+	public String[] getTags() {
+		return tags;
 	}
 	
 	@Override
 	public String toString() {
 		MutableString ms = new MutableString("Snippet: [", text, "] from [",
-				source, "] and topic: [");
-		for (String str : topic) {
+				source, "] and tags: [");
+		for (String str : tags) {
 			ms.append(str, ", ");
 		}
 		// delete last comma and whitespace

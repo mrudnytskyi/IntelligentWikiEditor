@@ -39,6 +39,6 @@ public class StopsRemoverProcessor extends TextProcessor {
 		fragment = fragment.replace("_", "");
 		result = new Snippet[1];
 		result[0] = new Snippet(fragment, snippet.getSource(), 
-				snippet.getTopic());
+				snippet.getTags());
 	}
 }

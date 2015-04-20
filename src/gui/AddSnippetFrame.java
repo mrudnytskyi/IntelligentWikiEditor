@@ -52,7 +52,7 @@ public class AddSnippetFrame extends ApplicationFrame {
 
 	private final JTextField source = new JTextField("Enter source here");
 
-	private final JList<String> topic;
+	private final JList<String> tags;
 
 	/**
 	 * Constructs new frame with specified content and title.
@@ -60,12 +60,12 @@ public class AddSnippetFrame extends ApplicationFrame {
 	 * @param listener
 	 *            necessary object, which will receive {@link Snippet} object,
 	 *            listening for changing <code>add-snippet</code> property
-	 * @param topics
-	 *            array of available topics names to categorize snippet
+	 * @param tags
+	 *            array of available tags names to categorize snippet
 	 */
-	public AddSnippetFrame(PropertyChangeListener listener, String[] topics) {
+	public AddSnippetFrame(PropertyChangeListener listener, String[] tags) {
 		super("Add snippet");
-		topic = new JList<String>(topics);
+		this.tags = new JList<String>(tags);
 		setLayout(new BorderLayout());
 		add(createContent(), BorderLayout.CENTER);
 		addPropertyChangeListener(listener);
@@ -99,8 +99,8 @@ public class AddSnippetFrame extends ApplicationFrame {
 		text.setBorder(BorderFactory.createTitledBorder("Snippet"));
 		JScrollPane src = new JScrollPane(this.source);
 		src.setBorder(BorderFactory.createTitledBorder("Source"));
-		JScrollPane topic = new JScrollPane(this.topic);
-		topic.setBorder(BorderFactory.createTitledBorder("Topics"));
+		JScrollPane tags = new JScrollPane(this.tags);
+		tags.setBorder(BorderFactory.createTitledBorder("Tags"));
 
 		GroupLayout group = new GroupLayout(topPanel);
 		int WIDTH = 300;
@@ -111,7 +111,7 @@ public class AddSnippetFrame extends ApplicationFrame {
 				.addGroup(
 						group.createSequentialGroup().addGroup(
 								group.createParallelGroup(Alignment.LEADING)
-										.addComponent(topic, DEF, WIDTH,
+										.addComponent(tags, DEF, WIDTH,
 												Short.MAX_VALUE)
 										.addComponent(text, DEF, WIDTH,
 												Short.MAX_VALUE)
@@ -124,7 +124,7 @@ public class AddSnippetFrame extends ApplicationFrame {
 								.addPreferredGap(ComponentPlacement.RELATED)
 								.addComponent(src, PREF, DEF, PREF)
 								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(topic, PREF, HEIGHT, PREF)));
+								.addComponent(tags, PREF, HEIGHT, PREF)));
 		topPanel.setLayout(group);
 
 		JPanel bottomPanel = new JPanel(new GridLayout(1, 2, 50, 0));
@@ -149,8 +149,8 @@ public class AddSnippetFrame extends ApplicationFrame {
 			break;
 		case "add-snippet-OK":
 			setVisible(false);
-			String[] topicArray = topic.getSelectedValuesList().toArray(
-					new String[topic.getSelectedIndices().length]);
+			String[] topicArray = tags.getSelectedValuesList().toArray(
+					new String[tags.getSelectedIndices().length]);
 			firePropertyChange("add-snippet", null, new Snippet(text.getText(),
 					source.getText(), topicArray));
 			break;

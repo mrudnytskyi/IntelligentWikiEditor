@@ -39,6 +39,6 @@ public class CleanProcessor extends TextProcessor {
 		text = text.replace(" $ ", " - ");
 		text = text.replace(".~", ".\r\n ");
 		result = new Snippet[1];
-		result[0] = new Snippet(text, snippet.getSource(), snippet.getTopic());
+		result[0] = new Snippet(text, snippet.getSource(), snippet.getTags());
 	}
 }

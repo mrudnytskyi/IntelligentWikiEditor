@@ -33,7 +33,7 @@ public class SenceTokenizerProcessor extends TextProcessor {
 		int i = 0;
 		while (st.hasMoreTokens()) {
 			result[i] = new Snippet(st.nextToken(), snippet.getSource(),
-					snippet.getTopic());
+					snippet.getTags());
 			i++;
 		}
 	}
