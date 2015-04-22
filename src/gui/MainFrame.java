@@ -66,7 +66,7 @@ public class MainFrame extends ApplicationFrame {
 	private static final String LINE = System.getProperty("line.separator");
 
 	private final FileFiltersManager filters = new FileFiltersManager();
-	
+
 	private Project currentProject;
 
 	/**
@@ -105,10 +105,13 @@ public class MainFrame extends ApplicationFrame {
 	@Override
 	protected AbstractAction[] createActions() {
 		List<AbstractAction> actions = new ArrayList<AbstractAction>();
-		actions.add(new Action(this, "Open", "open", "Open article file",
-				"res\\open.png", "res\\open_big.png",
+		actions.add(new Action(this, "New project", "show-new-project",
+				"Create new project", "res\\new.png", "res\\new_big.png",
+				new Integer(KeyEvent.VK_N)));
+		actions.add(new Action(this, "Open project", "open-project",
+				"Open project file", "res\\open.png", "res\\open_big.png",
 				new Integer(KeyEvent.VK_O)));
-		actions.add(new Action(this, "Save as", "save-as",
+		actions.add(new Action(this, "Save changes", "save-changes",
 				"Save article to file", "res\\save.png", "res\\save_big.png",
 				new Integer(KeyEvent.VK_S)));
 		actions.add(new Action(this, "Exit", "exit", "Exit the application",
@@ -148,18 +151,15 @@ public class MainFrame extends ApplicationFrame {
 		actions.add(new Action(this, "Generate article", "generate-article",
 				"Generate article text from snippets", "res\\wizard.png",
 				"res\\wizard_big.png", new Integer(KeyEvent.VK_G)));
-		actions.add(new Action(this, "New project", "show-new-project",
-				"Create new project", "res\\new.png", "res\\new_big.png",
-				new Integer(KeyEvent.VK_N)));
 
 		return actions.toArray(new AbstractAction[actions.size()]);
 	}
 
 	private JMenuBar createMenu() {
-		JMenu file = new JMenu("File");
+		JMenu file = new JMenu("Project");
 		file.add(getAction("show-new-project"));
-		file.add(getAction("open"));
-		file.add(getAction("save-as"));
+		file.add(getAction("open-project"));
+		file.add(getAction("save-changes"));
 		file.addSeparator();
 		file.add(getAction("exit"));
 		JMenu edit = new JMenu("Edit");
@@ -190,8 +190,8 @@ public class MainFrame extends ApplicationFrame {
 	private JToolBar createToolbar() {
 		JToolBar toolbar = new JToolBar();
 		toolbar.add(getAction("show-new-project"));
-		toolbar.add(getAction("open"));
-		toolbar.add(getAction("save-as"));
+		toolbar.add(getAction("open-project"));
+		toolbar.add(getAction("save-changes"));
 		toolbar.addSeparator();
 		toolbar.add(getAction("cut"));
 		toolbar.add(getAction("copy"));
@@ -225,10 +225,16 @@ public class MainFrame extends ApplicationFrame {
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		switch (evt.getPropertyName()) {
-		case "open":
+		case "show-new-project":
+			newProject();
+			break;
+		case "new-project":
+			OKNewProject((Project) evt.getNewValue());
+			break;
+		case "open-project":
 			open();
 			break;
-		case "save-as":
+		case "save-changes":
 			save();
 			break;
 		case "exit":
@@ -264,15 +270,9 @@ public class MainFrame extends ApplicationFrame {
 		case "generate-article":
 			generateArticle();
 			break;
-		case "show-new-project":
-			newProject();
-			break;
-		case "new-project":
-			OKNewProject((Project) evt.getNewValue());
-			break;
 		}
 	}
-	
+
 	private void newProject() {
 		String[] templates = new String[] { "LOL.xml", "LIL.xml", "LEL.xml" };
 		new NewProjectFrame(this, templates).setVisible(true);
@@ -280,21 +280,18 @@ public class MainFrame extends ApplicationFrame {
 
 	private void OKNewProject(Project project) {
 		currentProject = project;
-		try {
-			FilesFacade.writeXML("debug-prj.xml", currentProject);
-		} catch (IOException e) {
-			messages.error(e.toString());
-		}
 	}
 
 	private void open() {
-		JFileChooser chooserOpen = new JFileChooser(".");
-		chooserOpen.setFileFilter(filters.getFilter("txt"));
-		int resultOpen = chooserOpen.showOpenDialog(MainFrame.this);
-		if (resultOpen == JFileChooser.APPROVE_OPTION) {
+		JFileChooser chooser = new JFileChooser(".");
+		chooser.setFileFilter(filters.getFilter("xml"));
+		int result = chooser.showOpenDialog(MainFrame.this);
+		if (result == JFileChooser.APPROVE_OPTION) {
 			try {
-				article.setText(FilesFacade.readTXT(chooserOpen
-						.getSelectedFile().getPath()));
+				currentProject = (Project) FilesFacade.readXML(chooser
+						.getSelectedFile().getPath());
+				article.setText(FilesFacade.readTXT(currentProject
+						.getArticleFile()));
 			} catch (IOException e) {
 				messages.error(e.toString());
 				messager.showError(e.toString());
@@ -303,17 +300,16 @@ public class MainFrame extends ApplicationFrame {
 	}
 
 	private void save() {
-		JFileChooser chooserSave = new JFileChooser(".");
-		chooserSave.setFileFilter(filters.getFilter("txt"));
-		int resultSave = chooserSave.showSaveDialog(MainFrame.this);
-		if (resultSave == JFileChooser.APPROVE_OPTION) {
-			try {
-				FilesFacade.writeTXT(chooserSave.getSelectedFile().getPath(),
-						article.getText());
-			} catch (IOException e) {
-				messages.error(e.toString());
-				messager.showError(e.toString());
-			}
+		if (currentProject == null) {
+			messager.showInfo("No opened projects!");
+			return;
+		}
+		try {
+			FilesFacade.writeTXT(currentProject.getArticleFile(),
+					article.getText());
+		} catch (IOException e) {
+			messages.error(e.toString());
+			messager.showError(e.toString());
 		}
 	}
 
@@ -391,9 +387,18 @@ public class MainFrame extends ApplicationFrame {
 	}
 
 	private void OKAddSnippetFrame(Snippet snippet) {
+		if (currentProject == null) {
+			messager.showInfo("No opened projects!");
+			return;
+		}
+		File srcFolder = new File(currentProject.getSrcFolder());
+		if (!srcFolder.exists()) {
+			srcFolder.mkdir();
+		}
 		try {
-			FilesFacade.writeXML("article-src\\" + snippet.hashCode() + ".xml",
-					snippet);
+			FilesFacade.writeXML(new MutableString(srcFolder.getPath(),
+					File.separator, String.valueOf(snippet.hashCode()), ".xml")
+					.toString(), snippet);
 		} catch (IOException e) {
 			messages.error(e.toString());
 			messager.showError(e.toString());
@@ -401,24 +406,22 @@ public class MainFrame extends ApplicationFrame {
 	}
 
 	private void generateArticle() {
-		String articleName = messager.showInput("Enter article name");
-		if (articleName != null) {
-			try {
-				String[] srcFiles = new File("article-src").list();
-				Snippet[] snippets = new Snippet[srcFiles.length];
-				int i = 0;
-				for (String file : srcFiles) {
-					snippets[i] = (Snippet) FilesFacade.readXML("article-src\\"
-							+ file);
-				}
-				ArticleTemplate at = (ArticleTemplate) FilesFacade
-						.readXML("Template.xml");
-				ArticlesCreator ac = new ArticlesCreator(snippets, at);
-				FilesFacade.writeTXT(articleName + ".txt", ac.createArticle());
-			} catch (IOException e) {
-				messager.showError(e.toString());
-				messages.error(e.toString());
+		try {
+			File srcFolder = new File(currentProject.getSrcFolder());
+			File[] srcFiles = srcFolder.listFiles();
+			Snippet[] snippets = new Snippet[srcFiles.length];
+			int i = 0;
+			for (File file : srcFiles) {
+				snippets[i] = (Snippet) FilesFacade.readXML(file.getPath());
 			}
+			ArticleTemplate at = (ArticleTemplate) FilesFacade
+					.readXML(currentProject.getTemplateFile());
+			ArticlesCreator ac = new ArticlesCreator(snippets, at);
+			FilesFacade.writeTXT(currentProject.getArticleFile(),
+					ac.createArticle());
+		} catch (IOException e) {
+			messager.showError(e.toString());
+			messages.error(e.toString());
 		}
 	}
 
