@@ -19,6 +19,7 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,8 @@ import javax.swing.UIManager;
 import javax.swing.text.DefaultEditorKit;
 
 import utils.MutableString;
+import bot.core.ArticleTemplate;
+import bot.core.ArticlesCreator;
 import bot.io.DatabaseFacade;
 import bot.io.FilesFacade;
 import bot.nlp.Snippet;
@@ -63,6 +66,8 @@ public class MainFrame extends ApplicationFrame {
 	private static final String LINE = System.getProperty("line.separator");
 
 	private final FileFiltersManager filters = new FileFiltersManager();
+	
+	private Project currentProject;
 
 	/**
 	 * Constructs new frame with specified content and title.
@@ -140,11 +145,19 @@ public class MainFrame extends ApplicationFrame {
 		actions.add(new Action(this, "Add snippet", "show-add-snippet",
 				"Add snippet to sources", "res\\add-snippet.png",
 				"res\\add-snippet_big.png", new Integer(KeyEvent.VK_A)));
+		actions.add(new Action(this, "Generate article", "generate-article",
+				"Generate article text from snippets", "res\\wizard.png",
+				"res\\wizard_big.png", new Integer(KeyEvent.VK_G)));
+		actions.add(new Action(this, "New project", "show-new-project",
+				"Create new project", "res\\new.png", "res\\new_big.png",
+				new Integer(KeyEvent.VK_N)));
+
 		return actions.toArray(new AbstractAction[actions.size()]);
 	}
 
 	private JMenuBar createMenu() {
 		JMenu file = new JMenu("File");
+		file.add(getAction("show-new-project"));
 		file.add(getAction("open"));
 		file.add(getAction("save-as"));
 		file.addSeparator();
@@ -161,6 +174,7 @@ public class MainFrame extends ApplicationFrame {
 		insert.add(getAction("insert-external-link"));
 		JMenu article = new JMenu("Article");
 		article.add(getAction("show-add-snippet"));
+		article.add(getAction("generate-article"));
 		JMenu help = new JMenu("?");
 		help.add(getAction("about"));
 		JMenuBar menu = new JMenuBar();
@@ -175,6 +189,7 @@ public class MainFrame extends ApplicationFrame {
 
 	private JToolBar createToolbar() {
 		JToolBar toolbar = new JToolBar();
+		toolbar.add(getAction("show-new-project"));
 		toolbar.add(getAction("open"));
 		toolbar.add(getAction("save-as"));
 		toolbar.addSeparator();
@@ -189,6 +204,7 @@ public class MainFrame extends ApplicationFrame {
 		toolbar.add(getAction("insert-external-link"));
 		toolbar.addSeparator();
 		toolbar.add(getAction("show-add-snippet"));
+		toolbar.add(getAction("generate-article"));
 		return toolbar;
 	}
 
@@ -239,12 +255,35 @@ public class MainFrame extends ApplicationFrame {
 			messager.showInfo("Written by Myroslav Rudnytskyi, 2015.");
 			break;
 		case "show-add-snippet":
-			String[] topics = new String[] { "LOL", "LIL", "LEL" };
-			new AddSnippetFrame(this, topics).setVisible(true);
+			String[] tags = new String[] { "LOL", "LIL", "LEL" };
+			new AddSnippetFrame(this, tags).setVisible(true);
 			break;
 		case "add-snippet":
 			OKAddSnippetFrame((Snippet) evt.getNewValue());
 			break;
+		case "generate-article":
+			generateArticle();
+			break;
+		case "show-new-project":
+			newProject();
+			break;
+		case "new-project":
+			OKNewProject((Project) evt.getNewValue());
+			break;
+		}
+	}
+	
+	private void newProject() {
+		String[] templates = new String[] { "LOL.xml", "LIL.xml", "LEL.xml" };
+		new NewProjectFrame(this, templates).setVisible(true);
+	}
+
+	private void OKNewProject(Project project) {
+		currentProject = project;
+		try {
+			FilesFacade.writeXML("debug-prj.xml", currentProject);
+		} catch (IOException e) {
+			messages.error(e.toString());
 		}
 	}
 
@@ -353,10 +392,33 @@ public class MainFrame extends ApplicationFrame {
 
 	private void OKAddSnippetFrame(Snippet snippet) {
 		try {
-			FilesFacade.writeXML(snippet.hashCode() + ".xml", snippet);
+			FilesFacade.writeXML("article-src\\" + snippet.hashCode() + ".xml",
+					snippet);
 		} catch (IOException e) {
 			messages.error(e.toString());
 			messager.showError(e.toString());
+		}
+	}
+
+	private void generateArticle() {
+		String articleName = messager.showInput("Enter article name");
+		if (articleName != null) {
+			try {
+				String[] srcFiles = new File("article-src").list();
+				Snippet[] snippets = new Snippet[srcFiles.length];
+				int i = 0;
+				for (String file : srcFiles) {
+					snippets[i] = (Snippet) FilesFacade.readXML("article-src\\"
+							+ file);
+				}
+				ArticleTemplate at = (ArticleTemplate) FilesFacade
+						.readXML("Template.xml");
+				ArticlesCreator ac = new ArticlesCreator(snippets, at);
+				FilesFacade.writeTXT(articleName + ".txt", ac.createArticle());
+			} catch (IOException e) {
+				messager.showError(e.toString());
+				messages.error(e.toString());
+			}
 		}
 	}
 
