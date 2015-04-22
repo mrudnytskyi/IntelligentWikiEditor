@@ -66,6 +66,8 @@ public class MainFrame extends ApplicationFrame {
 	private static final String LINE = System.getProperty("line.separator");
 
 	private final FileFiltersManager filters = new FileFiltersManager();
+	
+	private Project currentProject;
 
 	/**
 	 * Constructs new frame with specified content and title.
@@ -146,12 +148,16 @@ public class MainFrame extends ApplicationFrame {
 		actions.add(new Action(this, "Generate article", "generate-article",
 				"Generate article text from snippets", "res\\wizard.png",
 				"res\\wizard_big.png", new Integer(KeyEvent.VK_G)));
+		actions.add(new Action(this, "New project", "show-new-project",
+				"Create new project", "res\\new.png", "res\\new_big.png",
+				new Integer(KeyEvent.VK_N)));
 
 		return actions.toArray(new AbstractAction[actions.size()]);
 	}
 
 	private JMenuBar createMenu() {
 		JMenu file = new JMenu("File");
+		file.add(getAction("show-new-project"));
 		file.add(getAction("open"));
 		file.add(getAction("save-as"));
 		file.addSeparator();
@@ -183,6 +189,7 @@ public class MainFrame extends ApplicationFrame {
 
 	private JToolBar createToolbar() {
 		JToolBar toolbar = new JToolBar();
+		toolbar.add(getAction("show-new-project"));
 		toolbar.add(getAction("open"));
 		toolbar.add(getAction("save-as"));
 		toolbar.addSeparator();
@@ -257,6 +264,26 @@ public class MainFrame extends ApplicationFrame {
 		case "generate-article":
 			generateArticle();
 			break;
+		case "show-new-project":
+			newProject();
+			break;
+		case "new-project":
+			OKNewProject((Project) evt.getNewValue());
+			break;
+		}
+	}
+	
+	private void newProject() {
+		String[] templates = new String[] { "LOL.xml", "LIL.xml", "LEL.xml" };
+		new NewProjectFrame(this, templates).setVisible(true);
+	}
+
+	private void OKNewProject(Project project) {
+		currentProject = project;
+		try {
+			FilesFacade.writeXML("debug-prj.xml", currentProject);
+		} catch (IOException e) {
+			messages.error(e.toString());
 		}
 	}
 
