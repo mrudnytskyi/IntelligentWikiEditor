@@ -19,7 +19,6 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import bot.io.FilesFacade;
 import bot.io.MediaWikiFacade;
 import bot.io.MediaWikiFacade.Language;
 
@@ -32,18 +31,78 @@ import bot.io.MediaWikiFacade.Language;
  * @see Assert
  */
 public class MediaWikiFacadeTest {
-	
+
 	@Test
 	public void test() {
-		MediaWikiFacade.setLanguage(Language.UKRAINIAN);
-		String text = null;
-		String file = "articleTestFile.txt";
+		String articleText = null, articleTextEmpty = null, 
+				articleTextNull = null, articleTextWrong = null;
+		String[] templates = null, templatesEmpty = null, 
+				templatesNull = null, templatesWrong = null, 
+				categories = null, categoriesEmpty = null, 
+				categoriesNull = null, categoriesWrong = null;
+
+		MediaWikiFacade.setLanguage(Language.ENGLISH);
+		// yes, Ukrain right for testing
+		String right = "Ukrain";
+		String wrong = "Urkaine";
 		try {
-			text = MediaWikiFacade.getArticleText(FilesFacade.readTXT(file));
+			articleText = MediaWikiFacade.getArticleText("Main");
+			templates = MediaWikiFacade.getTemplatesStartingWith(right);
+			categories = MediaWikiFacade.getCategoriesStartingWith(right);
+			articleTextWrong = MediaWikiFacade.getArticleText(wrong);
+			templatesWrong = MediaWikiFacade.getTemplatesStartingWith(wrong);
+			categoriesWrong = MediaWikiFacade.getCategoriesStartingWith(wrong);
+			try {
+				articleTextNull = MediaWikiFacade.getArticleText(null);
+			} catch (IllegalArgumentException e) {
+				System.out.println("Expected: " + e.getMessage());
+			}
+			try {
+				templatesNull = MediaWikiFacade.getTemplatesStartingWith(null);
+			} catch (IllegalArgumentException e) {
+				System.out.println("Expected: " + e.getMessage());
+			}
+			try {
+				categoriesNull = MediaWikiFacade
+						.getCategoriesStartingWith(null);
+			} catch (IllegalArgumentException e) {
+				System.out.println("Expected: " + e.getMessage());
+			}
+			try {
+				articleTextEmpty = MediaWikiFacade.getArticleText("");
+			} catch (IllegalArgumentException e) {
+				System.out.println("Expected: " + e.getMessage());
+			}
+			try {
+				templatesEmpty = MediaWikiFacade.getTemplatesStartingWith("");
+			} catch (IllegalArgumentException e) {
+				System.out.println("Expected: " + e.getMessage());
+			}
+			try {
+				categoriesEmpty = MediaWikiFacade.getCategoriesStartingWith("");
+			} catch (IllegalArgumentException e) {
+				System.out.println("Expected: " + e.getMessage());
+			}
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		Assert.assertNotNull(text);
-		System.out.println(text);
+
+		String[] emptyArray = new String[] {};
+		Assert.assertNotNull(articleText);
+		Assert.assertNotNull(templates);
+		System.out.println("Found templates: " + templates.length);
+		Assert.assertNotNull(categories);
+		Assert.assertTrue(categories.length > 500);
+		System.out.println("Found categories: " + categories.length);
+		Assert.assertNull(articleTextWrong);
+		Assert.assertArrayEquals(emptyArray, templatesWrong);
+		Assert.assertArrayEquals(emptyArray, categoriesWrong);
+		Assert.assertNull(articleTextNull);
+		Assert.assertNull(templatesNull);
+		Assert.assertNull(categoriesNull);
+		Assert.assertNull(articleTextEmpty);
+		Assert.assertNull(templatesEmpty);
+		Assert.assertNull(categoriesEmpty);
 	}
 }
