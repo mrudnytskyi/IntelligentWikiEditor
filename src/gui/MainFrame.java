@@ -120,9 +120,9 @@ public class MainFrame extends ApplicationFrame {
 		actions.add(new Action(this, "Insert link", "insert-link",
 				"Insert link to another Wikipedia page", "res\\wikilink.png",
 				"res\\wikilink_big.png", new Integer(KeyEvent.VK_L)));
-		actions.add(new Action(this, "Insert category", "insert-category",
-				"Insert category", "res\\category.png",
-				"res\\category_big.png", new Integer(KeyEvent.VK_C)));
+		actions.add(new Action(this, "Add categories", "show-add-categories",
+				"Add categories", "res\\category.png", "res\\category_big.png",
+				new Integer(KeyEvent.VK_C)));
 		actions.add(new Action(this, "Insert template", "insert-template",
 				"Insert template", "res\\template.png",
 				"res\\template_big.png", new Integer(KeyEvent.VK_T)));
@@ -168,7 +168,7 @@ public class MainFrame extends ApplicationFrame {
 		edit.add(getAction("paste"));
 		JMenu insert = new JMenu("Insert");
 		insert.add(getAction("insert-link"));
-		insert.add(getAction("insert-category"));
+		insert.add(getAction("show-add-categories"));
 		insert.add(getAction("insert-template"));
 		insert.add(getAction("insert-heading"));
 		insert.add(getAction("insert-external-link"));
@@ -198,7 +198,7 @@ public class MainFrame extends ApplicationFrame {
 		toolbar.add(getAction("paste"));
 		toolbar.addSeparator();
 		toolbar.add(getAction("insert-link"));
-		toolbar.add(getAction("insert-category"));
+		toolbar.add(getAction("show-add-categories"));
 		toolbar.add(getAction("insert-template"));
 		toolbar.add(getAction("insert-heading"));
 		toolbar.add(getAction("insert-external-link"));
@@ -245,8 +245,8 @@ public class MainFrame extends ApplicationFrame {
 		case "insert-link":
 			insertLink();
 			break;
-		case "insert-category":
-			insertCategory();
+		case "show-add-categories":
+			showAddCategories();
 			break;
 		case "insert-template":
 			insertTemplate();
@@ -270,7 +270,14 @@ public class MainFrame extends ApplicationFrame {
 		case "generate-article":
 			generateArticle();
 			break;
+		case "add-categories":
+			addCategories((String[]) evt.getNewValue());
+			break;
 		}
+	}
+
+	private void showAddCategories() {
+		new AddCategoriesFrame(this).setVisible(true);
 	}
 
 	private void newProject() {
@@ -335,12 +342,13 @@ public class MainFrame extends ApplicationFrame {
 		}
 	}
 
-	private void insertCategory() {
-		String categoryName = messager.showInput("Input category name");
-		if (categoryName != null) {
-			MutableString ms = new MutableString(categoryName.length() + 20);
-			ms.append(LINE, "[[Категорія:", categoryName, "]]", LINE);
-			article.insert(ms.toString(), article.getText().length());
+	private void addCategories(String[] categories) {
+		for (String categoryName : categories) {
+			if (categoryName != null) {
+				MutableString ms = new MutableString(LINE, "[[", categoryName,
+						"]]", LINE);
+				article.insert(ms.toString(), article.getText().length());
+			}
 		}
 	}
 
