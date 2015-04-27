@@ -129,7 +129,7 @@ public final class MediaWikiFacade {
 	 * Checks if {@link String} arguments are not null or empty. Note, that
 	 * every method in this class <strong>must</strong> make this check,
 	 * otherwise method results can be unexpected ("null" is correct String
-	 * value) or even harmful for Web servers ("" stands for all pages). 
+	 * value) or even harmful for Web servers ("" stands for all pages).
 	 * 
 	 * @param args
 	 *            parameters to check
@@ -264,6 +264,22 @@ public final class MediaWikiFacade {
 
 		List<String> result = getPagesStartingWith(preffix, null,
 				WikiNamespace.CATEGORY);
+		return result.toArray(new String[result.size()]);
+	}
+	
+	/**
+	 * Gets array of article names, starting with specified prefix.
+	 * 
+	 * @param preffix
+	 * @return list of pages, starting with specified prefix
+	 * @throws IOException
+	 *             if an I/O error occurs
+	 */
+	public static String[] getArticlesStartingWith(String preffix)
+			throws IOException {
+		
+		List<String> result = getPagesStartingWith(preffix, null,
+				WikiNamespace.ARTICLE);
 		return result.toArray(new String[result.size()]);
 	}
 }

@@ -72,6 +72,20 @@ public class AutoCompletePanel extends JPanel implements DocumentListener,
 	private final String caption;
 
 	private final Action action;
+	
+	/**
+	 * Constructs new panel with specified content. Note, that
+	 * <code>caption</code> parameter can store
+	 * <code>null</code> value.
+	 * 
+	 * @param source
+	 *            object, storing all items for autocompletion function
+	 * @param caption
+	 *            caption string, displayed near text field
+	 */
+	public AutoCompletePanel(AutoCompleteSource source, String caption) {
+		this(source, caption, null);
+	}
 
 	/**
 	 * Constructs new panel with specified content. Note, that

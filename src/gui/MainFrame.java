@@ -40,6 +40,7 @@ import javax.swing.text.DefaultEditorKit;
 
 import utils.MutableString;
 import bot.compiler.AST.CategoryDeclaration;
+import bot.compiler.AST.SmartLink;
 import bot.compiler.AST.TemplateDeclaration;
 import bot.core.ArticleTemplate;
 import bot.core.ArticlesCreator;
@@ -119,8 +120,8 @@ public class MainFrame extends ApplicationFrame {
 		actions.add(new Action(this, "Exit", "exit", "Exit the application",
 				"res\\exit.png", "res\\exit_big.png",
 				new Integer(KeyEvent.VK_E)));
-		actions.add(new Action(this, "Insert link", "insert-link",
-				"Insert link to another Wikipedia page", "res\\wikilink.png",
+		actions.add(new Action(this, "Add link to article", "show-add-article",
+				"Add link to another Wikipedia page", "res\\wikilink.png",
 				"res\\wikilink_big.png", new Integer(KeyEvent.VK_L)));
 		actions.add(new Action(this, "Add categories", "show-add-categories",
 				"Add categories", "res\\category.png", "res\\category_big.png",
@@ -169,7 +170,7 @@ public class MainFrame extends ApplicationFrame {
 		edit.add(getAction("copy"));
 		edit.add(getAction("paste"));
 		JMenu insert = new JMenu("Insert");
-		insert.add(getAction("insert-link"));
+		insert.add(getAction("show-add-article"));
 		insert.add(getAction("show-add-categories"));
 		insert.add(getAction("show-add-template"));
 		insert.add(getAction("insert-heading"));
@@ -199,7 +200,7 @@ public class MainFrame extends ApplicationFrame {
 		toolbar.add(getAction("copy"));
 		toolbar.add(getAction("paste"));
 		toolbar.addSeparator();
-		toolbar.add(getAction("insert-link"));
+		toolbar.add(getAction("show-add-article"));
 		toolbar.add(getAction("show-add-categories"));
 		toolbar.add(getAction("show-add-template"));
 		toolbar.add(getAction("insert-heading"));
@@ -244,8 +245,8 @@ public class MainFrame extends ApplicationFrame {
 				System.exit(0);
 			}
 			break;
-		case "insert-link":
-			insertLink();
+		case "show-add-article":
+			showAddArticle();;
 			break;
 		case "show-add-categories":
 			showAddCategories();
@@ -278,6 +279,9 @@ public class MainFrame extends ApplicationFrame {
 		case "add-template":
 			addTemplate((TemplateDeclaration) evt.getNewValue());
 			break;
+		case "add-article":
+			addArticle((String) evt.getNewValue());
+			break;
 		}
 	}
 
@@ -287,6 +291,10 @@ public class MainFrame extends ApplicationFrame {
 
 	private void showAddTemplate() {
 		new AddTemplateFrame(this).setVisible(true);
+	}
+	
+	private void showAddArticle() {
+		new AddArticleFrame(this).setVisible(true);
 	}
 
 	private void newProject() {
@@ -329,19 +337,18 @@ public class MainFrame extends ApplicationFrame {
 		}
 	}
 
-	private void insertLink() {
-		String articleName = messager.showInput("Input article name");
+	private void addArticle(String articleName) {
 		if (articleName != null) {
+			SmartLink smartLink = null;
 			try {
-				MutableString ms = new MutableString(articleName.length() + 10);
 				if (article.getSelectedText() == null) {
-					ms.append("[[", articleName, "]]");
-					article.insert(ms.toString(), article.getCaretPosition());
+					smartLink = new SmartLink(articleName);
+					article.insert(smartLink.toString(), article.getCaretPosition());
 					DatabaseFacade.addReplacement(articleName, articleName);
 				} else {
 					String selectedText = article.getSelectedText();
-					ms.append("[[", articleName, "|", selectedText, "]]");
-					article.replaceSelection(ms.toString());
+					smartLink = new SmartLink(articleName, selectedText);
+					article.replaceSelection(smartLink.toString());
 					DatabaseFacade.addReplacement(selectedText, articleName);
 				}
 			} catch (IOException e) {
