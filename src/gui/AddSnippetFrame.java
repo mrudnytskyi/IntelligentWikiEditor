@@ -15,9 +15,7 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -72,10 +70,7 @@ public class AddSnippetFrame extends ApplicationFrame {
 		setResizable(false);
 		setAlwaysOnTop(true);
 		pack();
-		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-		double x = (d.getWidth() - getWidth()) / 2;
-		double y = (d.getHeight() - getHeight()) / 2;
-		setLocation((int) x, (int) y);
+		moveToScreenCenter();
 	}
 
 	/**

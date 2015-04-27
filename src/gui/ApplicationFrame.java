@@ -14,6 +14,8 @@
  */
 package gui;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
@@ -188,5 +190,15 @@ public abstract class ApplicationFrame extends JFrame implements
 		action.putValue(Action.SHORT_DESCRIPTION, desc);
 		action.putValue(Action.MNEMONIC_KEY, key);
 		return action;
+	}
+	
+	/**
+	 * Moves this component to a screen center location. 
+	 */
+	protected void moveToScreenCenter() {
+		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+		double x = (d.getWidth() - getWidth()) / 2;
+		double y = (d.getHeight() - getHeight()) / 2;
+		setLocation((int) x, (int) y);
 	}
 }
