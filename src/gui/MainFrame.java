@@ -39,6 +39,8 @@ import javax.swing.UIManager;
 import javax.swing.text.DefaultEditorKit;
 
 import utils.MutableString;
+import bot.compiler.AST.CategoryDeclaration;
+import bot.compiler.AST.TemplateDeclaration;
 import bot.core.ArticleTemplate;
 import bot.core.ArticlesCreator;
 import bot.io.DatabaseFacade;
@@ -123,9 +125,9 @@ public class MainFrame extends ApplicationFrame {
 		actions.add(new Action(this, "Add categories", "show-add-categories",
 				"Add categories", "res\\category.png", "res\\category_big.png",
 				new Integer(KeyEvent.VK_C)));
-		actions.add(new Action(this, "Insert template", "insert-template",
-				"Insert template", "res\\template.png",
-				"res\\template_big.png", new Integer(KeyEvent.VK_T)));
+		actions.add(new Action(this, "Add template", "show-add-template",
+				"Add template", "res\\template.png", "res\\template_big.png",
+				new Integer(KeyEvent.VK_T)));
 		actions.add(new Action(this, "About", "about",
 				"Show information about software", "res\\info.png",
 				"res\\info_big.png", new Integer(KeyEvent.VK_A)));
@@ -169,7 +171,7 @@ public class MainFrame extends ApplicationFrame {
 		JMenu insert = new JMenu("Insert");
 		insert.add(getAction("insert-link"));
 		insert.add(getAction("show-add-categories"));
-		insert.add(getAction("insert-template"));
+		insert.add(getAction("show-add-template"));
 		insert.add(getAction("insert-heading"));
 		insert.add(getAction("insert-external-link"));
 		JMenu article = new JMenu("Article");
@@ -199,7 +201,7 @@ public class MainFrame extends ApplicationFrame {
 		toolbar.addSeparator();
 		toolbar.add(getAction("insert-link"));
 		toolbar.add(getAction("show-add-categories"));
-		toolbar.add(getAction("insert-template"));
+		toolbar.add(getAction("show-add-template"));
 		toolbar.add(getAction("insert-heading"));
 		toolbar.add(getAction("insert-external-link"));
 		toolbar.addSeparator();
@@ -248,8 +250,8 @@ public class MainFrame extends ApplicationFrame {
 		case "show-add-categories":
 			showAddCategories();
 			break;
-		case "insert-template":
-			insertTemplate();
+		case "show-add-template":
+			showAddTemplate();
 			break;
 		case "insert-heading":
 			insertHeading();
@@ -271,13 +273,20 @@ public class MainFrame extends ApplicationFrame {
 			generateArticle();
 			break;
 		case "add-categories":
-			addCategories((String[]) evt.getNewValue());
+			addCategories((CategoryDeclaration[]) evt.getNewValue());
+			break;
+		case "add-template":
+			addTemplate((TemplateDeclaration) evt.getNewValue());
 			break;
 		}
 	}
 
 	private void showAddCategories() {
 		new AddCategoriesFrame(this).setVisible(true);
+	}
+
+	private void showAddTemplate() {
+		new AddTemplateFrame(this).setVisible(true);
 	}
 
 	private void newProject() {
@@ -342,23 +351,18 @@ public class MainFrame extends ApplicationFrame {
 		}
 	}
 
-	private void addCategories(String[] categories) {
-		for (String categoryName : categories) {
-			if (categoryName != null) {
-				MutableString ms = new MutableString(LINE, "[[", categoryName,
-						"]]", LINE);
+	private void addCategories(CategoryDeclaration[] categories) {
+		for (CategoryDeclaration category : categories) {
+			if (category != null) {
+				MutableString ms = new MutableString(LINE, category.toString(),
+						LINE);
 				article.insert(ms.toString(), article.getText().length());
 			}
 		}
 	}
 
-	private void insertTemplate() {
-		String templateName = messager.showInput("Input template name");
-		if (templateName != null) {
-			MutableString ms = new MutableString(templateName.length() + 10);
-			ms.append("{{", templateName, "}}", LINE);
-			article.insert(ms.toString(), article.getCaretPosition());
-		}
+	private void addTemplate(TemplateDeclaration template) {
+		article.insert(template.toString(), article.getCaretPosition());
 	}
 
 	private void insertHeading() {

@@ -1,5 +1,5 @@
 /*
- * AddCategoriesFrame.java	24.04.2015
+ * AddTemplateFrame.java	27.04.2015
  * Copyright (C) 2015 Myroslav Rudnytskyi
  * 
  * This program is free software; you can redistribute it and/or
@@ -26,63 +26,58 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 import utils.AutoCompletePanel;
 import utils.AutoCompleteSource;
-import bot.compiler.AST.CategoryDeclaration;
+import bot.compiler.AST.TemplateDeclaration;
 import bot.io.MediaWikiFacade;
 import bot.io.MediaWikiFacade.Language;
 
 /**
- * Frame for adding categories to article with autocompletion function.
+ * Frame for adding templates to article with autocompletion function.
  * 
  * @author Myroslav Rudnytskyi
- * @version 0.1 24.04.2015
+ * @version 0.1 27.04.2015
  */
-public class AddCategoriesFrame extends ApplicationFrame {
+public class AddTemplateFrame extends ApplicationFrame {
 
-	private class CategorySource implements AutoCompleteSource {
+	private class TemplateSource implements AutoCompleteSource {
 
 		@Override
 		public String[] getSource(String... params) {
 			MediaWikiFacade.setLanguage(Language.UKRAINIAN);
 			String[] result = new String[] {};
 			try {
-				String[] categories = MediaWikiFacade
-						.getCategoriesStartingWith(params[0]);
-				result = new String[categories.length];
-				for (int i = 0; i < categories.length; i++) {
-					result[i] = categories[i].substring("Категорія:".length(),
-							categories[i].length());
+				String[] templates = MediaWikiFacade
+						.getTemplatesStartingWith(params[0]);
+				result = new String[templates.length];
+				for (int i = 0; i < templates.length; i++) {
+					result[i] = templates[i].substring("Шаблон:".length(),
+							templates[i].length());
 				}
 			} catch (IOException e) {
-				new MessagesFrame(AddCategoriesFrame.this).showError(e
+				new MessagesFrame(AddTemplateFrame.this).showError(e
 						.getMessage());
 			}
 			return result;
 		}
-
 	}
 
-	private static final long serialVersionUID = -4238311663986639159L;
+	private static final long serialVersionUID = -6937956054699961023L;
 
 	private final AutoCompletePanel autoComplete = new AutoCompletePanel(
-			new CategorySource(), "Enter category name:",
-			getAction("add-categories-add"));
-
-	private final java.awt.List resultCategories = new java.awt.List();
+			new TemplateSource(), "Enter template name:",
+			getAction("add-template-add"));
 
 	/**
 	 * Constructs new frame with specified content and title.
 	 * 
 	 * @param listener
-	 *            necessary object, which will receive array of categories
-	 *            objects, listening for changing <code>add-categories</code>
-	 *            property
+	 *            necessary object, which will receive template object,
+	 *            listening for changing <code>add-template</code> property
 	 */
-	public AddCategoriesFrame(PropertyChangeListener listener) {
-		super("Append categories");
+	public AddTemplateFrame(PropertyChangeListener listener) {
+		super("Add template");
 		setLayout(new BorderLayout());
 		add(createContent(), BorderLayout.CENTER);
 		addPropertyChangeListener(listener);
@@ -94,15 +89,17 @@ public class AddCategoriesFrame extends ApplicationFrame {
 
 	private JPanel createContent() {
 		JPanel content = new JPanel(new BorderLayout());
-		autoComplete.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+
+		JPanel params = new JPanel(new GridLayout(2, 1, 50, 20));
+		// TODO template parameters panel containment
 
 		JPanel buttons = new JPanel(new GridLayout(1, 2, 200, 0));
 		buttons.setBorder(BorderFactory.createEmptyBorder(20, 100, 0, 100));
-		buttons.add(new JButton(getAction("add-categories-OK")));
-		buttons.add(new JButton(getAction("add-categories-cancel")));
+		buttons.add(new JButton(getAction("add-template-OK")));
+		buttons.add(new JButton(getAction("add-template-cancel")));
 
 		content.add(autoComplete, BorderLayout.NORTH);
-		content.add(new JScrollPane(resultCategories), BorderLayout.CENTER);
+		content.add(params, BorderLayout.CENTER);
 		content.add(buttons, BorderLayout.SOUTH);
 
 		content.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
@@ -114,39 +111,19 @@ public class AddCategoriesFrame extends ApplicationFrame {
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		MessagesFrame messager = new MessagesFrame(this);
 		switch (evt.getPropertyName()) {
-		case "add-categories-cancel":
+		case "add-template-cancel":
 			setVisible(false);
 			break;
-		case "add-categories-OK":
-			if (resultCategories.getItemCount() == 0) {
-				if (!messager.showQuestion("It seems that result is empty! "
-						+ "Click \"Yes\" to continue anyway")) {
-					return;
-				}
-			}
-			CategoryDeclaration[] result = new CategoryDeclaration[resultCategories
-					.getItemCount()];
-			for (int i = 0; i < result.length; i++) {
-				result[i] = new CategoryDeclaration(
-						resultCategories.getItems()[i]);
-			}
-			firePropertyChange("add-categories", null, result);
+		case "add-template-OK":
+			TemplateDeclaration template = new TemplateDeclaration(
+					autoComplete.getInputedText());
+			// TODO pack parameters
+			firePropertyChange("add-template", null, template);
 			setVisible(false);
 			break;
-		case "add-categories-add":
-			String input = autoComplete.getInputedText();
-			if (!input.isEmpty()) {
-				if (autoComplete.searchStringInProposed(input) == -1) {
-					if (!messager.showQuestion("It seems that inputed "
-							+ "category name does not exists. Do you want "
-							+ "to add it anyway?")) {
-						return;
-					}
-				}
-				resultCategories.add(input);
-			}
+		case "add-template-add":
+			// TODO make parameters loading
 			break;
 		}
 	}
@@ -157,12 +134,12 @@ public class AddCategoriesFrame extends ApplicationFrame {
 	@Override
 	protected AbstractAction[] createActions() {
 		List<AbstractAction> actions = new ArrayList<AbstractAction>();
-		actions.add(new Action(this, "Cancel", "add-categories-cancel",
+		actions.add(new Action(this, "Cancel", "add-template-cancel",
 				"Cancel all changes", "", "res\\cancel_big.png", 0));
-		actions.add(new Action(this, "OK", "add-categories-OK",
+		actions.add(new Action(this, "OK", "add-template-OK",
 				"Apply all changes", "", "res\\ok_big.png", 0));
-		actions.add(new Action(this, "", "add-categories-add", "Add category",
-				"", "res\\add_small.png", 0));
+		actions.add(new Action(this, "", "add-template-add", "Add teplate", "",
+				"res\\add_small.png", 0));
 		return actions.toArray(new AbstractAction[actions.size()]);
 	}
 }
