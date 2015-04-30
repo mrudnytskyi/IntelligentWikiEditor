@@ -14,6 +14,9 @@
  */
 package bot.compiler.AST;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 import utils.MutableString;
@@ -25,27 +28,66 @@ import bot.compiler.Visitor;
  * @author Myroslav Rudnytskyi
  * @version 0.1 22.11.2014
  */
-/*
- * TODO
- * 1. use object of Template class instead String
- * 2. add template properties
- */
 public class TemplateDeclaration implements Content {
-	
-	protected final CharSequence template;
-	
-	public TemplateDeclaration(CharSequence template) {
-		Objects.requireNonNull(template, "Template can not be null!");
-		this.template = template;
+
+	protected final String name;
+
+	protected final TemplateParameter[] parameters;
+
+	protected final Map<TemplateParameter, String> parametersValues = new LinkedHashMap<TemplateParameter, String>();
+
+	public TemplateDeclaration(String name, TemplateParameter... params) {
+		this.name = Objects.requireNonNull(name, "Template name null!");
+		this.parameters = params;
 	}
-	
-	public CharSequence getTemplate() {
-		return template;
+
+	public String getName() {
+		return name;
 	}
-	
+
+	public TemplateParameter getParameter(String label) {
+		for (int i = 0; i < parameters.length; i++) {
+			if (parameters[i].getName().equals(label)) {
+				return parameters[i];
+			}
+		}
+		return null;
+	}
+
+	public String getValue(String name) {
+		TemplateParameter parameter = getParameter(name);
+		if (parameter == null) {
+			return null;
+		}
+		return parametersValues.get(name);
+	}
+
+	public boolean putValue(String name, String value) {
+		TemplateParameter parameter = getParameter(name);
+		if (parameter == null) {
+			return false;
+		}
+		parametersValues.put(parameter, value);
+		return true;
+	}
+
 	@Override
 	public String toString() {
-		MutableString ms = new MutableString("{{", template, "}}");
+		MutableString ms = new MutableString("{{", name);
+		if (!parametersValues.isEmpty()) {
+			for (Entry<TemplateParameter, String> e : parametersValues
+					.entrySet()) {
+				String value = e.getValue();
+				if (value == null || value.equals("null")) {
+					if (e.getKey().getDefault() != null) {
+						value = e.getKey().getDefault();
+					}
+				} else {
+					ms.append("|", e.getKey().getName(), "=", value);
+				}
+			}
+		}
+		ms.append("}}");
 		return ms.toString();
 	}
 
