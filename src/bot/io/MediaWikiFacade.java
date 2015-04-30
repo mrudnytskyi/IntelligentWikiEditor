@@ -15,10 +15,18 @@
 package bot.io;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Objects;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.JsonValue;
+import javax.json.JsonValue.ValueType;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
@@ -31,6 +39,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import utils.MutableString;
+import bot.compiler.AST.TemplateParameter;
 
 /**
  * Class, created to get access to data, stored on <a
@@ -51,23 +60,39 @@ public final class MediaWikiFacade {
 	 * @version 0.1 27.10.2014
 	 */
 	public enum Language {
-		UKRAINIAN("uk"), ENGLISH("en"), GERMAN("ge"), RUSSIAN("ru");
+		UKRAINIAN("uk", "Файл:", "Категорія:", "Шаблон:"), ENGLISH("en",
+				"File:", "Category:", "Template:");
 
 		private final String code;
 
-		private Language(String code) {
+		private final String filePreffix;
+
+		private final String categoryPreffix;
+
+		private final String templatePreffix;
+
+		private Language(String code, String file, String category,
+				String template) {
 			this.code = code;
+			this.filePreffix = file;
+			this.categoryPreffix = category;
+			this.templatePreffix = template;
 		}
 
-		/**
-		 * Returns language code for this enum constant in {@link String}
-		 * representation.
-		 * 
-		 * @return language code for this enum constant
-		 */
-		@Override
-		public String toString() {
+		public String getCode() {
 			return code;
+		}
+
+		public String getFilePreffix() {
+			return filePreffix;
+		}
+
+		public String getCategoryPreffix() {
+			return categoryPreffix;
+		}
+
+		public String getTemplatePreffix() {
+			return templatePreffix;
 		}
 	}
 
@@ -107,6 +132,8 @@ public final class MediaWikiFacade {
 
 	private static String QUERY_LINK = "?action=query";
 
+	private static Language lang = Language.UKRAINIAN;
+
 	/**
 	 * do not instantiate this class
 	 */
@@ -120,9 +147,14 @@ public final class MediaWikiFacade {
 	 *            language to set
 	 */
 	public static void setLanguage(Language lang) {
-		MutableString ms = new MutableString("http://", lang.toString(),
+		MediaWikiFacade.lang = Objects.requireNonNull(lang, "Language null!");
+		MutableString ms = new MutableString("http://", lang.getCode(),
 				".wikipedia.org/w/api.php");
 		WIKIPEDIA_API = ms.toString();
+	}
+
+	public static Language getLanguage() {
+		return lang;
 	}
 
 	/**
@@ -143,24 +175,27 @@ public final class MediaWikiFacade {
 		}
 	}
 
+	private static String normalize(String arg) {
+		return arg.replace(' ', '_');
+	}
+
 	/**
 	 * Gets plain wiki text of specified article. Note, that article name
 	 * depends on chosen language. See {@link #setLanguage(Language)
 	 * setLanguage()} method for details.
 	 * 
-	 * @param name
+	 * @param articleName
 	 *            full article name in chosen language
 	 * @return wiki text in {@link String} representation
 	 * @throws IOException
 	 *             if an I/O error occurs
 	 */
-	public static String getArticleText(String name) throws IOException {
-		checkArguments(name);
+	public static String getArticleText(String articleName) throws IOException {
+		checkArguments(articleName);
 		String text = null;
-		URL url = new URL(
-				new MutableString(WIKIPEDIA_API, QUERY_LINK,
-						"&format=xml&prop=revisions&titles=", name,
-						"&rvprop=content").toString());
+		URL url = new URL(new MutableString(WIKIPEDIA_API, QUERY_LINK,
+				"&format=xml&prop=revisions&titles=", normalize(articleName),
+				"&rvprop=content").toString());
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
 		try {
@@ -201,7 +236,7 @@ public final class MediaWikiFacade {
 		checkArguments(preffix);
 		List<String> pages = new ArrayList<String>();
 		URL url = new URL(new MutableString(WIKIPEDIA_API, QUERY_LINK,
-				"&list=allpages&format=xml&apprefix=", preffix,
+				"&list=allpages&format=xml&apprefix=", normalize(preffix),
 				"&apnamespace=", namespace.toString(), "&aplimit=500&apfrom=",
 				continueFrom != null ? continueFrom : "").toString());
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -266,7 +301,7 @@ public final class MediaWikiFacade {
 				WikiNamespace.CATEGORY);
 		return result.toArray(new String[result.size()]);
 	}
-	
+
 	/**
 	 * Gets array of article names, starting with specified prefix.
 	 * 
@@ -277,9 +312,50 @@ public final class MediaWikiFacade {
 	 */
 	public static String[] getArticlesStartingWith(String preffix)
 			throws IOException {
-		
+
 		List<String> result = getPagesStartingWith(preffix, null,
 				WikiNamespace.ARTICLE);
 		return result.toArray(new String[result.size()]);
+	}
+
+	/**
+	 * 
+	 * @param templateName
+	 * @return
+	 * @throws IOException
+	 */
+	public static TemplateParameter[] getTemplateParameters(String templateName)
+			throws IOException {
+
+		checkArguments(templateName);
+		URL url = new URL(new MutableString(WIKIPEDIA_API,
+				"?action=templatedata&titles=", lang.getTemplatePreffix(),
+				normalize(templateName), "&format=json").toString());
+		TemplateParameter[] parameters = new TemplateParameter[] {};
+		try (InputStream is = url.openStream()) {
+			JsonReader reader = Json.createReader(is);
+			JsonObject pages = reader.readObject().getJsonObject("pages");
+			if (pages.size() > 0) {
+				JsonObject firstChild = (JsonObject) pages.entrySet()
+						.iterator().next().getValue();
+				JsonObject params = firstChild.getJsonObject("params");
+				parameters = new TemplateParameter[params.size()];
+				int i = 0;
+				for (Entry<String, JsonValue> entry : params.entrySet()) {
+					JsonObject object = (JsonObject) entry.getValue();
+					String description = object.get("description")
+							.getValueType() == ValueType.OBJECT ? object
+							.getJsonObject("description").getString("uk")
+							: "null";
+					parameters[i] = new TemplateParameter(entry.getKey(),
+							description, object.get("default").toString(),
+							object.getString("type"),
+							object.getBoolean("required"),
+							object.getBoolean("suggested"));
+					i++;
+				}
+			}
+		}
+		return parameters;
 	}
 }
