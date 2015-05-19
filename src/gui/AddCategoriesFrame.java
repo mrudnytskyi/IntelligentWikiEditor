@@ -53,7 +53,8 @@ public class AddCategoriesFrame extends ApplicationFrame {
 						.getCategoriesStartingWith(params[0]);
 				result = new String[categories.length];
 				for (int i = 0; i < categories.length; i++) {
-					result[i] = categories[i].substring("Категорія:".length(),
+					result[i] = categories[i].substring(MediaWikiFacade
+							.getLanguage().getCategoryPreffix().length(),
 							categories[i].length());
 				}
 			} catch (IOException e) {

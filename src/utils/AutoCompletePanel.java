@@ -72,11 +72,10 @@ public class AutoCompletePanel extends JPanel implements DocumentListener,
 	private final String caption;
 
 	private final Action action;
-	
+
 	/**
 	 * Constructs new panel with specified content. Note, that
-	 * <code>caption</code> parameter can store
-	 * <code>null</code> value.
+	 * <code>caption</code> parameter can store <code>null</code> value.
 	 * 
 	 * @param source
 	 *            object, storing all items for autocompletion function
@@ -298,7 +297,7 @@ public class AutoCompletePanel extends JPanel implements DocumentListener,
 		ListModel<String> model = proposedItems.getModel();
 		boolean isCtrlSpace = KeyEvent.VK_SPACE == e.getKeyCode()
 				&& e.isControlDown();
-		if (isCtrlSpace && model.getSize() > 0) {
+		if (isCtrlSpace && model.getElementAt(0) != null) {
 			String firstSuitable = model.getElementAt(0);
 			// do not use setText - it removes all test first!
 			Document doc = input.getDocument();
