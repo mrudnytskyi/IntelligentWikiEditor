@@ -25,6 +25,7 @@ import java.util.Set;
 import utils.StringArrayList;
 import bot.nlp.Snippet;
 import bot.nlp.SnippetTopic;
+import bot.nlp.Stemmer;
 import bot.nlp.StopWordsHolder;
 import bot.nlp.processors.CleanProcessor;
 import bot.nlp.processors.StopsRemoverProcessor;
@@ -36,13 +37,13 @@ import bot.nlp.processors.TextProcessor;
  * @version 0.1 25.01.2015
  */
 public class Trainer {
-	
+
 	private final boolean DEBUG = true;
 
 	private final StringArrayList[] template;
-	
+
 	private final Map<Snippet, SnippetTopic> trainSet;
-	
+
 	public Trainer(Map<Snippet, SnippetTopic> trainSet) {
 		Objects.requireNonNull(trainSet, "Train set can not be null!");
 		this.trainSet = trainSet;
@@ -51,7 +52,7 @@ public class Trainer {
 			template[i] = new StringArrayList();
 		}
 	}
-	
+
 	private String prepareTextFragment(Snippet snippet) {
 		TextProcessor cleaner = new CleanProcessor();
 		cleaner.process(snippet);
@@ -59,13 +60,12 @@ public class Trainer {
 		stopsRemover.process(cleaner.getResultSnippet());
 		return stopsRemover.getResultSnippet().getText();
 	}
-	
+
 	public void train() {
-		Iterator<Entry<Snippet, SnippetTopic>> trainIter = 
+		Iterator<Entry<Snippet, SnippetTopic>> trainIter =
 				trainSet.entrySet().iterator();
 		while (trainIter.hasNext()) {
-			Entry<Snippet, SnippetTopic> entry = 
-					trainIter.next();
+			Entry<Snippet, SnippetTopic> entry = trainIter.next();
 			SnippetTopic topic = entry.getValue();
 			String text = prepareTextFragment(entry.getKey());
 			String[] words = text.split(" ");
@@ -73,17 +73,19 @@ public class Trainer {
 			StopWordsHolder ukrainianStopWords = new StopWordsHolder();
 			for (String word : words) {
 				if (ukrainianStopWords.notStopWord(word)) {
-					currentList.add(Classifier.stem(word));
+					currentList.add(Stemmer.stem(word));
 				}
 			}
 			template[topic.ordinal()] = currentList;
 		}
-		if (DEBUG) System.out.println(Arrays.toString(template));
+		if (DEBUG) {
+			System.out.println(Arrays.toString(template));
+		}
 		for (int i = 0; i < template.length; i++) {
 			template[i] = deleteNotOftenUsedWords(template[i]);
 		}
 	}
-	
+
 	private StringArrayList deleteNotOftenUsedWords(StringArrayList words) {
 		Set<String> multiUse = new HashSet<String>();
 		Set<String> singleUse = new HashSet<String>();
@@ -100,7 +102,9 @@ public class Trainer {
 	}
 
 	public ArticleTemplate getTemplate() {
-		if (DEBUG) System.out.println(Arrays.toString(template));
+		if (DEBUG) {
+			System.out.println(Arrays.toString(template));
+		}
 		return new ArticleTemplate(template);
 	}
 }
