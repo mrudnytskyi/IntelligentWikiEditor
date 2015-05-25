@@ -14,9 +14,16 @@
  */
 package bot.core;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 import bot.nlp.Snippet;
+import bot.nlp.SnippetTopic;
 import bot.nlp.processors.CleanProcessor;
 import bot.nlp.processors.SenceTokenizerProcessor;
 import bot.nlp.processors.StopsRemoverProcessor;
@@ -28,23 +35,31 @@ import bot.nlp.processors.TextProcessor;
  * @author Myroslav Rudnytskyi
  * @version 0.1 18.01.2015
  */
-// TODO: extend class to create other article parts
 public class ArticlesCreator {
-	
+
 	private static final boolean DEBUG = true;
-	
+
 	private final Snippet[] src;
-	
+
 	private final Classifier classifier;
-	
+
+	private final Map<SnippetTopic, List<Snippet>> article =
+			new HashMap<SnippetTopic, List<Snippet>>();
+
 	public ArticlesCreator(Snippet[] src, ArticleTemplate template) {
 		Objects.requireNonNull(src, "Text fragments array can not be null!");
 		this.src = src;
-		this.classifier = new Classifier(template);
+		classifier = new Classifier(template);
 	}
-	
+
+	private void add(Snippet snippet, SnippetTopic topic) {
+		if (article.get(topic) == null) {
+			article.put(topic, new ArrayList<Snippet>());
+		}
+		article.get(topic).add(snippet);
+	}
+
 	public String createArticle() {
-		Article at = new Article();
 		for (Snippet s : src) {
 			//refactore
 			TextProcessor cleaner = new CleanProcessor();
@@ -57,10 +72,30 @@ public class ArticlesCreator {
 				TextProcessor rem = new StopsRemoverProcessor();
 				rem.process(curr);
 				Snippet fin = rem.getResultSnippet();
-				at.add(curr, classifier.classify(fin));
-			}	
+				add(curr, classifier.classify(fin));
+			}
 		}
-		if (DEBUG) System.out.println(at);
-		return at.toString();
+		if (ArticlesCreator.DEBUG) {
+			System.out.println(this);
+		}
+		return toString();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		Iterator<Entry<SnippetTopic, List<Snippet>>> i =
+				article.entrySet().iterator();
+		while (i.hasNext()) {
+			Entry<SnippetTopic, List<Snippet>> current = i.next();
+			sb.append("\r\n== ");
+			sb.append(current.getKey());
+			sb.append(" ==\r\n");
+			Iterator<Snippet> iter = current.getValue().iterator();
+			while (iter.hasNext()) {
+				sb.append(iter.next().getText());
+			}
+		}
+		return sb.toString();
 	}
 }
