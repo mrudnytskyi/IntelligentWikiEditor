@@ -21,18 +21,17 @@ import java.util.Objects;
 import java.util.StringTokenizer;
 
 /**
- * Class for dividing char streams to {@link Token}s and 
- * making lexical analysis for Wikipedia article.
+ * Class for dividing char streams to {@link Token}s and making lexical analysis
+ * for Wikipedia article.
  * 
  * @author Myroslav Rudnytskyi
  * @version 0.1 26.10.2014
  */
 // TODO: write glueTokens()
-public class Lexer implements Tokenizer {
-	
+public class Lexer {
+
 	private static final String DIVIDERS = "*#<>!-[]{}'=";
-	
-	@Override
+
 	public List<Token> tokenize(CharSequence s) throws CompilerException {
 		Objects.requireNonNull(s, "Char sequence can not be null!");
 		checkBrackets(s);
@@ -40,18 +39,30 @@ public class Lexer implements Tokenizer {
 		List<Token> tokens = getTokens(strings);
 		return glueTokens(tokens);
 	}
-	
+
 	private void checkBrackets(CharSequence s) throws CompilerException {
 		int counterBrace = 0, counterBracket = 0, counterSquare = 0;
 		for (int i = 0; i < s.length(); i++) {
 			char current = s.charAt(i);
 			switch (current) {
-			case '{':	counterBrace++;		break;
-			case '<':	counterBracket++;	break;
-			case '[':	counterSquare++;	break;
-			case '}':	counterBrace--;		break;
-			case '>':	counterBracket--;	break;
-			case ']':	counterSquare--;	break;
+			case '{':
+				counterBrace++;
+				break;
+			case '<':
+				counterBracket++;
+				break;
+			case '[':
+				counterSquare++;
+				break;
+			case '}':
+				counterBrace--;
+				break;
+			case '>':
+				counterBracket--;
+				break;
+			case ']':
+				counterSquare--;
+				break;
 			}
 		}
 		if (counterBrace != 0) {
@@ -64,10 +75,10 @@ public class Lexer implements Tokenizer {
 			throw new CompilerException("Unbalanced squares! []");
 		}
 	}
-	
+
 	private List<String> getStringTokens(CharSequence sequence) {
-		StringTokenizer divider = new StringTokenizer(
-				sequence.toString(), DIVIDERS, true);
+		StringTokenizer divider =
+				new StringTokenizer(sequence.toString(), Lexer.DIVIDERS, true);
 		List<String> list = new ArrayList<String>(divider.countTokens());
 		while (divider.hasMoreElements()) {
 			list.add(divider.nextToken());
@@ -81,7 +92,7 @@ public class Lexer implements Tokenizer {
 				continue;
 			}
 			String current = (String) array[i];
-			if (i != array.length - 1 && current.length() == 1) {
+			if ((i != (array.length - 1)) && (current.length() == 1)) {
 				String next = (String) array[i + 1];
 				switch (current.charAt(0)) {
 				case '[':
@@ -114,7 +125,7 @@ public class Lexer implements Tokenizer {
 					break;
 				case '\'':
 					if (next.equals("'")) {
-						if (i < array.length - 2) {
+						if (i < (array.length - 2)) {
 							String next2 = (String) array[i + 2];
 							if (next2.equals("'")) {
 								resultList.add("'''");
@@ -132,8 +143,8 @@ public class Lexer implements Tokenizer {
 					int offset = 0;
 					// 6 maximum: =, ==, ===, ====, =====, ======
 					while (true/*offset < 6*/) {
-						if (i < array.length - offset && 
-								array[i + offset].equals("=")) {
+						if ((i < (array.length - offset))
+								&& array[i + offset].equals("=")) {
 							offset++;
 						} else {
 							break;
@@ -148,10 +159,10 @@ public class Lexer implements Tokenizer {
 					continue;
 				case '<':
 					if (next.equals("!")) {
-						if (i < array.length - 2) {
+						if (i < (array.length - 2)) {
 							String next2 = (String) array[i + 2];
 							if (next2.equals("-")) {
-								if (i < array.length - 3) {
+								if (i < (array.length - 3)) {
 									String next3 = (String) array[i + 3];
 									if (next3.equals("-")) {
 										resultList.add("<!--");
@@ -165,7 +176,7 @@ public class Lexer implements Tokenizer {
 					break;
 				case '-':
 					if (next.equals("-")) {
-						if (i < array.length - 2) {
+						if (i < (array.length - 2)) {
 							String next2 = (String) array[i + 2];
 							if (next2.equals(">")) {
 								resultList.add("-->");
@@ -181,7 +192,7 @@ public class Lexer implements Tokenizer {
 		}
 		return resultList;
 	}
-	
+
 	private List<Token> getTokens(List<String> tokens) {
 		Iterator<String> iterator = tokens.iterator();
 		List<Token> results = new ArrayList<Token>(tokens.size());
@@ -197,7 +208,7 @@ public class Lexer implements Tokenizer {
 		}
 		return results;
 	}
-	
+
 	private List<Token> glueTokens(List<Token> tokens) {
 		return tokens;
 	}
