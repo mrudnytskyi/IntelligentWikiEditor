@@ -1,0 +1,60 @@
+/*
+ * Text area ------------------------------------------------------------------
+ */
+
+.text-area {
+	-fx-font-family: "Courier New";
+	-fx-font-size: 12.0pt;
+	-fx-background-color: white;
+	-fx-pref-column-coun: 80.0;
+}
+
+.text-area:focused {
+	-fx-background-color: #FFFAD4;
+}
+
+/* 
+ * These next 3 properties are necessary to show 
+ * special background color if text area is focused
+ */
+.text-area .scroll-pane {
+	-fx-background-color: transparent;
+}
+
+.text-area .scroll-pane .viewport {
+	-fx-background-color: transparent;
+}
+
+.text-area .scroll-pane .content {
+	-fx-background-color: transparent;
+}
+
+/*
+ * Menu -----------------------------------------------------------------------
+ */
+
+.menu .label {
+	-fx-font-size: 10.0pt;
+	-fx-text-fill: black;
+}
+
+.menu-bar {
+    -fx-background-color: rgba(30, 30, 30, 0.8);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 10, 0.0, 0, 3);
+}
+
+.menu-bar .label {
+	-fx-text-fill: white;
+}
+
+.menu-item .label {
+	-fx-text-fill: black;
+}
+
+/*
+ * Toolbar --------------------------------------------------------------------
+ */
+ 
+ .tool-bar {
+ 	-fx-background-color: white;
+ }
