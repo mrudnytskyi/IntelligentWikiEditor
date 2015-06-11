@@ -20,7 +20,10 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.Clipboard;
+
+import org.controlsfx.control.textfield.TextFields;
 
 /**
  * 
@@ -28,6 +31,11 @@ import javafx.scene.input.Clipboard;
  * @version 0.1 30.05.2015
  */
 public class ApplicationRootController {
+
+	/**
+	 * Control FX issue
+	 */
+	private static final int POPUP_WIDTH = 250;
 
 	private final Clipboard cb = Clipboard.getSystemClipboard();
 
@@ -122,7 +130,21 @@ public class ApplicationRootController {
 	}
 
 	public void insertWikiLinkAction() {
-		notImpl();
+		TextInputDialog tid = new TextInputDialog();
+		tid.getEditor().setMinWidth(ApplicationRootController.POPUP_WIDTH);
+		//TODO
+		tid.getEditor().setPromptText("Start entering...");
+		TextFields.bindAutoCompletion(tid.getEditor(), "TODO");
+
+		tid.showAndWait();
+		if (tid.getResult() != null) {
+			text.replaceSelection(String.join(
+					"",
+					"[[",
+					tid.getResult(),
+					(text.getSelection().getLength() != 0 ? "|"
+							+ text.getSelectedText() : ""), "]]"));
+		}
 	}
 
 	public void insertExternalLinkAction() {
