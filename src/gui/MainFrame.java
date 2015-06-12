@@ -16,12 +16,14 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -38,7 +40,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.text.DefaultEditorKit;
 
-import utils.MutableString;
 import bot.compiler.AST.CategoryDeclaration;
 import bot.compiler.AST.SmartLink;
 import bot.compiler.AST.TemplateDeclaration;
@@ -66,8 +67,6 @@ public class MainFrame extends ApplicationFrame {
 
 	private final MessagesFrame messager = new MessagesFrame(this);
 
-	private static final String LINE = System.getProperty("line.separator");
-
 	private final FileFiltersManager filters = new FileFiltersManager();
 
 	private Project currentProject;
@@ -79,7 +78,7 @@ public class MainFrame extends ApplicationFrame {
 		super("Wiki Editor 1.0");
 		setLayout(new BorderLayout());
 		setSize(Toolkit.getDefaultToolkit().getScreenSize());
-		setExtendedState(MAXIMIZED_BOTH);
+		setExtendedState(Frame.MAXIMIZED_BOTH);
 		setJMenuBar(createMenu());
 		add(createContent(), BorderLayout.CENTER);
 		add(createToolbar(), BorderLayout.NORTH);
@@ -90,11 +89,13 @@ public class MainFrame extends ApplicationFrame {
 		article.setFont(new Font("Consolas", Font.PLAIN, 14));
 		article.setLineWrap(true);
 		JPanel content = new JPanel(new BorderLayout());
-		JSplitPane splitRight = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-				new JScrollPane(article), new JScrollPane(messages));
-		JSplitPane splitLeft = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-				toolpane, splitRight);
-		splitRight.setDividerLocation(getHeight() / 2 + getHeight() / 4);
+		JSplitPane splitRight =
+				new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JScrollPane(
+						article), new JScrollPane(messages));
+		JSplitPane splitLeft =
+				new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, toolpane,
+						splitRight);
+		splitRight.setDividerLocation((getHeight() / 2) + (getHeight() / 4));
 		splitRight.setOneTouchExpandable(true);
 		splitLeft.setDividerLocation(getWidth() / 6);
 		splitLeft.setOneTouchExpandable(true);
@@ -132,15 +133,18 @@ public class MainFrame extends ApplicationFrame {
 		actions.add(new Action(this, "About", "about",
 				"Show information about software", "res\\info.png",
 				"res\\info_big.png", new Integer(KeyEvent.VK_A)));
-		actions.add(parametizeAction(new DefaultEditorKit.CutAction(), "Cut",
-				"cut", "Cut selected text fragment", "res\\cut.png",
+		actions.add(ApplicationFrame.parametizeAction(
+				new DefaultEditorKit.CutAction(), "Cut", "cut",
+				"Cut selected text fragment", "res\\cut.png",
 				"res\\cut_big.png", new Integer(KeyEvent.VK_T)));
-		actions.add(parametizeAction(new DefaultEditorKit.CopyAction(), "Copy",
-				"copy", "Copy selected text fragment", "res\\copy.png",
+		actions.add(ApplicationFrame.parametizeAction(
+				new DefaultEditorKit.CopyAction(), "Copy", "copy",
+				"Copy selected text fragment", "res\\copy.png",
 				"res\\copy_big.png", new Integer(KeyEvent.VK_C)));
-		actions.add(parametizeAction(new DefaultEditorKit.PasteAction(),
-				"Paste", "paste", "Paste text fragment", "res\\paste.png",
-				"res\\paste_big.png", new Integer(KeyEvent.VK_P)));
+		actions.add(ApplicationFrame.parametizeAction(
+				new DefaultEditorKit.PasteAction(), "Paste", "paste",
+				"Paste text fragment", "res\\paste.png", "res\\paste_big.png",
+				new Integer(KeyEvent.VK_P)));
 		actions.add(new Action(this, "Insert heading", "insert-heading",
 				"Insert heading", "res\\heading.png", "res\\heading_big.png",
 				new Integer(KeyEvent.VK_H)));
@@ -246,7 +250,8 @@ public class MainFrame extends ApplicationFrame {
 			}
 			break;
 		case "show-add-article":
-			showAddArticle();;
+			showAddArticle();
+			;
 			break;
 		case "show-add-categories":
 			showAddCategories();
@@ -292,7 +297,7 @@ public class MainFrame extends ApplicationFrame {
 	private void showAddTemplate() {
 		new AddTemplateFrame(this).setVisible(true);
 	}
-	
+
 	private void showAddArticle() {
 		new AddArticleFrame(this).setVisible(true);
 	}
@@ -312,8 +317,9 @@ public class MainFrame extends ApplicationFrame {
 		int result = chooser.showOpenDialog(MainFrame.this);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			try {
-				currentProject = (Project) FilesFacade.readXML(chooser
-						.getSelectedFile().getPath());
+				currentProject =
+						(Project) FilesFacade.readXML(chooser.getSelectedFile()
+								.getPath());
 				article.setText(FilesFacade.readTXT(currentProject
 						.getArticleFile()));
 			} catch (IOException e) {
@@ -343,7 +349,8 @@ public class MainFrame extends ApplicationFrame {
 			try {
 				if (article.getSelectedText() == null) {
 					smartLink = new SmartLink(articleName);
-					article.insert(smartLink.toString(), article.getCaretPosition());
+					article.insert(smartLink.toString(),
+							article.getCaretPosition());
 					DatabaseFacade.addReplacement(articleName, articleName);
 				} else {
 					String selectedText = article.getSelectedText();
@@ -361,9 +368,10 @@ public class MainFrame extends ApplicationFrame {
 	private void addCategories(CategoryDeclaration[] categories) {
 		for (CategoryDeclaration category : categories) {
 			if (category != null) {
-				MutableString ms = new MutableString(LINE, category.toString(),
-						LINE);
-				article.insert(ms.toString(), article.getText().length());
+				String line = System.lineSeparator();
+				article.insert(
+						String.join("", line, category.toString(), line),
+						article.getText().length());
 			}
 		}
 	}
@@ -373,19 +381,22 @@ public class MainFrame extends ApplicationFrame {
 	}
 
 	private void insertHeading() {
-		String stringHeadingType = messager.showInput("Input heading type",
-				new Integer[] { 2, 3, 4, 5, 6 }, 2);
+		String stringHeadingType =
+				messager.showInput("Input heading type", new Integer[] { 2, 3,
+						4, 5, 6 }, 2);
 		if (stringHeadingType != null) {
 			int headingType = Integer.parseInt(stringHeadingType);
-			MutableString ms = new MutableString(2 * headingType + 10);
-			String heading = ms.append('=', headingType).toString();
-			ms.clear();
+			char[] headingChars = new char[headingType];
+			Arrays.fill(headingChars, '=');
+			String heading = new String(headingChars);
+			String line = System.lineSeparator();
 			if (article.getSelectedText() == null) {
-				ms.append(LINE, heading, "  ", heading, LINE);
-				article.insert(ms.toString(), article.getCaretPosition());
+				article.insert(
+						String.join("", line, heading, "  ", heading, line),
+						article.getCaretPosition());
 			} else {
-				ms.append(heading, article.getSelectedText(), heading);
-				article.replaceSelection(ms.toString());
+				article.replaceSelection(String.join("", heading,
+						article.getSelectedText(), heading));
 			}
 		}
 	}
@@ -393,14 +404,12 @@ public class MainFrame extends ApplicationFrame {
 	private void insertExternalLink() {
 		String resourceName = messager.showInput("Input resource name");
 		if (resourceName != null) {
-			MutableString ms = new MutableString(resourceName.length() + 5);
 			if (article.getSelectedText() == null) {
-				ms.append("[", resourceName, "]");
-				article.insert(ms.toString(), article.getCaretPosition());
+				article.insert(String.join("", "[", resourceName, "]"),
+						article.getCaretPosition());
 			} else {
-				ms.append("[", resourceName, " ", article.getSelectedText(),
-						"]");
-				article.replaceSelection(ms.toString());
+				article.replaceSelection(String.join("", "[", resourceName,
+						" ", article.getSelectedText(), "]"));
 			}
 		}
 	}
@@ -415,9 +424,10 @@ public class MainFrame extends ApplicationFrame {
 			srcFolder.mkdir();
 		}
 		try {
-			FilesFacade.writeXML(new MutableString(srcFolder.getPath(),
-					File.separator, String.valueOf(snippet.hashCode()), ".xml")
-					.toString(), snippet);
+			FilesFacade.writeXML(
+					String.join("", srcFolder.getPath(), File.separator,
+							String.valueOf(snippet.hashCode()), ".xml"),
+					snippet);
 		} catch (IOException e) {
 			messages.error(e.toString());
 			messager.showError(e.toString());
@@ -433,8 +443,9 @@ public class MainFrame extends ApplicationFrame {
 			for (File file : srcFiles) {
 				snippets[i] = (Snippet) FilesFacade.readXML(file.getPath());
 			}
-			ArticleTemplate at = (ArticleTemplate) FilesFacade
-					.readXML(currentProject.getTemplateFile());
+			ArticleTemplate at =
+					(ArticleTemplate) FilesFacade.readXML(currentProject
+							.getTemplateFile());
 			ArticlesCreator ac = new ArticlesCreator(snippets, at);
 			FilesFacade.writeTXT(currentProject.getArticleFile(),
 					ac.createArticle());

@@ -14,7 +14,6 @@
  */
 package bot.compiler.AST;
 
-import utils.MutableString;
 import bot.compiler.Visitor;
 
 /**
@@ -28,19 +27,17 @@ public class Math extends Characters {
 	public Math(CharSequence chars) {
 		super(chars);
 	}
-	
+
 	@Override
 	public String toString() {
-		MutableString ms = new MutableString("<math>", super.toString(),
-				"</math>");
-		return ms.toString();
+		return String.join("", "<math>", super.toString(), "</math>");
 	}
-	
+
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitMath(this);
 	}
-	
+
 	@Override
 	public CharSequence getWikiSource() {
 		return toString();

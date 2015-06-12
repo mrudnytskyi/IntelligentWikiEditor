@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
-import utils.MutableString;
 import bot.compiler.Visitor;
 
 /**
@@ -34,11 +33,12 @@ public class TemplateDeclaration implements Content {
 
 	protected final TemplateParameter[] parameters;
 
-	protected final Map<TemplateParameter, String> parametersValues = new LinkedHashMap<TemplateParameter, String>();
+	protected final Map<TemplateParameter, String> parametersValues =
+			new LinkedHashMap<TemplateParameter, String>();
 
-	public TemplateDeclaration(String name, TemplateParameter... params) {
+	public TemplateDeclaration(String name, TemplateParameter ... params) {
 		this.name = Objects.requireNonNull(name, "Template name null!");
-		this.parameters = params;
+		parameters = params;
 	}
 
 	public String getName() {
@@ -46,9 +46,9 @@ public class TemplateDeclaration implements Content {
 	}
 
 	public TemplateParameter getParameter(String label) {
-		for (int i = 0; i < parameters.length; i++) {
-			if (parameters[i].getName().equals(label)) {
-				return parameters[i];
+		for (TemplateParameter parameter : parameters) {
+			if (parameter.getName().equals(label)) {
+				return parameter;
 			}
 		}
 		return null;
@@ -73,22 +73,23 @@ public class TemplateDeclaration implements Content {
 
 	@Override
 	public String toString() {
-		MutableString ms = new MutableString("{{", name);
+		StringBuilder sb = new StringBuilder("{{" + name);
 		if (!parametersValues.isEmpty()) {
 			for (Entry<TemplateParameter, String> e : parametersValues
 					.entrySet()) {
 				String value = e.getValue();
-				if (value == null || value.equals("null")) {
+				if ((value == null) || value.equals("null")) {
 					if (e.getKey().getDefault() != null) {
 						value = e.getKey().getDefault();
 					}
 				} else {
-					ms.append("|", e.getKey().getName(), "=", value);
+					sb.append("|").append(e.getKey().getName()).append("=")
+							.append(value);
 				}
 			}
 		}
-		ms.append("}}");
-		return ms.toString();
+		sb.append("}}");
+		return sb.toString();
 	}
 
 	@Override

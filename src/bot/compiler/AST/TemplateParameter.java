@@ -16,8 +16,6 @@ package bot.compiler.AST;
 
 import java.util.Objects;
 
-import utils.MutableString;
-
 /**
  * 
  * @author Myroslav Rudnytskyi
@@ -26,11 +24,11 @@ import utils.MutableString;
 public class TemplateParameter {
 
 	public enum TemplateParameterType {
-		NUMBER("number"), STRING("string"), LINE("line"), BOOLEAN("boolean"), DATE(
-				"date"), WIKI_PAGE_NAME("wiki-page-name"), WIKI_FILE_NAME(
+		NUMBER("number"), STRING("string"), LINE("line"), BOOLEAN("boolean"),
+		DATE("date"), WIKI_PAGE_NAME("wiki-page-name"), WIKI_FILE_NAME(
 				"wiki-file-name"), WIKI_USER_NAME("wiki-user-name"), CONTENT(
-				"content"), UNBALANCED_WIKITEXT("unbalanced-wikitext"), UNKNOWN(
-				"");
+				"content"), UNBALANCED_WIKITEXT("unbalanced-wikitext"),
+		UNKNOWN("");
 
 		private final String str;
 
@@ -44,10 +42,10 @@ public class TemplateParameter {
 		}
 
 		public static TemplateParameterType parse(String str) {
-			TemplateParameterType[] values = values();
-			for (int i = 0; i < values.length; i++) {
-				if (str.equals(values[i])) {
-					return values[i];
+			TemplateParameterType[] values = TemplateParameterType.values();
+			for (TemplateParameterType value : values) {
+				if (str.equals(value)) {
+					return value;
 				}
 			}
 			return UNKNOWN;
@@ -69,8 +67,9 @@ public class TemplateParameter {
 	public TemplateParameter(String name, String description, String def,
 			String type, boolean required, boolean suggested) {
 
-		this.name = Objects.requireNonNull(name,
-				"Template parameter name can not be null!");
+		this.name =
+				Objects.requireNonNull(name,
+						"Template parameter name can not be null!");
 		this.description = description;
 		this.def = def;
 		this.type = TemplateParameterType.parse(type);
@@ -104,10 +103,9 @@ public class TemplateParameter {
 
 	@Override
 	public String toString() {
-		MutableString ms = new MutableString("name ", name, ", description ",
-				description, ", def ", def, ", type ", type.toString(),
-				", required ", String.valueOf(required), ", suggested ",
+		return String.join("", "name ", name, ", description ", description,
+				", def ", def, ", type ", type.toString(), ", required ",
+				String.valueOf(required), ", suggested ",
 				String.valueOf(suggested), "\n");
-		return ms.toString();
 	}
 }

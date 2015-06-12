@@ -18,26 +18,25 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
 
-import utils.MutableString;
 import bot.compiler.Visitor;
 
 /**
- * Class represents simple link in article, such as [http://google.com] or 
+ * Class represents simple link in article, such as [http://google.com] or
  * [http://google.com Google].
  * 
  * @author Myroslav Rudnytskyi
  * @version 0.1 19.11.2014
  */
 public class Link implements Content {
-	
+
 	protected final URL url;
-	
+
 	protected final CharSequence caption;
-	
+
 	public Link(URL url) {
 		this(url, null);
 	}
-	
+
 	public Link(CharSequence url) {
 		this(url, null);
 	}
@@ -47,7 +46,7 @@ public class Link implements Content {
 		this.url = url;
 		this.caption = caption;
 	}
-	
+
 	public Link(CharSequence url, CharSequence caption) {
 		Objects.requireNonNull(url, "URL can not be null!");
 		try {
@@ -57,25 +56,21 @@ public class Link implements Content {
 		}
 		this.caption = caption;
 	}
-	
+
 	public CharSequence getCaption() {
 		return caption;
 	}
-	
+
 	public URL getURL() {
 		return url;
 	}
-	
+
 	@Override
 	public String toString() {
-		MutableString ms = new MutableString("[", url.toString());
-		if (caption != null) {
-			ms.append(" ", caption);
-		}
-		ms.append(']');
-		return ms.toString();
+		return String.join("", "[", url.toString(),
+				(caption != null ? " " : ""), "]");
 	}
-	
+
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitLink(this);

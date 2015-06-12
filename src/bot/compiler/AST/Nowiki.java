@@ -14,7 +14,6 @@
  */
 package bot.compiler.AST;
 
-import utils.MutableString;
 import bot.compiler.Visitor;
 
 /**
@@ -28,14 +27,12 @@ public class Nowiki extends Characters {
 	public Nowiki(CharSequence chars) {
 		super(chars);
 	}
-	
+
 	@Override
 	public String toString() {
-		MutableString ms = new MutableString("<nowiki>", getCharacters(),
-				"</nowiki>");
-		return ms.toString();
+		return String.join("", "<nowiki>", getCharacters(), "</nowiki>");
 	}
-	
+
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitNowiki(this);

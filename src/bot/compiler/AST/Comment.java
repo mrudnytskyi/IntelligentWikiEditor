@@ -14,7 +14,6 @@
  */
 package bot.compiler.AST;
 
-import utils.MutableString;
 import bot.compiler.Visitor;
 
 /**
@@ -28,13 +27,12 @@ public class Comment extends Characters {
 	public Comment(CharSequence chars) {
 		super(chars);
 	}
-	
+
 	@Override
 	public String toString() {
-		MutableString ms = new MutableString("<!--", getCharacters(), "-->");
-		return ms.toString();
+		return String.join("", "<!--", getCharacters(), "-->");
 	}
-	
+
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitComment(this);

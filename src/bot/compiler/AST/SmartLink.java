@@ -16,7 +16,6 @@ package bot.compiler.AST;
 
 import java.util.Objects;
 
-import utils.MutableString;
 import bot.compiler.Visitor;
 
 /**
@@ -26,11 +25,11 @@ import bot.compiler.Visitor;
  * @version 0.1 19.11.2014
  */
 public class SmartLink implements Content {
-	
+
 	protected final CharSequence destination;
-	
+
 	protected final CharSequence caption;
-	
+
 	public SmartLink(CharSequence destination) {
 		this(destination, null);
 	}
@@ -40,25 +39,21 @@ public class SmartLink implements Content {
 		this.destination = destination;
 		this.caption = caption;
 	}
-	
+
 	public CharSequence getDestination() {
 		return destination;
 	}
-	
+
 	public CharSequence getCaption() {
 		return caption;
 	}
-	
+
 	@Override
 	public String toString() {
-		MutableString ms = new MutableString("[[", destination);
-		if (caption != null) {
-			ms.append("|", caption);
-		}
-		ms.append("]]");
-		return ms.toString();
+		return String.join("", "[[", destination, (caption != null ? "|"
+				+ caption : ""), "]]");
 	}
-	
+
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitSmartLink(this);

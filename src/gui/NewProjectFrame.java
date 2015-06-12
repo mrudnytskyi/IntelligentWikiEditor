@@ -34,8 +34,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import utils.MutableString;
+import javax.swing.SwingConstants;
 
 /**
  * Frame for setting new project settings.
@@ -108,13 +107,13 @@ public class NewProjectFrame extends ApplicationFrame {
 
 		JPanel center = new JPanel(new GridLayout(3, 2, 50, 20));
 		center.setBorder(BorderFactory.createTitledBorder("Project files:"));
-		center.add(new JLabel("Source folder:", JLabel.CENTER));
+		center.add(new JLabel("Source folder:", SwingConstants.CENTER));
 		center.add(src);
 		src.setEnabled(false);
-		center.add(new JLabel("Choose template file:", JLabel.CENTER));
+		center.add(new JLabel("Choose template file:", SwingConstants.CENTER));
 		center.add(template);
 		template.setEditable(false);
-		center.add(new JLabel("Enter article name:", JLabel.CENTER));
+		center.add(new JLabel("Enter article name:", SwingConstants.CENTER));
 		center.add(article);
 		article.setEnabled(false);
 
@@ -140,9 +139,10 @@ public class NewProjectFrame extends ApplicationFrame {
 		case "new-project-OK":
 			boolean locationEmpty = location.getText().isEmpty();
 			if (!locationEmpty) {
-				Project project = new Project(location.getText(), template
-						.getSelectedItem().toString(), article.getText(),
-						src.getText());
+				Project project =
+						new Project(location.getText(), template
+								.getSelectedItem().toString(),
+								article.getText(), src.getText());
 				firePropertyChange("new-project", null, project);
 				setVisible(false);
 			} else {
@@ -161,10 +161,9 @@ public class NewProjectFrame extends ApplicationFrame {
 				String location = chooser.getSelectedFile().getPath();
 				String separator = FileSystems.getDefault().getSeparator();
 				this.location.setText(location);
-				article.setText(new MutableString(location, separator, article
-						.getText()).toString());
-				src.setText(new MutableString(location, separator, "src")
-						.toString());
+				article.setText(String.join("", location, separator,
+						article.getText()));
+				src.setText(String.join("", location, separator, "src"));
 			}
 			break;
 		}

@@ -16,7 +16,6 @@ package bot.compiler.AST;
 
 import java.util.Objects;
 
-import utils.MutableString;
 import bot.compiler.Visitor;
 
 /**
@@ -27,22 +26,21 @@ import bot.compiler.Visitor;
  */
 // TODO: use object of Category class instead String
 public class CategoryDeclaration implements Content {
-	
+
 	protected final CharSequence category;
-	
+
 	public CategoryDeclaration(CharSequence category) {
 		Objects.requireNonNull(category, "Category object can not be null!");
 		this.category = category;
 	}
-	
+
 	public CharSequence getCategory() {
 		return category;
 	}
-	
+
 	@Override
 	public String toString() {
-		MutableString ms = new MutableString("[[Категорія:", category, "]]");
-		return ms.toString();
+		return String.join("", "[[Категорія:", category, "]]");
 	}
 
 	@Override

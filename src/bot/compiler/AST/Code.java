@@ -16,7 +16,6 @@ package bot.compiler.AST;
 
 import java.util.Objects;
 
-import utils.MutableString;
 import bot.compiler.Visitor;
 
 /**
@@ -27,11 +26,11 @@ import bot.compiler.Visitor;
  */
 // TODO: make language recognizing mechanism
 public class Code extends Characters {
-	
+
 	public enum Language {
 		JAVA5, CXX, C_SHARP, C, UNKNOWN;
 	}
-	
+
 	protected final Language language;
 
 	public Code(CharSequence chars, Language language) {
@@ -43,23 +42,20 @@ public class Code extends Characters {
 	public Language getLanguage() {
 		return language;
 	}
-	
+
 	@Override
 	public String toString() {
-		MutableString ms = new MutableString();
-		ms.append("<source");
-		if (!language.equals(Language.UNKNOWN)) {
-			ms.append(" lang = ", language.toString().toLowerCase());
-		}
-		ms.append(">", super.toString(), "</source>");
-		return ms.toString();
+		return String.join("", "<source",
+				(!language.equals(Language.UNKNOWN) ? " lang = "
+						+ language.toString().toLowerCase() : ""), ">",
+				super.toString(), "</source>");
 	}
-	
+
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitCode(this);
 	}
-	
+
 	@Override
 	public CharSequence getWikiSource() {
 		return toString();

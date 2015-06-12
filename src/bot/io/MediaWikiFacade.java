@@ -38,7 +38,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import utils.MutableString;
 import bot.compiler.AST.TemplateParameter;
 
 /**
@@ -74,9 +73,9 @@ public final class MediaWikiFacade {
 		private Language(String code, String file, String category,
 				String template) {
 			this.code = code;
-			this.filePreffix = file;
-			this.categoryPreffix = category;
-			this.templatePreffix = template;
+			filePreffix = file;
+			categoryPreffix = category;
+			templatePreffix = template;
 		}
 
 		public String getCode() {
@@ -128,7 +127,8 @@ public final class MediaWikiFacade {
 
 	// TODO: will be used later, in getFiles method
 	@SuppressWarnings("unused")
-	private static String COMMONS_API = "http://commons.wikimedia.org/w/api.php";
+	private static String COMMONS_API =
+			"http://commons.wikimedia.org/w/api.php";
 
 	private static String QUERY_LINK = "?action=query";
 
@@ -137,8 +137,7 @@ public final class MediaWikiFacade {
 	/**
 	 * do not instantiate this class
 	 */
-	private MediaWikiFacade() {
-	}
+	private MediaWikiFacade() {}
 
 	/**
 	 * Sets specified language. Note, that Ukrainian is used by default.
@@ -148,13 +147,13 @@ public final class MediaWikiFacade {
 	 */
 	public static void setLanguage(Language lang) {
 		MediaWikiFacade.lang = Objects.requireNonNull(lang, "Language null!");
-		MutableString ms = new MutableString("http://", lang.getCode(),
-				".wikipedia.org/w/api.php");
-		WIKIPEDIA_API = ms.toString();
+		MediaWikiFacade.WIKIPEDIA_API =
+				String.join("", "http://", lang.getCode(),
+						".wikipedia.org/w/api.php");
 	}
 
 	public static Language getLanguage() {
-		return lang;
+		return MediaWikiFacade.lang;
 	}
 
 	/**
@@ -166,9 +165,9 @@ public final class MediaWikiFacade {
 	 * @param args
 	 *            parameters to check
 	 */
-	private static void checkArguments(String... args) {
+	private static void checkArguments(String ... args) {
 		for (String s : args) {
-			if (s == null || s.isEmpty()) {
+			if ((s == null) || s.isEmpty()) {
 				throw new IllegalArgumentException(
 						"Parameter can not be null or empty!");
 			}
@@ -191,19 +190,23 @@ public final class MediaWikiFacade {
 	 *             if an I/O error occurs
 	 */
 	public static String getArticleText(String articleName) throws IOException {
-		checkArguments(articleName);
+		MediaWikiFacade.checkArguments(articleName);
 		String text = null;
-		URL url = new URL(new MutableString(WIKIPEDIA_API, QUERY_LINK,
-				"&format=xml&prop=revisions&titles=", normalize(articleName),
-				"&rvprop=content").toString());
+		URL url =
+				new URL(String.join("", MediaWikiFacade.WIKIPEDIA_API,
+						MediaWikiFacade.QUERY_LINK,
+						"&format=xml&prop=revisions&titles=",
+						MediaWikiFacade.normalize(articleName),
+						"&rvprop=content"));
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
 		try {
 			Document doc = factory.newDocumentBuilder().parse(url.openStream());
 			XPath xpath = XPathFactory.newInstance().newXPath();
 			String allPagesPath = "/api/query/pages/page/revisions/rev";
-			Node result = (Node) xpath.compile(allPagesPath).evaluate(doc,
-					XPathConstants.NODE);
+			Node result =
+					(Node) xpath.compile(allPagesPath).evaluate(doc,
+							XPathConstants.NODE);
 			if (result != null) {
 				text = result.getFirstChild().getNodeValue().toString();
 			}
@@ -233,33 +236,39 @@ public final class MediaWikiFacade {
 	private static List<String> getPagesStartingWith(String preffix,
 			String continueFrom, WikiNamespace namespace) throws IOException {
 
-		checkArguments(preffix);
+		MediaWikiFacade.checkArguments(preffix);
 		List<String> pages = new ArrayList<String>();
-		URL url = new URL(new MutableString(WIKIPEDIA_API, QUERY_LINK,
-				"&list=allpages&format=xml&apprefix=", normalize(preffix),
-				"&apnamespace=", namespace.toString(), "&aplimit=500&apfrom=",
-				continueFrom != null ? continueFrom : "").toString());
+		URL url =
+				new URL(String.join("", MediaWikiFacade.WIKIPEDIA_API,
+						MediaWikiFacade.QUERY_LINK,
+						"&list=allpages&format=xml&apprefix=",
+						MediaWikiFacade.normalize(preffix), "&apnamespace=",
+						namespace.toString(), "&aplimit=500&apfrom=",
+						continueFrom != null ? continueFrom : ""));
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
 		try {
 			Document doc = factory.newDocumentBuilder().parse(url.openStream());
 			XPath xpath = XPathFactory.newInstance().newXPath();
 			String allPagesPath = "/api/query/allpages";
-			Node allPages = (Node) xpath.compile(allPagesPath).evaluate(doc,
-					XPathConstants.NODE);
+			Node allPages =
+					(Node) xpath.compile(allPagesPath).evaluate(doc,
+							XPathConstants.NODE);
 			for (int i = 0; i < allPages.getChildNodes().getLength(); i++) {
 				pages.add(allPages.getChildNodes().item(i).getAttributes()
 						.getNamedItem("title").getNodeValue());
 			}
 
 			String continueAllPagesPath = "/api/query-continue/allpages";
-			Node continueAllPages = (Node) xpath.compile(continueAllPagesPath)
-					.evaluate(doc, XPathConstants.NODE);
+			Node continueAllPages =
+					(Node) xpath.compile(continueAllPagesPath).evaluate(doc,
+							XPathConstants.NODE);
 			if (continueAllPages != null) {
-				String nextContinueFrom = continueAllPages.getAttributes()
-						.getNamedItem("apcontinue").getNodeValue();
-				pages.addAll(getPagesStartingWith(preffix, nextContinueFrom,
-						namespace));
+				String nextContinueFrom =
+						continueAllPages.getAttributes()
+								.getNamedItem("apcontinue").getNodeValue();
+				pages.addAll(MediaWikiFacade.getPagesStartingWith(preffix,
+						nextContinueFrom, namespace));
 			}
 		} catch (ParserConfigurationException | XPathExpressionException
 				| SAXException e) {
@@ -281,8 +290,9 @@ public final class MediaWikiFacade {
 	public static String[] getTemplatesStartingWith(String preffix)
 			throws IOException {
 
-		List<String> result = getPagesStartingWith(preffix, null,
-				WikiNamespace.TEMPLATE);
+		List<String> result =
+				MediaWikiFacade.getPagesStartingWith(preffix, null,
+						WikiNamespace.TEMPLATE);
 		return result.toArray(new String[result.size()]);
 	}
 
@@ -297,8 +307,9 @@ public final class MediaWikiFacade {
 	public static String[] getCategoriesStartingWith(String preffix)
 			throws IOException {
 
-		List<String> result = getPagesStartingWith(preffix, null,
-				WikiNamespace.CATEGORY);
+		List<String> result =
+				MediaWikiFacade.getPagesStartingWith(preffix, null,
+						WikiNamespace.CATEGORY);
 		return result.toArray(new String[result.size()]);
 	}
 
@@ -313,8 +324,9 @@ public final class MediaWikiFacade {
 	public static String[] getArticlesStartingWith(String preffix)
 			throws IOException {
 
-		List<String> result = getPagesStartingWith(preffix, null,
-				WikiNamespace.ARTICLE);
+		List<String> result =
+				MediaWikiFacade.getPagesStartingWith(preffix, null,
+						WikiNamespace.ARTICLE);
 		return result.toArray(new String[result.size()]);
 	}
 
@@ -327,31 +339,37 @@ public final class MediaWikiFacade {
 	public static TemplateParameter[] getTemplateParameters(String templateName)
 			throws IOException {
 
-		checkArguments(templateName);
-		URL url = new URL(new MutableString(WIKIPEDIA_API,
-				"?action=templatedata&titles=", lang.getTemplatePreffix(),
-				normalize(templateName), "&format=json").toString());
+		MediaWikiFacade.checkArguments(templateName);
+		URL url =
+				new URL(
+						String.join("", MediaWikiFacade.WIKIPEDIA_API,
+								"?action=templatedata&titles=",
+								MediaWikiFacade.lang.getTemplatePreffix(),
+								MediaWikiFacade.normalize(templateName),
+								"&format=json"));
 		TemplateParameter[] parameters = new TemplateParameter[] {};
 		try (InputStream is = url.openStream()) {
 			JsonReader reader = Json.createReader(is);
 			JsonObject pages = reader.readObject().getJsonObject("pages");
 			if (pages.size() > 0) {
-				JsonObject firstChild = (JsonObject) pages.entrySet()
-						.iterator().next().getValue();
+				JsonObject firstChild =
+						(JsonObject) pages.entrySet().iterator().next()
+								.getValue();
 				JsonObject params = firstChild.getJsonObject("params");
 				parameters = new TemplateParameter[params.size()];
 				int i = 0;
 				for (Entry<String, JsonValue> entry : params.entrySet()) {
 					JsonObject object = (JsonObject) entry.getValue();
-					String description = object.get("description")
-							.getValueType() == ValueType.OBJECT ? object
-							.getJsonObject("description").getString("uk")
-							: "null";
-					parameters[i] = new TemplateParameter(entry.getKey(),
-							description, object.get("default").toString(),
-							object.getString("type"),
-							object.getBoolean("required"),
-							object.getBoolean("suggested"));
+					String description =
+							object.get("description").getValueType() == ValueType.OBJECT ? object
+									.getJsonObject("description").getString(
+											"uk") : "null";
+					parameters[i] =
+							new TemplateParameter(entry.getKey(), description,
+									object.get("default").toString(),
+									object.getString("type"),
+									object.getBoolean("required"),
+									object.getBoolean("suggested"));
 					i++;
 				}
 			}

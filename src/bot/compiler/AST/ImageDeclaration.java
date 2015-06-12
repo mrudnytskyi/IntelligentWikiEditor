@@ -16,7 +16,6 @@ package bot.compiler.AST;
 
 import java.util.Objects;
 
-import utils.MutableString;
 import bot.compiler.Visitor;
 
 /**
@@ -29,22 +28,21 @@ import bot.compiler.Visitor;
 public class ImageDeclaration implements Content {
 
 	protected final CharSequence image;
-	
+
 	public ImageDeclaration(CharSequence image) {
 		Objects.requireNonNull(image, "Image can not be null!");
 		this.image = image;
 	}
-	
+
 	public CharSequence getImage() {
 		return image;
 	}
-	
+
 	@Override
 	public String toString() {
-		MutableString ms = new MutableString("[[Файл:", image, "]]");
-		return ms.toString();
+		return String.join("", "[[Файл:", image, "]]");
 	}
-	
+
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitImageDeclaration(this);

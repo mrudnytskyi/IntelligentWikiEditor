@@ -14,7 +14,6 @@
  */
 package bot.compiler.AST;
 
-import utils.MutableString;
 import bot.compiler.Visitor;
 
 /**
@@ -28,11 +27,10 @@ public class Bold extends AbstractContentHolder {
 	public Bold(Content[] content) {
 		super(content);
 	}
-	
+
 	@Override
 	public String toString() {
-		MutableString ms = new MutableString("'''", super.toString(), "'''");
-		return ms.toString();
+		return String.join("", "'''", super.toString(), "'''");
 	}
 
 	@Override
