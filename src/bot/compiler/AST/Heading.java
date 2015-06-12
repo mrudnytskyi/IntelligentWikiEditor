@@ -72,7 +72,8 @@ public class Heading extends AbstractContentHolder {
 	public String toString() {
 		char[] chars = new char[getType().ordinal()];
 		Arrays.fill(chars, '=');
-		return new String(chars);
+		String heading = new String(chars);
+		return String.join("", heading, super.toString(), heading);
 	}
 
 	@Override
