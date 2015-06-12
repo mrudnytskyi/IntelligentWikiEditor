@@ -15,20 +15,13 @@
 package gui.fx;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.Clipboard;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 
 import org.controlsfx.control.textfield.TextFields;
 
@@ -41,7 +34,7 @@ import bot.io.MediaWikiFacade;
  */
 public class ApplicationRootController {
 
-	private final Clipboard cb = Clipboard.getSystemClipboard();
+	private final Clipboard clipboard = Clipboard.getSystemClipboard();
 
 	@FXML
 	private Button cutButton;
@@ -68,8 +61,8 @@ public class ApplicationRootController {
 	public void initialize() {
 		text.setWrapText(true);
 		text.setOnMouseMoved(event -> {
-			pasteButton.setDisable(!cb.hasString());
-			pasteMenuItem.setDisable(!cb.hasString());
+			pasteButton.setDisable(!clipboard.hasString());
+			pasteMenuItem.setDisable(!clipboard.hasString());
 		});
 		text.selectedTextProperty().addListener(listener -> {
 			if (text.getSelectedText().length() != 0) {
@@ -86,54 +79,19 @@ public class ApplicationRootController {
 		});
 	}
 
+	private TextInputDialog textInputDialogFactory() {
+		TextInputDialog tid = new TextInputDialog();
+		int popupWidth = 250;
+		tid.getEditor().setMinWidth(popupWidth);
+		return tid;
+	}
+
 	public void newAction() {
-		notImpl();
-	}
-
-	private void notImpl() {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText("Not implemented error");
-		alert.setContentText("Sorry, not implemented yet");
-		alert.show();
-	}
-
-	private void showError(Exception e) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText("Look, an exception!");
-		alert.setContentText(e.getMessage());
-
-		// Create expandable Exception.
-		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter(sw);
-		e.printStackTrace(pw);
-		String exceptionText = sw.toString();
-
-		Label label = new Label("The exception stacktrace was:");
-
-		TextArea textArea = new TextArea(exceptionText);
-		textArea.setEditable(false);
-		textArea.setWrapText(true);
-
-		textArea.setMaxWidth(Double.MAX_VALUE);
-		textArea.setMaxHeight(Double.MAX_VALUE);
-		GridPane.setVgrow(textArea, Priority.ALWAYS);
-		GridPane.setHgrow(textArea, Priority.ALWAYS);
-
-		GridPane expContent = new GridPane();
-		expContent.setMaxWidth(Double.MAX_VALUE);
-		expContent.add(label, 0, 0);
-		expContent.add(textArea, 0, 1);
-
-		// Set expandable Exception into the dialog pane.
-		alert.getDialogPane().setExpandableContent(expContent);
-
-		alert.show();
+		Dialogs.showNotImplementedError();
 	}
 
 	public void openFileAction() {
-		notImpl();
+		Dialogs.showNotImplementedError();
 	}
 
 	public void openURLAction() {
@@ -147,21 +105,21 @@ public class ApplicationRootController {
 			try {
 				text.setText(MediaWikiFacade.getArticleText(tid.getResult()));
 			} catch (IOException e) {
-				showError(e);
+				Dialogs.showError(e);
 			}
 		}
 	}
 
 	public void saveAction() {
-		notImpl();
+		Dialogs.showNotImplementedError();
 	}
 
 	public void saveAsAction() {
-		notImpl();
+		Dialogs.showNotImplementedError();
 	}
 
 	public void closeAction() {
-		notImpl();
+		Dialogs.showNotImplementedError();
 	}
 
 	public void cutAction() {
@@ -198,41 +156,34 @@ public class ApplicationRootController {
 	}
 
 	public void insertExternalLinkAction() {
-		notImpl();
+		Dialogs.showNotImplementedError();
 	}
 
 	public void insertHeadingAction() {
-		notImpl();
+		Dialogs.showNotImplementedError();
 	}
 
 	public void insertSnippetAction() {
-		notImpl();
+		Dialogs.showNotImplementedError();
 	}
 
 	public void insertTemplateAction() {
-		notImpl();
+		Dialogs.showNotImplementedError();
 	}
 
 	public void addCategoriesAction() {
-		notImpl();
+		Dialogs.showNotImplementedError();
 	}
 
 	public void helpAction() {
-		notImpl();
+		Dialogs.showNotImplementedError();
 	}
 
 	public void aboutAction() {
-		notImpl();
+		Dialogs.showNotImplementedError();
 	}
 
 	public void quitAction() {
-		notImpl();
-	}
-
-	private TextInputDialog textInputDialogFactory() {
-		TextInputDialog tid = new TextInputDialog();
-		int popupWidth = 250;
-		tid.getEditor().setMinWidth(popupWidth);
-		return tid;
+		Dialogs.showNotImplementedError();
 	}
 }
