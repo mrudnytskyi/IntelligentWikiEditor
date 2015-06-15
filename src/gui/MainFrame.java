@@ -38,6 +38,7 @@ import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultEditorKit;
 
 import bot.compiler.AST.CategoryDeclaration;
@@ -66,8 +67,6 @@ public class MainFrame extends ApplicationFrame {
 	private final JPanel toolpane = new JPanel();
 
 	private final MessagesFrame messager = new MessagesFrame(this);
-
-	private final FileFiltersManager filters = new FileFiltersManager();
 
 	private Project currentProject;
 
@@ -313,7 +312,8 @@ public class MainFrame extends ApplicationFrame {
 
 	private void open() {
 		JFileChooser chooser = new JFileChooser(".");
-		chooser.setFileFilter(filters.getFilter("xml"));
+		chooser.setFileFilter(new FileNameExtensionFilter(
+				"eXtensible Markup Language files (XML)", "xml", "XML"));
 		int result = chooser.showOpenDialog(MainFrame.this);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			try {
