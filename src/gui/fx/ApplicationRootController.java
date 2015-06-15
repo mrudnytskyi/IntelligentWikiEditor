@@ -15,6 +15,8 @@
 package gui.fx;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -35,6 +37,9 @@ import bot.io.MediaWikiFacade;
 public class ApplicationRootController {
 
 	private final Clipboard clipboard = Clipboard.getSystemClipboard();
+
+	private final ResourceBundle i18n = ResourceBundleFactory
+			.getBundle(new Locale("uk", "ua"));
 
 	@FXML
 	private Button cutButton;
@@ -83,6 +88,13 @@ public class ApplicationRootController {
 		TextInputDialog tid = new TextInputDialog();
 		int popupWidth = 250;
 		tid.getEditor().setMinWidth(popupWidth);
+		tid.setHeaderText(i18n
+				.getString("text-input-dialog_header-text_article"));
+		tid.setContentText(i18n
+				.getString("text-input-dialog_content-text_article"));
+		tid.setTitle(i18n.getString("text-input-dialog_title_article"));
+		tid.getEditor().setPromptText(
+				i18n.getString("text-input-dialog_prompt-text_article"));
 		return tid;
 	}
 
@@ -96,12 +108,13 @@ public class ApplicationRootController {
 
 	public void openURLAction() {
 		TextInputDialog tid = textInputDialogFactory();
-		//TODO
-		tid.getEditor().setPromptText("Start entering article name...");
-		TextFields.bindAutoCompletion(tid.getEditor(), "TODO");
 
+		//TODO autocomplete
+		TextFields.bindAutoCompletion(tid.getEditor(), "TODO");
 		tid.showAndWait();
-		if (tid.getResult() != null) {
+
+		String result = tid.getResult();
+		if ((result != null) && result.isEmpty()) {
 			try {
 				text.setText(MediaWikiFacade.getArticleText(tid.getResult()));
 			} catch (IOException e) {
@@ -140,18 +153,19 @@ public class ApplicationRootController {
 
 	public void insertWikiLinkAction() {
 		TextInputDialog tid = textInputDialogFactory();
-		//TODO
-		tid.getEditor().setPromptText("Start entering article name...");
-		TextFields.bindAutoCompletion(tid.getEditor(), "TODO");
 
+		//TODO autocomplete
+		TextFields.bindAutoCompletion(tid.getEditor(), "TODO");
 		tid.showAndWait();
-		if (tid.getResult() != null) {
-			text.replaceSelection(String.join(
-					"",
-					"[[",
-					tid.getResult(),
-					(text.getSelection().getLength() != 0 ? "|"
-							+ text.getSelectedText() : ""), "]]"));
+
+		String result = tid.getResult();
+		if (result != null) {
+			//@formatter:off
+			String[] replacement = { "[[", tid.getResult(), 
+				(text.getSelection().getLength() != 0 ? (result.isEmpty() ? 
+					"" : "|") + text.getSelectedText() : ""), "]]" };
+			//@formatter:on
+			text.replaceSelection(String.join("", replacement));
 		}
 	}
 
