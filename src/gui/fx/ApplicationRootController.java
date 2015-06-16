@@ -14,6 +14,7 @@
  */
 package gui.fx;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -24,9 +25,11 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.Clipboard;
+import javafx.stage.FileChooser;
 
 import org.controlsfx.control.textfield.TextFields;
 
+import bot.io.FilesFacade;
 import bot.io.MediaWikiFacade;
 
 /**
@@ -103,7 +106,19 @@ public class ApplicationRootController {
 	}
 
 	public void openFileAction() {
-		Dialogs.showNotImplementedError();
+		FileChooser chooser = new FileChooser();
+		chooser.setInitialDirectory(new File("."));
+		chooser.getExtensionFilters().add(
+				new FileChooser.ExtensionFilter(i18n
+						.getString("extension-filter_wpf"), "*.wpf"));
+		File file = chooser.showOpenDialog(null);
+		if (file != null) {
+			try {
+				text.setText(FilesFacade.readTXT(file.getAbsolutePath()));
+			} catch (IOException e) {
+				Dialogs.showError(e);
+			}
+		}
 	}
 
 	public void openURLAction() {
