@@ -44,6 +44,8 @@ public class ApplicationRootController {
 	private final ResourceBundle i18n = ResourceBundleFactory
 			.getBundle(new Locale("uk", "ua"));
 
+	private String currentOpenedFile;
+
 	@FXML
 	private Button cutButton;
 
@@ -113,8 +115,9 @@ public class ApplicationRootController {
 						.getString("extension-filter_wpf"), "*.wpf"));
 		File file = chooser.showOpenDialog(null);
 		if (file != null) {
+			currentOpenedFile = file.getAbsolutePath();
 			try {
-				text.setText(FilesFacade.readTXT(file.getAbsolutePath()));
+				text.setText(FilesFacade.readTXT(currentOpenedFile));
 			} catch (IOException e) {
 				Dialogs.showError(e);
 			}
@@ -129,9 +132,9 @@ public class ApplicationRootController {
 		tid.showAndWait();
 
 		String result = tid.getResult();
-		if ((result != null) && result.isEmpty()) {
+		if (result != null) {
 			try {
-				text.setText(MediaWikiFacade.getArticleText(tid.getResult()));
+				text.setText(MediaWikiFacade.getArticleText(result));
 			} catch (IOException e) {
 				Dialogs.showError(e);
 			}
@@ -139,11 +142,29 @@ public class ApplicationRootController {
 	}
 
 	public void saveAction() {
-		Dialogs.showNotImplementedError();
+		if (currentOpenedFile != null) {
+			try {
+				FilesFacade.writeTXT(currentOpenedFile, text.getText());
+			} catch (IOException e) {
+				Dialogs.showError(e);
+			}
+		}
 	}
 
 	public void saveAsAction() {
-		Dialogs.showNotImplementedError();
+		FileChooser chooser = new FileChooser();
+		chooser.setInitialDirectory(new File("."));
+		chooser.getExtensionFilters().add(
+				new FileChooser.ExtensionFilter(i18n
+						.getString("extension-filter_wpf"), "*.wpf"));
+		File file = chooser.showSaveDialog(null);
+		if (file != null) {
+			try {
+				FilesFacade.writeTXT(file.getAbsolutePath(), text.getText());
+			} catch (IOException e) {
+				Dialogs.showError(e);
+			}
+		}
 	}
 
 	public void closeAction() {
