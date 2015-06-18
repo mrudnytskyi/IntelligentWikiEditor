@@ -123,12 +123,12 @@ public final class MediaWikiFacade {
 		}
 	}
 
-	private static String WIKIPEDIA_API = "http://uk.wikipedia.org/w/api.php";
+	private static String WIKIPEDIA_API = "https://uk.wikipedia.org/w/api.php";
 
 	// TODO: will be used later, in getFiles method
 	@SuppressWarnings("unused")
 	private static String COMMONS_API =
-			"http://commons.wikimedia.org/w/api.php";
+			"https://commons.wikimedia.org/w/api.php";
 
 	private static String QUERY_LINK = "?action=query";
 
