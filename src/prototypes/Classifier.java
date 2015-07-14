@@ -12,7 +12,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package bot.core;
+package prototypes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +25,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 
 import bot.nlp.Snippet;
-import bot.nlp.SnippetTopic;
 import bot.nlp.Stemmer;
 import bot.nlp.StopWordsHolder;
 
@@ -50,7 +49,12 @@ public class Classifier {
 		}
 	}
 
-	private static final boolean DEBUG = true;
+	//stub
+	private class ArticleTemplate {
+		public boolean containsWord(String word, int i) {
+			return false;
+		}
+	}
 
 	protected static final int COUNT = 5;
 
@@ -100,9 +104,6 @@ public class Classifier {
 		for (String word : words) {
 			if (ukrainianStopWords.notStopWord(word)) {
 				String stemmed = Stemmer.stem(word);
-				if (Classifier.DEBUG) {
-					System.out.println(word + " -> " + stemmed);
-				}
 				Integer used = wordsUse.get(stemmed);
 				if (used == null) {
 					used = 0;
@@ -123,15 +124,9 @@ public class Classifier {
 			entries[i] = iter.next();
 		}
 		Arrays.sort(entries, new EntryComparator());
-		if (Classifier.DEBUG) {
-			System.out.println("Entries count = " + entries.length);
-		}
 		for (int i = entries.length - 1, j = 0; j < Math.min(Classifier.COUNT,
 				entries.length); i--, j++) {
 			oftenWords.add(entries[i].getKey());
-		}
-		if (Classifier.DEBUG) {
-			System.out.println(Arrays.deepToString(entries));
 		}
 		return oftenWords;
 	}

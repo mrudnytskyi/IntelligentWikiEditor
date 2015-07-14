@@ -44,8 +44,6 @@ import javax.swing.text.DefaultEditorKit;
 import bot.compiler.AST.CategoryDeclaration;
 import bot.compiler.AST.SmartLink;
 import bot.compiler.AST.TemplateDeclaration;
-import bot.core.ArticleTemplate;
-import bot.core.ArticlesCreator;
 import bot.io.DatabaseFacade;
 import bot.io.FilesFacade;
 import bot.nlp.Snippet;
@@ -275,7 +273,6 @@ public class MainFrame extends ApplicationFrame {
 			OKAddSnippetFrame((Snippet) evt.getNewValue());
 			break;
 		case "generate-article":
-			generateArticle();
 			break;
 		case "add-categories":
 			addCategories((CategoryDeclaration[]) evt.getNewValue());
@@ -431,27 +428,6 @@ public class MainFrame extends ApplicationFrame {
 		} catch (IOException e) {
 			messages.error(e.toString());
 			messager.showError(e.toString());
-		}
-	}
-
-	private void generateArticle() {
-		try {
-			File srcFolder = new File(currentProject.getSrcFolder());
-			File[] srcFiles = srcFolder.listFiles();
-			Snippet[] snippets = new Snippet[srcFiles.length];
-			int i = 0;
-			for (File file : srcFiles) {
-				snippets[i] = (Snippet) FilesFacade.readXML(file.getPath());
-			}
-			ArticleTemplate at =
-					(ArticleTemplate) FilesFacade.readXML(currentProject
-							.getTemplateFile());
-			ArticlesCreator ac = new ArticlesCreator(snippets, at);
-			FilesFacade.writeTXT(currentProject.getArticleFile(),
-					ac.createArticle());
-		} catch (IOException e) {
-			messager.showError(e.toString());
-			messages.error(e.toString());
 		}
 	}
 

@@ -12,9 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package bot.core;
+package prototypes;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -24,12 +23,8 @@ import java.util.Set;
 
 import utils.StringArrayList;
 import bot.nlp.Snippet;
-import bot.nlp.SnippetTopic;
 import bot.nlp.Stemmer;
 import bot.nlp.StopWordsHolder;
-import bot.nlp.processors.CleanProcessor;
-import bot.nlp.processors.StopsRemoverProcessor;
-import bot.nlp.processors.TextProcessor;
 
 /**
  * 
@@ -37,8 +32,6 @@ import bot.nlp.processors.TextProcessor;
  * @version 0.1 25.01.2015
  */
 public class Trainer {
-
-	private final boolean DEBUG = true;
 
 	private final StringArrayList[] template;
 
@@ -54,11 +47,7 @@ public class Trainer {
 	}
 
 	private String prepareTextFragment(Snippet snippet) {
-		TextProcessor cleaner = new CleanProcessor();
-		cleaner.process(snippet);
-		TextProcessor stopsRemover = new StopsRemoverProcessor();
-		stopsRemover.process(cleaner.getResultSnippet());
-		return stopsRemover.getResultSnippet().getText();
+		return snippet.getText();
 	}
 
 	public void train() {
@@ -78,9 +67,6 @@ public class Trainer {
 			}
 			template[topic.ordinal()] = currentList;
 		}
-		if (DEBUG) {
-			System.out.println(Arrays.toString(template));
-		}
 		for (int i = 0; i < template.length; i++) {
 			template[i] = deleteNotOftenUsedWords(template[i]);
 		}
@@ -99,12 +85,5 @@ public class Trainer {
 			list.add(s);
 		}
 		return list;
-	}
-
-	public ArticleTemplate getTemplate() {
-		if (DEBUG) {
-			System.out.println(Arrays.toString(template));
-		}
-		return new ArticleTemplate(template);
 	}
 }
