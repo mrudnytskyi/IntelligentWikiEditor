@@ -1,6 +1,4 @@
-package intelligent.wiki.editor.gui.fx;
 /*
- * ResourceBundleFactory.java	13.06.2015
  * Copyright (C) 2015 Myroslav Rudnytskyi
  * 
  * This program is free software; you can redistribute it and/or
@@ -13,6 +11,7 @@ package intelligent.wiki.editor.gui.fx;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
+package intelligent.wiki.editor.gui.fx;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,24 +23,77 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 /**
- * 
+ * Class, created to make {@link ResourceBundle} be able to read properties
+ * in different encodings, for example, UTF-8.
+ *
  * @author Myroslav Rudnytskyi
- * @version 0.1 13.06.2015
+ * @version 18.09.2015
  */
 public class ResourceBundleFactory {
 
+	private static final String LANGUAGE_BASE_FILE = "LangBundles";
+	private static final Logger log = Logger.getLogger(ResourceBundleFactory.class.getName());
+	private static ClassLoader resourcesLoader;
+
+	static {
+		try {
+			resourcesLoader = new URLClassLoader(new URL[]{
+					new File("src/main/resources").toURI().toURL()});
+			log.info("Resources loader created successfully!");
+		} catch (MalformedURLException e) {
+			Dialogs.showError(e);
+		}
+	}
+
 	/**
-	 * See <a
-	 * href="http://www.gubber.ru/Razrabotka/ResourceBundle-and-UTF-8.html"
-	 * >site</a> for details.
+	 * Do not instantiate it, use static methods!
+	 */
+	private ResourceBundleFactory() {
+	}
+
+	/**
+	 * Wrapper for {@link ResourceBundle#getBundle(String, Locale, ClassLoader, ResourceBundle.Control)} method.
+	 *
+	 * @return resource bundle, stored in file with UTF-8 encoding
+	 */
+	public static ResourceBundle getBundle() {
+		return ResourceBundle.getBundle(
+				ResourceBundleFactory.LANGUAGE_BASE_FILE, Locale.getDefault(),
+				ResourceBundleFactory.resourcesLoader,
+				new EncodingResourceBundleControl());
+	}
+
+	/**
+	 * Wrapper for {@link ResourceBundle#getBundle(String, Locale, ClassLoader, ResourceBundle.Control)} method.
+	 *
+	 * @param locale locale object. If it is <code>null</code> will be loaded from {@link Locale#getDefault()}
+	 * @return resource bundle, stored in file with UTF-8 encoding
+	 */
+	public static ResourceBundle getBundle(Locale locale) {
+		if (locale == null) {
+			log.warning("Locale is null, loading default...");
+			return ResourceBundleFactory.getBundle();
+		}
+		return ResourceBundle.getBundle(
+				ResourceBundleFactory.LANGUAGE_BASE_FILE, locale,
+				ResourceBundleFactory.resourcesLoader,
+				new EncodingResourceBundleControl());
+	}
+
+	/**
+	 * See <a href="http://www.gubber.ru/Razrabotka/ResourceBundle-and-UTF-8.html">site</a> for details.
 	 */
 	private static class EncodingResourceBundleControl extends
 			ResourceBundle.Control {
 
 		private final String encoding;
 
+		/**
+		 * Default encoding is UTF-8
+		 */
 		public EncodingResourceBundleControl() {
 			this("UTF-8");
 		}
@@ -51,10 +103,9 @@ public class ResourceBundleFactory {
 		}
 
 		@Override
-		public ResourceBundle newBundle(String baseName, Locale locale,
-				String format, ClassLoader loader, boolean reload)
-				throws IllegalAccessException, InstantiationException,
-				IOException {
+		public ResourceBundle newBundle(
+				String baseName, Locale locale, String format, ClassLoader loader, boolean reload
+		) throws IllegalAccessException, InstantiationException, IOException {
 
 			String bundleName = toBundleName(baseName, locale);
 			String resourceName = toResourceName(bundleName, "properties");
@@ -67,38 +118,4 @@ public class ResourceBundleFactory {
 			return super.newBundle(baseName, locale, format, loader, reload);
 		}
 	}
-
-	private static final String LANGUAGE_BASE_FILE = "LangBundles";
-
-	private static ClassLoader resourcesLoader;
-
-	static {
-		try {
-			ResourceBundleFactory.resourcesLoader =
-					new URLClassLoader(new URL[] { new File("src/main/resources").toURI()
-							.toURL() });
-		} catch (MalformedURLException e) {
-			Dialogs.showError(e);
-		}
-	}
-
-	private ResourceBundleFactory() {}
-
-	public static ResourceBundle getBundle() {
-		return ResourceBundle.getBundle(
-				ResourceBundleFactory.LANGUAGE_BASE_FILE, Locale.getDefault(),
-				ResourceBundleFactory.resourcesLoader,
-				new EncodingResourceBundleControl());
-	}
-
-	public static ResourceBundle getBundle(Locale locale) {
-		if (locale == null) {
-			return ResourceBundleFactory.getBundle();
-		}
-		return ResourceBundle.getBundle(
-				ResourceBundleFactory.LANGUAGE_BASE_FILE, locale,
-				ResourceBundleFactory.resourcesLoader,
-				new EncodingResourceBundleControl());
-	}
-
 }
