@@ -1,0 +1,15 @@
+<intelligent.wiki.editor.FilesFacadeTest_-Obj>
+  <number>1994</number>
+  <array>
+    <double>2.1</double>
+    <double>0.3</double>
+  </array>
+  <list>
+    <string>This</string>
+    <string>is</string>
+    <string>test</string>
+    <string>String</string>
+    <string>~!@#$%^&amp;|:&quot;&lt;&gt;`\&apos;;/.,</string>
+  </list>
+  <outer-class/>
+</intelligent.wiki.editor.FilesFacadeTest_-Obj>

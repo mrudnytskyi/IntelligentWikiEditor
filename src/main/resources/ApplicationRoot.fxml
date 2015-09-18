@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane prefHeight="600.0" prefWidth="1024.0" stylesheets="@WarmStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="intelligent.wiki.editor.gui.fx.ApplicationRootController">
+   <top>
+      <VBox maxHeight="90.0" minHeight="90.0" prefHeight="90.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar>
+              <menus>
+                  <Menu mnemonicParsing="false" text="%menu_article">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#newAction" text="%menu_new">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@new_small.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <Menu mnemonicParsing="false" text="%menu_open">
+                          <items>
+                              <MenuItem mnemonicParsing="false" onAction="#openFileAction" text="%menu_open-file">
+                                 <accelerator>
+                                    <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                 </accelerator></MenuItem>
+                            <MenuItem mnemonicParsing="false" onAction="#openURLAction" text="%menu_open-url">
+                                 <accelerator>
+                                    <KeyCodeCombination alt="UP" code="U" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                 </accelerator></MenuItem>
+                          </items>
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@open_small.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Menu>
+                        <MenuItem mnemonicParsing="false" onAction="#saveAction" text="%menu_save">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@save_small.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#saveAsAction" text="%menu_save-as">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@save_small.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#closeAction" text="%menu_close">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="%menu_edit">
+                     <items>
+                        <MenuItem fx:id="cutMenuItem" mnemonicParsing="false" onAction="#cutAction" text="%menu_cut">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@cut_small.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem fx:id="copyMenuItem" mnemonicParsing="false" onAction="#copyAction" text="%menu_copy">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@copy_small.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem fx:id="pasteMenuItem" mnemonicParsing="false" onAction="#pasteAction" text="%menu_paste">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@paste_small.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#selectAllAction" text="%menu_select-all">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="%menu_source">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#insertWikiLinkAction" text="%menu_insert-link">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@wikilink_small.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="DOWN" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#insertExternalLinkAction" text="%menu_insert-external-link">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@link_small.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="DOWN" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#insertHeadingAction" text="%menu_insert-heading">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@heading_small.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="DOWN" code="H" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#insertSnippetAction" text="%menu_insert-snippet">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@add-snippet_small.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="DOWN" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#insertTemplateAction" text="%menu_insert-template">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@template_small.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="DOWN" code="T" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#addCategoriesAction" text="%menu_add-categories">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@category_small.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="DOWN" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="%menu_application">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#helpAction" text="%menu_help">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@question_small.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="F1" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#aboutAction" text="%menu_about">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@info_small.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic></MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#quitAction" text="%menu_quit">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@exit_small.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                     </items>
+                  </Menu>
+               </menus>
+            </MenuBar>
+            <ToolBar prefHeight="62.0" prefWidth="1024.0">
+              <items>
+                  <MenuButton mnemonicParsing="false" prefHeight="48.0" prefWidth="60.0">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#openFileAction" text="Open file" />
+                      <MenuItem mnemonicParsing="false" onAction="#openURLAction" text="Load from URL" />
+                    </items>
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@open_big.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <tooltip>
+                        <Tooltip text="%toolbar_open" />
+                     </tooltip>
+                  </MenuButton>
+                <Button mnemonicParsing="false" onAction="#saveAction" prefHeight="48.0" prefWidth="48.0">
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@save_big.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <tooltip>
+                        <Tooltip text="%toolbar_save" />
+                     </tooltip></Button>
+                  <Separator orientation="VERTICAL" />
+                  <Button fx:id="cutButton" mnemonicParsing="false" onAction="#cutAction" prefHeight="48.0" prefWidth="48.0">
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@cut_big.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <tooltip>
+                        <Tooltip text="%toolbar_cut" />
+                     </tooltip></Button>
+                  <Button fx:id="copyButton" mnemonicParsing="false" onAction="#copyAction" prefHeight="48.0" prefWidth="48.0">
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@copy_big.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <tooltip>
+                        <Tooltip text="%toolbar_copy" />
+                     </tooltip></Button>
+                  <Button fx:id="pasteButton" mnemonicParsing="false" onAction="#pasteAction" prefHeight="48.0" prefWidth="48.0">
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@paste_big.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <tooltip>
+                        <Tooltip text="%toolbar_paste" />
+                     </tooltip></Button>
+                  <Separator orientation="VERTICAL" />
+                  <Button mnemonicParsing="false" onAction="#insertWikiLinkAction" prefHeight="48.0" prefWidth="48.0">
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@wikilink_big.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <tooltip>
+                        <Tooltip text="%toolbar_insert-link" />
+                     </tooltip></Button>
+                  <Button mnemonicParsing="false" onAction="#insertExternalLinkAction" prefHeight="48.0" prefWidth="48.0">
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@link_big.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <tooltip>
+                        <Tooltip text="%toolbar_insert-external-link" />
+                     </tooltip></Button>
+                  <Button mnemonicParsing="false" onAction="#insertHeadingAction" prefHeight="48.0" prefWidth="48.0">
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@heading_big.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <tooltip>
+                        <Tooltip text="%toolbar_insert-heading" />
+                     </tooltip></Button>
+                  <Button mnemonicParsing="false" onAction="#insertSnippetAction" prefHeight="48.0" prefWidth="48.0">
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@add-snippet_big.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <tooltip>
+                        <Tooltip text="%toolbar_insert-snippet" />
+                     </tooltip></Button>
+                  <Button mnemonicParsing="false" onAction="#insertTemplateAction" prefHeight="48.0" prefWidth="48.0">
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@template_big.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <tooltip>
+                        <Tooltip text="%toolbar_insert-template" />
+                     </tooltip></Button>
+                  <Button mnemonicParsing="false" onAction="#addCategoriesAction" prefHeight="48.0" prefWidth="48.0">
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@category_big.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <tooltip>
+                        <Tooltip text="%toolbar_add-categories" />
+                     </tooltip></Button>
+              </items>
+            </ToolBar>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <SplitPane dividerPositions="0.23385518590998042" prefHeight="600.0" prefWidth="1042.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <items>
+                  <TreeView prefHeight="598.0" prefWidth="155.0" />
+                     <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+                       <tabs>
+                         <Tab>
+                           <content>
+                              <TextArea fx:id="text" prefHeight="200.0" prefWidth="200.0" />
+                           </content>
+                        </Tab>
+                    </tabs>
+                  </TabPane>
+               </items>
+            </SplitPane>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
