@@ -92,54 +92,54 @@ public class MainFrame extends ApplicationFrame {
 	protected AbstractAction[] createActions() {
 		List<AbstractAction> actions = new ArrayList<AbstractAction>();
 		actions.add(new Action(this, "New project", "show-new-project",
-				"Create new project", "res\\new.png", "res\\new_big.png",
+				"Create new project", "src/main/resources/new.png", "src/main/resources/new_big.png",
 				new Integer(KeyEvent.VK_N)));
 		actions.add(new Action(this, "Open project", "open-project",
-				"Open project file", "res\\open.png", "res\\open_big.png",
+				"Open project file", "src/main/resources/open.png", "src/main/resources/open_big.png",
 				new Integer(KeyEvent.VK_O)));
 		actions.add(new Action(this, "Save changes", "save-changes",
-				"Save article to file", "res\\save.png", "res\\save_big.png",
+				"Save article to file", "src/main/resources/save.png", "src/main/resources/save_big.png",
 				new Integer(KeyEvent.VK_S)));
 		actions.add(new Action(this, "Exit", "exit", "Exit the application",
-				"res\\exit.png", "res\\exit_big.png",
+				"src/main/resources/exit.png", "src/main/resources/exit_big.png",
 				new Integer(KeyEvent.VK_E)));
 		actions.add(new Action(this, "Add link to article", "show-add-article",
-				"Add link to another Wikipedia page", "res\\wikilink.png",
-				"res\\wikilink_big.png", new Integer(KeyEvent.VK_L)));
+				"Add link to another Wikipedia page", "src/main/resources/wikilink.png",
+				"src/main/resources/wikilink_big.png", new Integer(KeyEvent.VK_L)));
 		actions.add(new Action(this, "Add categories", "show-add-categories",
-				"Add categories", "res\\category.png", "res\\category_big.png",
+				"Add categories", "src/main/resources/category.png", "src/main/resources/category_big.png",
 				new Integer(KeyEvent.VK_C)));
 		actions.add(new Action(this, "Add template", "show-add-template",
-				"Add template", "res\\template.png", "res\\template_big.png",
+				"Add template", "src/main/resources/template.png", "src/main/resources/template_big.png",
 				new Integer(KeyEvent.VK_T)));
 		actions.add(new Action(this, "About", "about",
-				"Show information about software", "res\\info.png",
-				"res\\info_big.png", new Integer(KeyEvent.VK_A)));
+				"Show information about software", "src/main/resources/info.png",
+				"src/main/resources/info_big.png", new Integer(KeyEvent.VK_A)));
 		actions.add(ApplicationFrame.parametizeAction(
 				new DefaultEditorKit.CutAction(), "Cut", "cut",
-				"Cut selected text fragment", "res\\cut.png",
-				"res\\cut_big.png", new Integer(KeyEvent.VK_T)));
+				"Cut selected text fragment", "src/main/resources/cut.png",
+				"src/main/resources/cut_big.png", new Integer(KeyEvent.VK_T)));
 		actions.add(ApplicationFrame.parametizeAction(
 				new DefaultEditorKit.CopyAction(), "Copy", "copy",
-				"Copy selected text fragment", "res\\copy.png",
-				"res\\copy_big.png", new Integer(KeyEvent.VK_C)));
+				"Copy selected text fragment", "src/main/resources/copy.png",
+				"src/main/resources/copy_big.png", new Integer(KeyEvent.VK_C)));
 		actions.add(ApplicationFrame.parametizeAction(
 				new DefaultEditorKit.PasteAction(), "Paste", "paste",
-				"Paste text fragment", "res\\paste.png", "res\\paste_big.png",
+				"Paste text fragment", "src/main/resources/paste.png", "src/main/resources/paste_big.png",
 				new Integer(KeyEvent.VK_P)));
 		actions.add(new Action(this, "Insert heading", "insert-heading",
-				"Insert heading", "res\\heading.png", "res\\heading_big.png",
+				"Insert heading", "src/main/resources/heading.png", "src/main/resources/heading_big.png",
 				new Integer(KeyEvent.VK_H)));
 		actions.add(new Action(this, "Insert external link",
 				"insert-external-link", "Insert link to external resources",
-				"res\\link.png", "res\\link_big.png",
+				"src/main/resources/link.png", "src/main/resources/link_big.png",
 				new Integer(KeyEvent.VK_E)));
 		actions.add(new Action(this, "Add snippet", "show-add-snippet",
-				"Add snippet to sources", "res\\add-snippet.png",
-				"res\\add-snippet_big.png", new Integer(KeyEvent.VK_A)));
+				"Add snippet to sources", "src/main/resources/add-snippet.png",
+				"src/main/resources/add-snippet_big.png", new Integer(KeyEvent.VK_A)));
 		actions.add(new Action(this, "Generate article", "generate-article",
-				"Generate article text from snippets", "res\\wizard.png",
-				"res\\wizard_big.png", new Integer(KeyEvent.VK_G)));
+				"Generate article text from snippets", "src/main/resources/wizard.png",
+				"src/main/resources/wizard_big.png", new Integer(KeyEvent.VK_G)));
 
 		return actions.toArray(new AbstractAction[actions.size()]);
 	}

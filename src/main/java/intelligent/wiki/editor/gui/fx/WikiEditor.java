@@ -35,7 +35,7 @@ import javafx.stage.Stage;
 public class WikiEditor extends Application {
 
 	private static final String APPLICATION_ROOT_FILE =
-			"res/ApplicationRoot.fxml";
+			"src/main/resources/ApplicationRoot.fxml";
 
 	private Stage primaryStage;
 	private BorderPane applicationRoot;

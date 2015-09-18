@@ -75,7 +75,7 @@ public class ResourceBundleFactory {
 	static {
 		try {
 			ResourceBundleFactory.resourcesLoader =
-					new URLClassLoader(new URL[] { new File("res").toURI()
+					new URLClassLoader(new URL[] { new File("src/main/resources").toURI()
 							.toURL() });
 		} catch (MalformedURLException e) {
 			Dialogs.showError(e);

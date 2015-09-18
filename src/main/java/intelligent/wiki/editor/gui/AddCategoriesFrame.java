@@ -159,11 +159,11 @@ public class AddCategoriesFrame extends ApplicationFrame {
 	protected AbstractAction[] createActions() {
 		List<AbstractAction> actions = new ArrayList<AbstractAction>();
 		actions.add(new Action(this, "Cancel", "add-categories-cancel",
-				"Cancel all changes", "", "res\\cancel_big.png", 0));
+				"Cancel all changes", "", "src/main/resources/cancel_big.png", 0));
 		actions.add(new Action(this, "OK", "add-categories-OK",
-				"Apply all changes", "", "res\\ok_big.png", 0));
+				"Apply all changes", "", "src/main/resources/ok_big.png", 0));
 		actions.add(new Action(this, "", "add-categories-add", "Add category",
-				"", "res\\add_small.png", 0));
+				"", "src/main/resources/add_small.png", 0));
 		return actions.toArray(new AbstractAction[actions.size()]);
 	}
 }
