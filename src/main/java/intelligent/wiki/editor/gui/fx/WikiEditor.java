@@ -1,6 +1,4 @@
-package intelligent.wiki.editor.gui.fx;
 /*
- * WikiEditor.java	20.05.2015
  * Copyright (C) 2015 Myroslav Rudnytskyi
  * 
  * This program is free software; you can redistribute it and/or
@@ -13,12 +11,7 @@ package intelligent.wiki.editor.gui.fx;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Locale;
-import java.util.ResourceBundle;
+package intelligent.wiki.editor.gui.fx;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -26,36 +19,42 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 /**
- * 
- * 
+ * Main class of wiki editor application, containing code to run it
+ * ({@link #start(Stage)}) and load GUI.
+ *
  * @author Myroslav Rudnytskyi
- * @version 0.1 20.05.2015
+ * @version 18.09.2015
  */
 public class WikiEditor extends Application {
 
-	private static final String APPLICATION_ROOT_FILE =
-			"src/main/resources/ApplicationRoot.fxml";
+	private static final String WIKI_EDITOR_ROOT_FILE =
+			"src/main/resources/WikiEditorRoot.fxml";
 
 	private Stage primaryStage;
 	private BorderPane applicationRoot;
 
+	/**
+	 * Method, called on wiki editor start-up.
+	 */
 	@Override
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
-		primaryStage.setTitle("Intelligent Wiki Bot 0.1");
+		primaryStage.setTitle("Intelligent Wiki Editor 0.1");
 		showApplicationRoot();
 	}
 
 	private void showApplicationRoot() {
 		try {
-			URL fxml =
-					new File(WikiEditor.APPLICATION_ROOT_FILE).toURI().toURL();
-
-			ResourceBundle i18n =
-					ResourceBundleFactory.getBundle(new Locale("uk", "ua"));
-
-			applicationRoot = (BorderPane) new FXMLLoader(fxml, i18n).load();
+			URL fxml = new File(WikiEditor.WIKI_EDITOR_ROOT_FILE).toURI().toURL();
+			ResourceBundle i18n = ResourceBundleFactory.getBundle(new Locale("uk", "ua"));
+			applicationRoot = new FXMLLoader(fxml, i18n).load();
 		} catch (IOException e) {
 			Dialogs.showError(e);
 		}
@@ -63,10 +62,5 @@ public class WikiEditor extends Application {
 		Scene scene = new Scene(applicationRoot);
 		primaryStage.setScene(scene);
 		primaryStage.show();
-	}
-
-	// TODO: this is code for debug application starting. Will be removed later!
-	public static void main(String[] args) {
-		Application.launch(args);
 	}
 }

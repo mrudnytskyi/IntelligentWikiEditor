@@ -4,7 +4,8 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane prefHeight="600.0" prefWidth="1024.0" stylesheets="@WarmStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="intelligent.wiki.editor.gui.fx.ApplicationRootController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="600.0" prefWidth="1024.0" stylesheets="@WarmStyle.css"
+            xmlns="http://javafx.com/javafx/8" fx:controller="intelligent.wiki.editor.gui.fx.ApplicationRootController">
    <top>
       <VBox maxHeight="90.0" minHeight="90.0" prefHeight="90.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
          <children>
