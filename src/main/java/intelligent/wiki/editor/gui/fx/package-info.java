@@ -1,6 +1,4 @@
-package intelligent.wiki.editor.gui.fx;
 /*
- * package-info.java	20.05.2015
  * Copyright (C) 2015 Myroslav Rudnytskyi
  * 
  * This program is free software; you can redistribute it and/or
@@ -17,5 +15,6 @@ package intelligent.wiki.editor.gui.fx;
  * Package, containing classes for GUI, based on JavaFX library.
  * 
  * @author Myroslav Rudnytskyi
- * @version 0.1 20.05.2015
+ * @version 18.09.2015
  */
+package intelligent.wiki.editor.gui.fx;

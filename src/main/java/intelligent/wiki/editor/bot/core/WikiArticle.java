@@ -1,6 +1,4 @@
-package intelligent.wiki.editor.bot.core;
 /*
- * WikiArticle.java	24.09.2014
  * Copyright (C) 2014 Myroslav Rudnytskyi
  * 
  * This program is free software; you can redistribute it and/or
@@ -13,13 +11,34 @@ package intelligent.wiki.editor.bot.core;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
+package intelligent.wiki.editor.bot.core;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
- * 
+ * Class, representing Wikipedia article in application.
+ *
  * @author Myroslav Rudnytskyi
- * @version 0.1 24.09.2014
+ * @version 19.09.2015
  */
-// TODO: write
 public class WikiArticle {
 
+	private StringProperty text = new SimpleStringProperty();
+
+	public WikiArticle(String text) {
+		this.text.setValue(text);
+	}
+
+	public String getText() {
+		return text.get();
+	}
+
+	public void setText(String text) {
+		this.text.set(text);
+	}
+
+	public StringProperty textProperty() {
+		return text;
+	}
 }
