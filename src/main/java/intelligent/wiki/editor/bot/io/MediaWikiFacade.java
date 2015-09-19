@@ -1,6 +1,4 @@
-package intelligent.wiki.editor.bot.io;
 /*
- * MediaWikiFacade.java	27.10.2014
  * Copyright (C) 2014 Myroslav Rudnytskyi
  * 
  * This program is free software; you can redistribute it and/or
@@ -13,14 +11,12 @@ package intelligent.wiki.editor.bot.io;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
+package intelligent.wiki.editor.bot.io;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Objects;
+import intelligent.wiki.editor.bot.compiler.AST.TemplateParameter;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -33,123 +29,38 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
-
-import intelligent.wiki.editor.bot.compiler.AST.TemplateParameter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Objects;
 
 /**
- * Class, created to get access to data, stored on <a
- * href=http://https://www.mediawiki.org/wiki/API:Main_page>MediaWiki</a>
+ * Class, created to get access to data, stored on <a href=http://https://www.mediawiki.org/wiki/API:Main_page>MediaWiki</a>
  * servers, such as Wikipedia articles, templates, categories and so on. Note,
  * that all it's methods can throw {@link IOException}.
  * 
  * @author Myroslav Rudnytskyi
- * @version 0.1 27.10.2014
+ * @version 19.09.2015
  */
 public final class MediaWikiFacade {
 
-	/**
-	 * Enumeration, containing language codes, such as "uk" stands for
-	 * Ukrainian, "en" for English and so on.
-	 * 
-	 * @author Mir4ik
-	 * @version 0.1 27.10.2014
-	 */
-	public enum Language {
-		UKRAINIAN("uk", "Файл:", "Категорія:", "Шаблон:"), ENGLISH("en",
-				"File:", "Category:", "Template:");
-
-		private final String code;
-
-		private final String filePreffix;
-
-		private final String categoryPreffix;
-
-		private final String templatePreffix;
-
-		private Language(String code, String file, String category,
-				String template) {
-			this.code = code;
-			filePreffix = file;
-			categoryPreffix = category;
-			templatePreffix = template;
-		}
-
-		public String getCode() {
-			return code;
-		}
-
-		public String getFilePreffix() {
-			return filePreffix;
-		}
-
-		public String getCategoryPreffix() {
-			return categoryPreffix;
-		}
-
-		public String getTemplatePreffix() {
-			return templatePreffix;
-		}
-	}
-
-	/**
-	 * Enumeration, containing Mediawiki namespace constants, such as "0" stands
-	 * for Main or article namespace, "10" for templates namespace (starting
-	 * with "Template:" preffix).
-	 * 
-	 * @author Myroslav Rudnytskyi
-	 * @version 0.1 23.04.2015
-	 */
-	private enum WikiNamespace {
-		ARTICLE(0), MAIN(0), FILE(6), TEMPLATE(10), CATEGORY(14);
-
-		private final int code;
-
-		private WikiNamespace(int code) {
-			this.code = code;
-		}
-
-		/**
-		 * Returns namespace constants in {@link String} representation.
-		 * 
-		 * @return namespace constant for this enum constant
-		 */
-		@Override
-		public String toString() {
-			return String.valueOf(code);
-		}
-	}
-
+	// https is necessary!
 	private static String WIKIPEDIA_API = "https://uk.wikipedia.org/w/api.php";
-
+	// https is necessary!
 	// TODO: will be used later, in getFiles method
 	@SuppressWarnings("unused")
 	private static String COMMONS_API =
 			"https://commons.wikimedia.org/w/api.php";
-
 	private static String QUERY_LINK = "?action=query";
-
 	private static Language lang = Language.UKRAINIAN;
 
 	/**
 	 * do not instantiate this class
 	 */
-	private MediaWikiFacade() {}
-
-	/**
-	 * Sets specified language. Note, that Ukrainian is used by default.
-	 * 
-	 * @param lang
-	 *            language to set
-	 */
-	public static void setLanguage(Language lang) {
-		MediaWikiFacade.lang = Objects.requireNonNull(lang, "Language null!");
-		MediaWikiFacade.WIKIPEDIA_API =
-				String.join("", "http://", lang.getCode(),
-						".wikipedia.org/w/api.php");
+	private MediaWikiFacade() {
 	}
 
 	public static Language getLanguage() {
@@ -157,15 +68,29 @@ public final class MediaWikiFacade {
 	}
 
 	/**
+	 * Sets specified language. Note, that Ukrainian is used by default.
+	 *
+	 * @param lang
+	 *            language to set
+	 */
+	public static void setLanguage(Language lang) {
+		MediaWikiFacade.lang = Objects.requireNonNull(lang, "Language null!");
+		// https is necessary!
+		MediaWikiFacade.WIKIPEDIA_API =
+				String.join("", "https://", lang.getCode(),
+						".wikipedia.org/w/api.php");
+	}
+
+	/**
 	 * Checks if {@link String} arguments are not null or empty. Note, that
 	 * every method in this class <strong>must</strong> make this check,
 	 * otherwise method results can be unexpected ("null" is correct String
 	 * value) or even harmful for Web servers ("" stands for all pages).
-	 * 
+	 *
 	 * @param args
 	 *            parameters to check
 	 */
-	private static void checkArguments(String ... args) {
+	private static void checkArguments(String... args) {
 		for (String s : args) {
 			if ((s == null) || s.isEmpty()) {
 				throw new IllegalArgumentException(
@@ -182,7 +107,7 @@ public final class MediaWikiFacade {
 	 * Gets plain wiki text of specified article. Note, that article name
 	 * depends on chosen language. See {@link #setLanguage(Language)
 	 * setLanguage()} method for details.
-	 * 
+	 *
 	 * @param articleName
 	 *            full article name in chosen language
 	 * @return wiki text in {@link String} representation
@@ -208,7 +133,7 @@ public final class MediaWikiFacade {
 					(Node) xpath.compile(allPagesPath).evaluate(doc,
 							XPathConstants.NODE);
 			if (result != null) {
-				text = result.getFirstChild().getNodeValue().toString();
+				text = result.getFirstChild().getNodeValue();
 			}
 		} catch (ParserConfigurationException | XPathExpressionException
 				| SAXException e) {
@@ -221,20 +146,16 @@ public final class MediaWikiFacade {
 	/**
 	 * Gets list of all pages from specified namespace, starting with specified
 	 * preffix.
-	 * 
-	 * @param preffix
-	 *            preffix
-	 * @param continueFrom
-	 *            page name, on which query was stopped, if result has more than
-	 *            500 occurrences
-	 * @param namespace
-	 *            {@link WikiNamespace namespace} object
+	 *
+	 * @param preffix      preffix
+	 * @param continueFrom page name, on which query was stopped, if result has more than
+	 *                     500 occurrences
+	 * @param namespace    {@link WikiNamespace namespace} object
 	 * @return list of pages, starting with specified prefix
-	 * @throws IOException
-	 *             if an I/O error occurs
+	 * @throws IOException if an I/O error occurs
 	 */
 	private static List<String> getPagesStartingWith(String preffix,
-			String continueFrom, WikiNamespace namespace) throws IOException {
+													 String continueFrom, WikiNamespace namespace) throws IOException {
 
 		MediaWikiFacade.checkArguments(preffix);
 		List<String> pages = new ArrayList<String>();
@@ -280,7 +201,7 @@ public final class MediaWikiFacade {
 
 	/**
 	 * Gets array of templates names, starting with specified preffix.
-	 * 
+	 *
 	 * @param preffix
 	 *            preffix
 	 * @return array of pages, starting with specified prefix
@@ -298,8 +219,8 @@ public final class MediaWikiFacade {
 
 	/**
 	 * Gets array of categories names, starting with specified prefix.
-	 * 
-	 * @param preffix
+	 *
+	 * @param preffix preffix
 	 * @return list of pages, starting with specified prefix
 	 * @throws IOException
 	 *             if an I/O error occurs
@@ -315,8 +236,8 @@ public final class MediaWikiFacade {
 
 	/**
 	 * Gets array of article names, starting with specified prefix.
-	 * 
-	 * @param preffix
+	 *
+	 * @param preffix  preffix
 	 * @return list of pages, starting with specified prefix
 	 * @throws IOException
 	 *             if an I/O error occurs
@@ -331,10 +252,11 @@ public final class MediaWikiFacade {
 	}
 
 	/**
-	 * 
-	 * @param templateName
-	 * @return
-	 * @throws IOException
+	 * Gets array of template parameters, using it's name.
+	 *
+	 * @param templateName template name
+	 * @return array of template parameters
+	 * @throws IOException if an I/O error occurs
 	 */
 	public static TemplateParameter[] getTemplateParameters(String templateName)
 			throws IOException {
@@ -347,7 +269,7 @@ public final class MediaWikiFacade {
 								MediaWikiFacade.lang.getTemplatePreffix(),
 								MediaWikiFacade.normalize(templateName),
 								"&format=json"));
-		TemplateParameter[] parameters = new TemplateParameter[] {};
+		TemplateParameter[] parameters = new TemplateParameter[]{};
 		try (InputStream is = url.openStream()) {
 			JsonReader reader = Json.createReader(is);
 			JsonObject pages = reader.readObject().getJsonObject("pages");
@@ -375,5 +297,77 @@ public final class MediaWikiFacade {
 			}
 		}
 		return parameters;
+	}
+
+	/**
+	 * Enumeration, containing language codes, such as "uk" stands for
+	 * Ukrainian, "en" for English and so on.
+	 *
+	 * @author Mir4ik
+	 * @version 0.1 27.10.2014
+	 */
+	public enum Language {
+		UKRAINIAN("uk", "Файл:", "Категорія:", "Шаблон:"), ENGLISH("en",
+				"File:", "Category:", "Template:");
+
+		private final String code;
+
+		private final String filePreffix;
+
+		private final String categoryPreffix;
+
+		private final String templatePreffix;
+
+		Language(String code, String file, String category,
+				 String template) {
+			this.code = code;
+			filePreffix = file;
+			categoryPreffix = category;
+			templatePreffix = template;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public String getFilePreffix() {
+			return filePreffix;
+		}
+
+		public String getCategoryPreffix() {
+			return categoryPreffix;
+		}
+
+		public String getTemplatePreffix() {
+			return templatePreffix;
+		}
+	}
+
+	/**
+	 * Enumeration, containing Mediawiki namespace constants, such as "0" stands
+	 * for Main or article namespace, "10" for templates namespace (starting
+	 * with "Template:" preffix).
+	 *
+	 * @author Myroslav Rudnytskyi
+	 * @version 0.1 23.04.2015
+	 */
+	private enum WikiNamespace {
+		ARTICLE(0), MAIN(0), FILE(6), TEMPLATE(10), CATEGORY(14);
+
+		private final int code;
+
+		WikiNamespace(int code) {
+			this.code = code;
+		}
+
+		/**
+		 * Returns namespace constants in {@link String} representation.
+		 *
+		 * @return namespace constant for this enum constant
+		 */
+		@Override
+		public String toString() {
+			return String.valueOf(code);
+		}
 	}
 }

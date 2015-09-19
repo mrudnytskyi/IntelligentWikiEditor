@@ -1,6 +1,4 @@
-package intelligent.wiki.editor;
 /*
- * MediaWikiFacadeTest.java	14.04.2015
  * Copyright (C) 2015 Myroslav Rudnytskyi
  * 
  * This program is free software; you can redistribute it and/or
@@ -13,28 +11,26 @@ package intelligent.wiki.editor;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-
-import java.io.IOException;
-
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+package intelligent.wiki.editor;
 
 import intelligent.wiki.editor.bot.io.MediaWikiFacade;
 import intelligent.wiki.editor.bot.io.MediaWikiFacade.Language;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Class for testing {@link MediaWikiFacade} class.
  * 
  * @author Myroslav Rudnytskyi
- * @version 0.1 14.04.2015
+ * @version 0.1 19.09.2015
  * @see Test
  * @see Assert
  */
 public class MediaWikiFacadeTest {
 
 	@Test
-	@Ignore
 	public void test() {
 		String articleText = null, articleTextEmpty = null, 
 				articleTextNull = null, articleTextWrong = null;
@@ -95,7 +91,7 @@ public class MediaWikiFacadeTest {
 		Assert.assertNotNull(templates);
 		System.out.println("Found templates: " + templates.length);
 		Assert.assertNotNull(categories);
-		Assert.assertTrue(categories.length > 500);
+		Assert.assertTrue(categories.length >= 500);
 		System.out.println("Found categories: " + categories.length);
 		Assert.assertNull(articleTextWrong);
 		Assert.assertArrayEquals(emptyArray, templatesWrong);
