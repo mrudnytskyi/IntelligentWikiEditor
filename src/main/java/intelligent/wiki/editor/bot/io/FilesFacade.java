@@ -1,6 +1,4 @@
-package intelligent.wiki.editor.bot.io;
 /*
- * FilesFacade.java	17.01.2015
  * Copyright (C) 2015 Myroslav Rudnytskyi
  * 
  * This program is free software; you can redistribute it and/or
@@ -13,6 +11,10 @@ package intelligent.wiki.editor.bot.io;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
+package intelligent.wiki.editor.bot.io;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.StreamException;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -23,15 +25,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.StreamException;
-
 /**
  * Class, created for reading and writing files with different formats: plain
  * text and XML. Note, that all it's methods can throw {@link IOException}.
  * 
  * @author Myroslav Rudnytskyi
- * @version 0.2 17.01.2015
+ * @version 19.09.2015
  */
 public final class FilesFacade {
 	
@@ -58,7 +57,8 @@ public final class FilesFacade {
 	/**
 	 * Writes plain text to specified file.
 	 * <p>
-	 * Note, that {@link StandardOpenOption#CREATE CREATE},
+	 * Note, that {@link StandardCharsets#UTF_8 UTF-8} {@link Charset charset}
+	 * is used to encode bytes and {@link StandardOpenOption#CREATE CREATE},
 	 * {@link StandardOpenOption#TRUNCATE_EXISTING TRUNCATE_EXISTING} and 
 	 * {@link StandardOpenOption#WRITE WRITE} 
 	 * {@link StandardOpenOption open options} is used to open file.
@@ -68,7 +68,7 @@ public final class FilesFacade {
 	 * @throws IOException		if an I/O error occurs
 	 */
 	public static void writeTXT(String file, String str) throws IOException {
-		Files.write(Paths.get(file), str.getBytes());
+		Files.write(Paths.get(file), str.getBytes(StandardCharsets.UTF_8));
 	}
 	
 	/**
