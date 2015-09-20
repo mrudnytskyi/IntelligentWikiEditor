@@ -373,7 +373,7 @@
                   <TreeView prefHeight="598.0" prefWidth="155.0" />
                      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
                        <tabs>
-                           <Tab fx:id="tabs">
+                           <Tab fx:id="tab">
                            <content>
                               <TextArea fx:id="text" prefHeight="200.0" prefWidth="200.0" />
                            </content>

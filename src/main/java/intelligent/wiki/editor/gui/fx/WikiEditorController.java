@@ -69,14 +69,14 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	private MenuItem pasteMenuItem;
 
 	@FXML
-	private Tab tabs;
+	private Tab tab;
 
 	@FXML
 	private TextArea text;
 
-	private boolean textChanged = false;
+	private boolean textUpdate = false;
 
-	private boolean loading = false;
+	private boolean ignoreTextUpdate = false;
 
 	private Stage stage;
 
@@ -89,10 +89,14 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		text.textProperty().bindBidirectional(article.textProperty());
 		text.setWrapText(true);
 		text.textProperty().addListener((observable, oldValue, newValue) -> {
-			if (!loading) {
-				setTextChangedFlag();
+			if (!ignoreTextUpdate) {
+				textUpdateOn();
 			}
 		});
+		initCutCopyPasteBehavior();
+	}
+
+	private void initCutCopyPasteBehavior() {
 		text.setOnMouseMoved(event -> {
 			pasteButton.setDisable(!clipboard.hasString());
 			pasteMenuItem.setDisable(!clipboard.hasString());
@@ -112,18 +116,26 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		});
 	}
 
-	private void setTextChangedFlag() {
-		if (!textChanged) {
-			tabs.setStyle("-fx-font-weight: bold;");
+	private void textUpdateOn() {
+		if (!textUpdate) {
+			tab.setStyle("-fx-font-weight: bold;");
 		}
-		textChanged = true;
+		textUpdate = true;
 	}
 
-	private void clearTextChangedFlag() {
-		if (textChanged) {
-			tabs.setStyle("-fx-font-weight: normal;");
+	private void textUpdateOff() {
+		if (textUpdate) {
+			tab.setStyle("-fx-font-weight: normal;");
 		}
-		textChanged = false;
+		textUpdate = false;
+	}
+
+	private void ignoreTextUpdateOn() {
+		ignoreTextUpdate = true;
+	}
+
+	private void ignoreTextUpdateOff() {
+		ignoreTextUpdate = false;
 	}
 
 	public void actionNew() {
@@ -139,18 +151,18 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		//TODO maybe change *.wpf to *.waf: not project, but article
 		chooser.getExtensionFilters().add(
 				new FileChooser.ExtensionFilter(i18n.getString("extension-filter_wpf"), "*.wpf"));
-		File file = chooser.showOpenDialog(null);
+		File file = chooser.showOpenDialog(stage);
 		if (file != null) {
 			currentOpenedFile = file.getAbsolutePath();
-			loading = true;
+			ignoreTextUpdateOn();
 			try {
 				text.setText(FilesFacade.readTXT(currentOpenedFile));
 			} catch (IOException e) {
 				showError(e);
 			}
-			loading = false;
-			tabs.setText(file.getName());
-			clearTextChangedFlag();
+			ignoreTextUpdateOff();
+			tab.setText(file.getName());
+			textUpdateOff();
 		}
 	}
 
@@ -166,15 +178,15 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 
 		if (result.isPresent()) {
 			currentOpenedFile = null;
-			loading = true;
+			ignoreTextUpdateOn();
 			try {
 				text.setText(MediaWikiFacade.getArticleText(result.get()));
 			} catch (IOException e) {
 				showError(e);
 			}
-			loading = false;
-			tabs.setText(result.get());
-			clearTextChangedFlag();
+			ignoreTextUpdateOff();
+			tab.setText(result.get());
+			textUpdateOff();
 		}
 	}
 
@@ -189,7 +201,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 			} catch (IOException e) {
 				showError(e);
 			}
-			clearTextChangedFlag();
+			textUpdateOff();
 		} else {
 			actionSaveAs();
 		}
@@ -204,15 +216,15 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		//TODO maybe change *.wpf to *.waf: not project, but article
 		chooser.getExtensionFilters().add(
 				new FileChooser.ExtensionFilter(i18n.getString("extension-filter_wpf"), "*.wpf"));
-		File file = chooser.showSaveDialog(null);
+		File file = chooser.showSaveDialog(stage);
 		if (file != null) {
 			try {
 				FilesFacade.writeTXT(file.getAbsolutePath(), text.getText());
 			} catch (IOException e) {
 				showError(e);
 			}
-			tabs.setText(file.getName());
-			clearTextChangedFlag();
+			tab.setText(file.getName());
+			textUpdateOff();
 		}
 	}
 
@@ -298,12 +310,13 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 * Closes application. If there is unsaved changes, question dialog is showing.
 	 */
 	public void actionQuit() {
-		if (textChanged) {
+		if (textUpdate) {
 			Optional<ButtonType> result = Dialogs.makeExitDialog().showAndWait();
-			if (result.isPresent() && result.get() == ButtonType.OK) {
-				Platform.exit();
+			if (!result.isPresent() || result.get() != ButtonType.OK) {
+				return;
 			}
 		}
+		Platform.exit();
 	}
 
 	/**
@@ -322,6 +335,6 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	@Override
 	public void handle(WindowEvent event) {
 		actionQuit();
-		event.consume();
+		event.consume(); // stop event handling
 	}
 }
