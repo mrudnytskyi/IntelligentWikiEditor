@@ -98,8 +98,8 @@
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator></MenuItem>
-                        <MenuItem fx:id="pasteMenuItem" mnemonicParsing="false" onAction="#actionPaste"
-                                  text="%menu_paste">
+                         <MenuItem fx:id="pasteMenuItem" mnemonicParsing="false" onAction="#actionPaste"
+                                   text="%menu_paste">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -132,8 +132,8 @@
                            <accelerator>
                               <KeyCodeCombination alt="DOWN" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator></MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#actionInsertExternalLink"
-                                  text="%menu_insert-external-link">
+                         <MenuItem mnemonicParsing="false" onAction="#actionInsertExternalLink"
+                                   text="%menu_insert-external-link">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -230,8 +230,8 @@
               <items>
                   <MenuButton mnemonicParsing="false" prefHeight="48.0" prefWidth="60.0">
                     <items>
-                       <MenuItem mnemonicParsing="false" onAction="#actionOpenFile" text="Open file"/>
-                       <MenuItem mnemonicParsing="false" onAction="#actionOpenURL" text="Load from URL"/>
+                        <MenuItem mnemonicParsing="false" onAction="#actionOpenFile" text="Open file"/>
+                        <MenuItem mnemonicParsing="false" onAction="#actionOpenURL" text="Load from URL"/>
                     </items>
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
@@ -256,8 +256,8 @@
                         <Tooltip text="%toolbar_save" />
                      </tooltip></Button>
                   <Separator orientation="VERTICAL" />
-                 <Button fx:id="cutButton" mnemonicParsing="false" onAction="#actionCut" prefHeight="48.0"
-                         prefWidth="48.0">
+                  <Button fx:id="cutButton" mnemonicParsing="false" onAction="#actionCut" prefHeight="48.0"
+                          prefWidth="48.0">
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -268,8 +268,8 @@
                      <tooltip>
                         <Tooltip text="%toolbar_cut" />
                      </tooltip></Button>
-                 <Button fx:id="copyButton" mnemonicParsing="false" onAction="#actionCopy" prefHeight="48.0"
-                         prefWidth="48.0">
+                  <Button fx:id="copyButton" mnemonicParsing="false" onAction="#actionCopy" prefHeight="48.0"
+                          prefWidth="48.0">
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -280,8 +280,8 @@
                      <tooltip>
                         <Tooltip text="%toolbar_copy" />
                      </tooltip></Button>
-                 <Button fx:id="pasteButton" mnemonicParsing="false" onAction="#actionPaste" prefHeight="48.0"
-                         prefWidth="48.0">
+                  <Button fx:id="pasteButton" mnemonicParsing="false" onAction="#actionPaste" prefHeight="48.0"
+                          prefWidth="48.0">
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -304,8 +304,8 @@
                      <tooltip>
                         <Tooltip text="%toolbar_insert-link" />
                      </tooltip></Button>
-                 <Button mnemonicParsing="false" onAction="#actionInsertExternalLink" prefHeight="48.0"
-                         prefWidth="48.0">
+                  <Button mnemonicParsing="false" onAction="#actionInsertExternalLink" prefHeight="48.0"
+                          prefWidth="48.0">
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -373,7 +373,7 @@
                   <TreeView prefHeight="598.0" prefWidth="155.0" />
                      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
                        <tabs>
-                         <Tab>
+                           <Tab fx:id="tabs">
                            <content>
                               <TextArea fx:id="text" prefHeight="200.0" prefWidth="200.0" />
                            </content>

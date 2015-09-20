@@ -16,19 +16,22 @@ package intelligent.wiki.editor.gui.fx;
 import intelligent.wiki.editor.bot.core.WikiArticle;
 import intelligent.wiki.editor.bot.io.FilesFacade;
 import intelligent.wiki.editor.bot.io.MediaWikiFacade;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static intelligent.wiki.editor.gui.fx.Dialogs.*;
@@ -38,14 +41,15 @@ import static intelligent.wiki.editor.gui.fx.Dialogs.*;
  * Note, that all these actions are <code>public</code> to be referred from <code>fxml</code> file.
  *
  * @author Myroslav Rudnytskyi
- * @version 19.09.2015
+ * @version 20.09.2015
  */
-public class WikiEditorController implements Initializable {
+public class WikiEditorController implements Initializable, EventHandler<WindowEvent> {
 
 	private final Clipboard clipboard = Clipboard.getSystemClipboard();
 	private final WikiArticle article = new WikiArticle("");
 	private ResourceBundle i18n;
 	private String currentOpenedFile;
+
 	@FXML
 	private Button cutButton;
 
@@ -65,7 +69,16 @@ public class WikiEditorController implements Initializable {
 	private MenuItem pasteMenuItem;
 
 	@FXML
+	private Tab tabs;
+
+	@FXML
 	private TextArea text;
+
+	private boolean textChanged = false;
+
+	private boolean loading = false;
+
+	private Stage stage;
 
 	/**
 	 * {@inheritDoc}
@@ -73,9 +86,13 @@ public class WikiEditorController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		i18n = resources;
-
 		text.textProperty().bindBidirectional(article.textProperty());
 		text.setWrapText(true);
+		text.textProperty().addListener((observable, oldValue, newValue) -> {
+			if (!loading) {
+				setTextChangedFlag();
+			}
+		});
 		text.setOnMouseMoved(event -> {
 			pasteButton.setDisable(!clipboard.hasString());
 			pasteMenuItem.setDisable(!clipboard.hasString());
@@ -95,6 +112,20 @@ public class WikiEditorController implements Initializable {
 		});
 	}
 
+	private void setTextChangedFlag() {
+		if (!textChanged) {
+			tabs.setStyle("-fx-font-weight: bold;");
+		}
+		textChanged = true;
+	}
+
+	private void clearTextChangedFlag() {
+		if (textChanged) {
+			tabs.setStyle("-fx-font-weight: normal;");
+		}
+		textChanged = false;
+	}
+
 	public void actionNew() {
 		showNotImplementedError();
 	}
@@ -111,11 +142,15 @@ public class WikiEditorController implements Initializable {
 		File file = chooser.showOpenDialog(null);
 		if (file != null) {
 			currentOpenedFile = file.getAbsolutePath();
+			loading = true;
 			try {
 				text.setText(FilesFacade.readTXT(currentOpenedFile));
 			} catch (IOException e) {
 				showError(e);
 			}
+			loading = false;
+			tabs.setText(file.getName());
+			clearTextChangedFlag();
 		}
 	}
 
@@ -123,19 +158,23 @@ public class WikiEditorController implements Initializable {
 	 * Shows {@link TextInputDialog} to input article name for future loading.
 	 */
 	public void actionOpenURL() {
-		TextInputDialog tid = makeTextInputDialog();
+		TextInputDialog tid = makeArticleInputDialog();
 
 		//TODO auto completion from list of all enabled articles
 		TextFields.bindAutoCompletion(tid.getEditor(), "TODO");
-		tid.showAndWait();
+		Optional<String> result = tid.showAndWait();
 
-		String result = tid.getResult();
-		if (result != null) {
+		if (result.isPresent()) {
+			currentOpenedFile = null;
+			loading = true;
 			try {
-				text.setText(MediaWikiFacade.getArticleText(result));
+				text.setText(MediaWikiFacade.getArticleText(result.get()));
 			} catch (IOException e) {
 				showError(e);
 			}
+			loading = false;
+			tabs.setText(result.get());
+			clearTextChangedFlag();
 		}
 	}
 
@@ -150,6 +189,7 @@ public class WikiEditorController implements Initializable {
 			} catch (IOException e) {
 				showError(e);
 			}
+			clearTextChangedFlag();
 		} else {
 			actionSaveAs();
 		}
@@ -171,6 +211,8 @@ public class WikiEditorController implements Initializable {
 			} catch (IOException e) {
 				showError(e);
 			}
+			tabs.setText(file.getName());
+			clearTextChangedFlag();
 		}
 	}
 
@@ -211,17 +253,16 @@ public class WikiEditorController implements Initializable {
 	 * is no selected text - this name will be also caption for link.
 	 */
 	public void actionInsertWikiLink() {
-		TextInputDialog tid = makeTextInputDialog();
+		TextInputDialog tid = makeArticleInputDialog();
 
 		//TODO auto completion from list of all enabled articles
 		TextFields.bindAutoCompletion(tid.getEditor(), "TODO");
-		tid.showAndWait();
+		Optional<String> result = tid.showAndWait();
 
-		String result = tid.getResult();
-		if (result != null) {
+		if (result.isPresent()) {
 			String selected = text.getSelectedText();
-			String replaced = !selected.isEmpty() ? (result.isEmpty() ? "" : "|") + selected : "";
-			text.replaceSelection(String.join("", "[[", result, replaced, "]]"));
+			String replaced = !selected.isEmpty() ? (result.get().isEmpty() ? "" : "|") + selected : "";
+			text.replaceSelection(String.join("", "[[", result.get(), replaced, "]]"));
 		}
 	}
 
@@ -253,7 +294,34 @@ public class WikiEditorController implements Initializable {
 		showNotImplementedError();
 	}
 
+	/**
+	 * Closes application. If there is unsaved changes, question dialog is showing.
+	 */
 	public void actionQuit() {
-		showNotImplementedError();
+		if (textChanged) {
+			Optional<ButtonType> result = Dialogs.makeExitDialog().showAndWait();
+			if (result.isPresent() && result.get() == ButtonType.OK) {
+				Platform.exit();
+			}
+		}
+	}
+
+	/**
+	 * Links these controller object with stage object from parameter
+	 *
+	 * @param stage stage object. Note, that null values cause {@link NullPointerException}
+	 */
+	public void setStage(Stage stage) {
+		this.stage = Objects.requireNonNull(stage, "Stage can not be null!");
+		stage.setOnCloseRequest(this);
+	}
+
+	/**
+	 * Method is called when user tries to close application using red cross on the window top.
+	 */
+	@Override
+	public void handle(WindowEvent event) {
+		actionQuit();
+		event.consume();
 	}
 }

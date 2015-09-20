@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  * input, error and so on.
  *
  * @author Myroslav Rudnytskyi
- * @version 19.09.2015
+ * @version 20.09.2015
  */
 public class Dialogs {
 
@@ -64,6 +64,48 @@ public class Dialogs {
 		tid.setTitle(title);
 
 		log.info("Created text input dialog!");
+
+		return tid;
+	}
+
+	private static Alert makeQuestionDialog(String title, String header, String content) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(header);
+		alert.setContentText(content);
+
+		return alert;
+	}
+
+	/**
+	 * Method is used to create (not show!) exit dialog.
+	 *
+	 * @return dialog with question, "OK" and "Cancel" buttons
+	 */
+	public static Alert makeExitDialog() {
+		return makeQuestionDialog(
+				i18n.getString("question-dialog_title"),
+				i18n.getString("question-dialog_header-text_exit"),
+				i18n.getString("question-dialog_content-text_exit"));
+	}
+
+	/**
+	 * Method is used to create (not show!) input article name dialog.
+	 *
+	 * @return dialog with text input field for article name
+	 */
+	public static TextInputDialog makeArticleInputDialog() {
+		TextInputDialog tid = makeTextInputDialog(
+				i18n.getString("text-input-dialog_title_article"),
+				i18n.getString("text-input-dialog_header-text_article"),
+				i18n.getString("text-input-dialog_content-text_article")
+		);
+
+		// dirty hack with popup menu
+		int popupWidth = 250;
+		tid.getEditor().setMinWidth(popupWidth);
+
+		tid.getEditor().setPromptText(i18n.getString("text-input-dialog_prompt-text_article"));
 
 		return tid;
 	}
@@ -105,7 +147,7 @@ public class Dialogs {
 	}
 
 	/**
-	 * Method is used to stub not realized functions.
+	 * Method is used to stub not realized functions with error dialog.
 	 */
 	public static void showNotImplementedError() {
 		Alert alert = makeErrorDialog(
@@ -114,26 +156,5 @@ public class Dialogs {
 				i18n.getString("error-dialog_content-text_not-implemented"));
 
 		alert.show();
-	}
-
-	/**
-	 * Method is used to create (not show!) text input dialogs.
-	 *
-	 * @return dialog with text input field
-	 */
-	public static TextInputDialog makeTextInputDialog() {
-		TextInputDialog tid = makeTextInputDialog(
-				i18n.getString("text-input-dialog_title_article"),
-				i18n.getString("text-input-dialog_header-text_article"),
-				i18n.getString("text-input-dialog_content-text_article")
-		);
-
-		// dirty hack with popup menu
-		int popupWidth = 250;
-		tid.getEditor().setMinWidth(popupWidth);
-
-		tid.getEditor().setPromptText(i18n.getString("text-input-dialog_prompt-text_article"));
-
-		return tid;
 	}
 }

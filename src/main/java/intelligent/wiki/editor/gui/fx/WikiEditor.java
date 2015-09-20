@@ -30,7 +30,7 @@ import java.util.ResourceBundle;
  * ({@link #start(Stage)}) and load GUI.
  *
  * @author Myroslav Rudnytskyi
- * @version 18.09.2015
+ * @version 20.09.2015
  */
 public class WikiEditor extends Application {
 
@@ -54,7 +54,9 @@ public class WikiEditor extends Application {
 		try {
 			URL fxml = new File(WikiEditor.WIKI_EDITOR_ROOT_FILE).toURI().toURL();
 			ResourceBundle i18n = ResourceBundleFactory.getBundle(new Locale("uk", "ua"));
-			applicationRoot = new FXMLLoader(fxml, i18n).load();
+			FXMLLoader loader = new FXMLLoader(fxml, i18n);
+			applicationRoot = loader.load();
+			((WikiEditorController) loader.getController()).setStage(primaryStage);
 		} catch (IOException e) {
 			Dialogs.showError(e);
 		}
