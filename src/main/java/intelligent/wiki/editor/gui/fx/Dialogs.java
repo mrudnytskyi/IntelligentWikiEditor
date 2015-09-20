@@ -13,11 +13,8 @@
  */
 package intelligent.wiki.editor.gui.fx;
 
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
@@ -46,35 +43,35 @@ public class Dialogs {
 	private Dialogs() {
 	}
 
-	private static Alert makeErrorDialog(String title, String header, String content) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle(title);
-		alert.setHeaderText(header);
-		alert.setContentText(content);
+	private static Dialog prepareDialog(Dialog dialog, String title, String header, String content) {
+		dialog.setTitle(title);
+		dialog.setHeaderText(header);
+		dialog.setContentText(content);
+		return dialog;
+	}
 
+	private static Alert makeErrorDialog(String title, String header, String content) {
 		log.severe(String.join(" ", header, content));
 
-		return alert;
+		return (Alert) prepareDialog(new Alert(AlertType.ERROR), title, header, content);
 	}
 
 	private static TextInputDialog makeTextInputDialog(String title, String header, String content) {
-		TextInputDialog tid = new TextInputDialog();
-		tid.setHeaderText(header);
-		tid.setContentText(content);
-		tid.setTitle(title);
-
 		log.info("Created text input dialog!");
 
-		return tid;
+		return (TextInputDialog) prepareDialog(new TextInputDialog(), title, header, content);
 	}
 
 	private static Alert makeQuestionDialog(String title, String header, String content) {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle(title);
-		alert.setHeaderText(header);
-		alert.setContentText(content);
+		log.info("Created question dialog!");
 
-		return alert;
+		return (Alert) prepareDialog(new Alert(AlertType.CONFIRMATION), title, header, content);
+	}
+
+	private static Alert makeInfoDialog(String title, String header, String content) {
+		log.info("Created information dialog!");
+
+		return (Alert) prepareDialog(new Alert(AlertType.INFORMATION), title, header, content);
 	}
 
 	/**
@@ -154,6 +151,16 @@ public class Dialogs {
 				i18n.getString("error-dialog_title"),
 				i18n.getString("error-dialog_header-text_not-implemented"),
 				i18n.getString("error-dialog_content-text_not-implemented"));
+
+		alert.show();
+	}
+
+	public static void showAboutDialog() {
+		Alert alert = makeInfoDialog(
+				i18n.getString("info-dialog_title"),
+				i18n.getString("info-dialog_header-text_about"),
+				"Copyright (c) Myroslav Rudnytskyi, Kyiv, Ukraine, 2015"
+		);
 
 		alert.show();
 	}

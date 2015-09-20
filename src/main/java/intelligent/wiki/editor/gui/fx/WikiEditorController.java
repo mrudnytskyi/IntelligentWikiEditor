@@ -303,7 +303,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	}
 
 	public void actionAbout() {
-		showNotImplementedError();
+		showAboutDialog();
 	}
 
 	/**
