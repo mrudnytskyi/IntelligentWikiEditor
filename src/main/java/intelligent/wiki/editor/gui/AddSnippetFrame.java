@@ -14,26 +14,16 @@ package intelligent.wiki.editor.gui;
  * GNU General Public License for more details.
  */
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import intelligent.wiki.editor.bot.nlp.Snippet;
+
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.LayoutStyle.ComponentPlacement;
-
-import intelligent.wiki.editor.bot.nlp.Snippet;
 
 /**
  * Frame for adding {@link Snippet text fragments} to application.
@@ -80,9 +70,9 @@ public class AddSnippetFrame extends ApplicationFrame {
 	protected AbstractAction[] createActions() {
 		List<AbstractAction> actions = new ArrayList<AbstractAction>();
 		actions.add(new Action(this, "Cancel", "add-snippet-cancel",
-				"Cancel all changes", "", "src/main/resources/cancel_big.png", 0));
+				"Cancel all changes", "", "src/main/resources/images/cancel_big.png", 0));
 		actions.add(new Action(this, "OK", "add-snippet-OK",
-				"Apply all changes", "", "src/main/resources/ok_big.png", 0));
+				"Apply all changes", "", "src/main/resources/images/ok_big.png", 0));
 		return actions.toArray(new AbstractAction[actions.size()]);
 	}
 

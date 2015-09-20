@@ -14,9 +14,7 @@ package intelligent.wiki.editor.gui;
  * GNU General Public License for more details.
  */
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 /**
  * 
@@ -32,29 +30,26 @@ public class MessagesFrame {
 	}
 
 	public void showError(String msg) {
-		String path = "src/main/resources/error_big.png";
+		String path = "src/main/resources/images/error_big.png";
 		JOptionPane.showMessageDialog(parent, msg, "Error",
 				JOptionPane.ERROR_MESSAGE, new ImageIcon(path));
 	}
 	
 	public void showInfo(String msg) {
-		String path = "src/main/resources/info_big.png";
+		String path = "src/main/resources/images/info_big.png";
 		JOptionPane.showMessageDialog(parent, msg, "Info",
 				JOptionPane.INFORMATION_MESSAGE, new ImageIcon(path));
 	}
 	
 	public boolean showQuestion(String msg) {
-		String path = "src/main/resources/question_big.png";
-		if (JOptionPane.showConfirmDialog(parent, msg, "Question",
+		String path = "src/main/resources/images/question_big.png";
+		return JOptionPane.showConfirmDialog(parent, msg, "Question",
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-				new ImageIcon(path)) == JOptionPane.YES_OPTION) {
-					return true;
-		}
-		return false;
+				new ImageIcon(path)) == JOptionPane.YES_OPTION;
 	}
 	
 	public void showWarning(String msg) {
-		String path = "src/main/resources/warning_big.png";
+		String path = "src/main/resources/images/warning_big.png";
 		JOptionPane.showMessageDialog(parent, msg, "Warning",
 				JOptionPane.WARNING_MESSAGE, new ImageIcon(path));
 	}
@@ -64,7 +59,7 @@ public class MessagesFrame {
 	}
 	
 	public String showInput(String msg, Object[] values, Object value) {
-		String path = "src/main/resources/question_big.png";
+		String path = "src/main/resources/images/question_big.png";
 		Object o = JOptionPane.showInputDialog(parent, msg, "Input",
 				JOptionPane.QUESTION_MESSAGE, new ImageIcon(path),
 				values, value);

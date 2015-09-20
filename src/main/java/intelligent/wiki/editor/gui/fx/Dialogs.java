@@ -155,7 +155,11 @@ public class Dialogs {
 		alert.show();
 	}
 
+	/**
+	 * Method is used to show message about author.
+	 */
 	public static void showAboutDialog() {
+		//TODO: expand message to show also used libraries and their license
 		Alert alert = makeInfoDialog(
 				i18n.getString("info-dialog_title"),
 				i18n.getString("info-dialog_header-text_about"),

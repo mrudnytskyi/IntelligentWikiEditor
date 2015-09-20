@@ -14,25 +14,19 @@ package intelligent.wiki.editor.gui;
  * GNU General Public License for more details.
  */
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import intelligent.wiki.editor.bot.compiler.AST.CategoryDeclaration;
+import intelligent.wiki.editor.bot.io.MediaWikiFacade;
+import intelligent.wiki.editor.bot.io.MediaWikiFacade.Language;
+import intelligent.wiki.editor.utils.AutoCompletePanel;
+import intelligent.wiki.editor.utils.AutoCompleteSource;
+
+import javax.swing.*;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-
-import intelligent.wiki.editor.utils.AutoCompletePanel;
-import intelligent.wiki.editor.utils.AutoCompleteSource;
-import intelligent.wiki.editor.bot.compiler.AST.CategoryDeclaration;
-import intelligent.wiki.editor.bot.io.MediaWikiFacade;
-import intelligent.wiki.editor.bot.io.MediaWikiFacade.Language;
 
 /**
  * Frame for adding categories to article with autocompletion function.
@@ -42,41 +36,15 @@ import intelligent.wiki.editor.bot.io.MediaWikiFacade.Language;
  */
 public class AddCategoriesFrame extends ApplicationFrame {
 
-	private class CategorySource implements AutoCompleteSource {
-
-		@Override
-		public String[] getSource(String... params) {
-			MediaWikiFacade.setLanguage(Language.UKRAINIAN);
-			String[] result = new String[] {};
-			try {
-				String[] categories = MediaWikiFacade
-						.getCategoriesStartingWith(params[0]);
-				result = new String[categories.length];
-				for (int i = 0; i < categories.length; i++) {
-					result[i] = categories[i].substring(MediaWikiFacade
-							.getLanguage().getCategoryPreffix().length(),
-							categories[i].length());
-				}
-			} catch (IOException e) {
-				new MessagesFrame(AddCategoriesFrame.this).showError(e
-						.getMessage());
-			}
-			return result;
-		}
-
-	}
-
 	private static final long serialVersionUID = -4238311663986639159L;
-
 	private final AutoCompletePanel autoComplete = new AutoCompletePanel(
 			new CategorySource(), "Enter category name:",
 			getAction("add-categories-add"));
-
 	private final java.awt.List resultCategories = new java.awt.List();
 
 	/**
 	 * Constructs new frame with specified content and title.
-	 * 
+	 *
 	 * @param listener
 	 *            necessary object, which will receive array of categories
 	 *            objects, listening for changing <code>add-categories</code>
@@ -117,38 +85,38 @@ public class AddCategoriesFrame extends ApplicationFrame {
 	public void propertyChange(PropertyChangeEvent evt) {
 		MessagesFrame messager = new MessagesFrame(this);
 		switch (evt.getPropertyName()) {
-		case "add-categories-cancel":
-			setVisible(false);
-			break;
-		case "add-categories-OK":
-			if (resultCategories.getItemCount() == 0) {
-				if (!messager.showQuestion("It seems that result is empty! "
-						+ "Click \"Yes\" to continue anyway")) {
-					return;
-				}
-			}
-			CategoryDeclaration[] result = new CategoryDeclaration[resultCategories
-					.getItemCount()];
-			for (int i = 0; i < result.length; i++) {
-				result[i] = new CategoryDeclaration(
-						resultCategories.getItems()[i]);
-			}
-			firePropertyChange("add-categories", null, result);
-			setVisible(false);
-			break;
-		case "add-categories-add":
-			String input = autoComplete.getInputedText();
-			if (!input.isEmpty()) {
-				if (autoComplete.searchStringInProposed(input) == -1) {
-					if (!messager.showQuestion("It seems that inputed "
-							+ "category name does not exists. Do you want "
-							+ "to add it anyway?")) {
+			case "add-categories-cancel":
+				setVisible(false);
+				break;
+			case "add-categories-OK":
+				if (resultCategories.getItemCount() == 0) {
+					if (!messager.showQuestion("It seems that result is empty! "
+							+ "Click \"Yes\" to continue anyway")) {
 						return;
 					}
 				}
-				resultCategories.add(input);
-			}
-			break;
+				CategoryDeclaration[] result = new CategoryDeclaration[resultCategories
+						.getItemCount()];
+				for (int i = 0; i < result.length; i++) {
+					result[i] = new CategoryDeclaration(
+							resultCategories.getItems()[i]);
+				}
+				firePropertyChange("add-categories", null, result);
+				setVisible(false);
+				break;
+			case "add-categories-add":
+				String input = autoComplete.getInputedText();
+				if (!input.isEmpty()) {
+					if (autoComplete.searchStringInProposed(input) == -1) {
+						if (!messager.showQuestion("It seems that inputed "
+								+ "category name does not exists. Do you want "
+								+ "to add it anyway?")) {
+							return;
+						}
+					}
+					resultCategories.add(input);
+				}
+				break;
 		}
 	}
 
@@ -159,11 +127,35 @@ public class AddCategoriesFrame extends ApplicationFrame {
 	protected AbstractAction[] createActions() {
 		List<AbstractAction> actions = new ArrayList<AbstractAction>();
 		actions.add(new Action(this, "Cancel", "add-categories-cancel",
-				"Cancel all changes", "", "src/main/resources/cancel_big.png", 0));
+				"Cancel all changes", "", "src/main/resources/images/cancel_big.png", 0));
 		actions.add(new Action(this, "OK", "add-categories-OK",
-				"Apply all changes", "", "src/main/resources/ok_big.png", 0));
+				"Apply all changes", "", "src/main/resources/images/ok_big.png", 0));
 		actions.add(new Action(this, "", "add-categories-add", "Add category",
-				"", "src/main/resources/add_small.png", 0));
+				"", "src/main/resources/images/add_small.png", 0));
 		return actions.toArray(new AbstractAction[actions.size()]);
+	}
+
+	private class CategorySource implements AutoCompleteSource {
+
+		@Override
+		public String[] getSource(String... params) {
+			MediaWikiFacade.setLanguage(Language.UKRAINIAN);
+			String[] result = new String[]{};
+			try {
+				String[] categories = MediaWikiFacade
+						.getCategoriesStartingWith(params[0]);
+				result = new String[categories.length];
+				for (int i = 0; i < categories.length; i++) {
+					result[i] = categories[i].substring(MediaWikiFacade
+									.getLanguage().getCategoryPreffix().length(),
+							categories[i].length());
+				}
+			} catch (IOException e) {
+				new MessagesFrame(AddCategoriesFrame.this).showError(e
+						.getMessage());
+			}
+			return result;
+		}
+
 	}
 }

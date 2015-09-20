@@ -14,27 +14,13 @@ package intelligent.wiki.editor.gui;
  * GNU General Public License for more details.
  */
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 /**
  * Frame for setting new project settings.
@@ -82,11 +68,11 @@ public class NewProjectFrame extends ApplicationFrame {
 	protected AbstractAction[] createActions() {
 		List<AbstractAction> actions = new ArrayList<AbstractAction>();
 		actions.add(new Action(this, "Cancel", "new-project-cancel",
-				"Cancel all changes", "", "src/main/resources/cancel_big.png", 0));
+				"Cancel all changes", "", "src/main/resources/images/cancel_big.png", 0));
 		actions.add(new Action(this, "OK", "new-project-OK",
-				"Apply all changes", "", "src/main/resources/ok_big.png", 0));
+				"Apply all changes", "", "src/main/resources/images/ok_big.png", 0));
 		actions.add(new Action(this, "", "new-project-open", "Open location",
-				"", "src/main/resources/open_small.png", 0));
+				"", "src/main/resources/images/open_small.png", 0));
 		return actions.toArray(new AbstractAction[actions.size()]);
 	}
 
