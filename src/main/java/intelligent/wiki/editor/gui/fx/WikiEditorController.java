@@ -30,6 +30,7 @@ import org.controlsfx.control.textfield.TextFields;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -282,8 +283,25 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		showNotImplementedError();
 	}
 
+	/**
+	 * Shows dialog to choose type of inserted heading. If there
+	 * is no selected text - heading will have empty caption.
+	 */
 	public void actionInsertHeading() {
-		showNotImplementedError();
+		Alert alert = makeChooseHeadingTypeDialog();
+		Optional<ButtonType> result = alert.showAndWait();
+		if (!result.get().getButtonData().isCancelButton()) {
+			char[] headingChars = new char[Integer.parseInt(result.get().getText())];
+			Arrays.fill(headingChars, '=');
+			String heading = new String(headingChars);
+			String line = System.lineSeparator();
+
+			if (text.getSelectedText() == null || text.getSelectedText().isEmpty()) {
+				text.insertText(text.getCaretPosition(), String.join("", line, heading, "  ", heading, line));
+			} else {
+				text.replaceSelection(String.join("", heading, text.getSelectedText(), heading));
+			}
+		}
 	}
 
 	public void actionInsertSnippet() {
@@ -302,6 +320,9 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		showNotImplementedError();
 	}
 
+	/**
+	 * Shows message about author.
+	 */
 	public void actionAbout() {
 		showAboutDialog();
 	}
