@@ -169,7 +169,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		chooser.setInitialDirectory(new File("."));
 		//TODO maybe change *.wpf to *.waf: not project, but article
 		chooser.getExtensionFilters().add(
-				new FileChooser.ExtensionFilter(i18n.getString("extension-filter_wpf"), "*.wpf"));
+				new FileChooser.ExtensionFilter(i18n.getString("extension-filter.wpf"), "*.wpf"));
 		File file = chooser.showOpenDialog(stage);
 		if (file != null) {
 			currentOpenedFile = file.getAbsolutePath();
@@ -234,7 +234,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		chooser.setInitialDirectory(new File("."));
 		//TODO maybe change *.wpf to *.waf: not project, but article
 		chooser.getExtensionFilters().add(
-				new FileChooser.ExtensionFilter(i18n.getString("extension-filter_wpf"), "*.wpf"));
+				new FileChooser.ExtensionFilter(i18n.getString("extension-filter.wpf"), "*.wpf"));
 		File file = chooser.showSaveDialog(stage);
 		if (file != null) {
 			try {

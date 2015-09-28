@@ -11,9 +11,9 @@
          <children>
             <MenuBar>
               <menus>
-                  <Menu mnemonicParsing="false" text="%menu_article">
+                  <Menu mnemonicParsing="false" text="%menu.article">
                      <items>
-                        <MenuItem mnemonicParsing="false" onAction="#actionNew" text="%menu_new">
+                        <MenuItem mnemonicParsing="false" onAction="#actionNew" text="%menu.new">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -24,13 +24,13 @@
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator></MenuItem>
-                        <Menu mnemonicParsing="false" text="%menu_open">
+                        <Menu mnemonicParsing="false" text="%menu.open">
                           <items>
-                             <MenuItem mnemonicParsing="false" onAction="#actionOpenFile" text="%menu_open-file">
+                             <MenuItem mnemonicParsing="false" onAction="#actionOpenFile" text="%menu.open-file">
                                  <accelerator>
                                     <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                                  </accelerator></MenuItem>
-                             <MenuItem mnemonicParsing="false" onAction="#actionOpenURL" text="%menu_open-url">
+                             <MenuItem mnemonicParsing="false" onAction="#actionOpenURL" text="%menu.open-url">
                                  <accelerator>
                                     <KeyCodeCombination alt="UP" code="U" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                                  </accelerator></MenuItem>
@@ -43,7 +43,7 @@
                               </ImageView>
                            </graphic>
                         </Menu>
-                        <MenuItem mnemonicParsing="false" onAction="#actionSave" text="%menu_save">
+                        <MenuItem mnemonicParsing="false" onAction="#actionSave" text="%menu.save">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -54,7 +54,7 @@
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator></MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#actionSaveAs" text="%menu_save-as">
+                        <MenuItem mnemonicParsing="false" onAction="#actionSaveAs" text="%menu.save-as">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -65,7 +65,7 @@
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                            </accelerator></MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#actionClose" text="%menu_close">
+                        <MenuItem mnemonicParsing="false" onAction="#actionClose" text="%menu.close">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" />
                            </graphic>
@@ -74,9 +74,9 @@
                            </accelerator></MenuItem>
                      </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" text="%menu_edit">
+                  <Menu mnemonicParsing="false" text="%menu.edit">
                      <items>
-                        <MenuItem fx:id="cutMenuItem" mnemonicParsing="false" onAction="#actionCut" text="%menu_cut">
+                        <MenuItem fx:id="cutMenuItem" mnemonicParsing="false" onAction="#actionCut" text="%menu.cut">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -87,7 +87,7 @@
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator></MenuItem>
-                        <MenuItem fx:id="copyMenuItem" mnemonicParsing="false" onAction="#actionCopy" text="%menu_copy">
+                        <MenuItem fx:id="copyMenuItem" mnemonicParsing="false" onAction="#actionCopy" text="%menu.copy">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -99,7 +99,7 @@
                               <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator></MenuItem>
                          <MenuItem fx:id="pasteMenuItem" mnemonicParsing="false" onAction="#actionPaste"
-                                   text="%menu_paste">
+                                   text="%menu.paste">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -110,7 +110,7 @@
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator></MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#actionSelectAll" text="%menu_select-all">
+                        <MenuItem mnemonicParsing="false" onAction="#actionSelectAll" text="%menu.select-all">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" />
                            </graphic>
@@ -119,9 +119,9 @@
                            </accelerator></MenuItem>
                      </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" text="%menu_source">
+                  <Menu mnemonicParsing="false" text="%menu.source">
                      <items>
-                        <MenuItem mnemonicParsing="false" onAction="#actionInsertWikiLink" text="%menu_insert-link">
+                        <MenuItem mnemonicParsing="false" onAction="#actionInsertWikiLink" text="%menu.insert-link">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -133,7 +133,7 @@
                               <KeyCodeCombination alt="DOWN" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator></MenuItem>
                          <MenuItem mnemonicParsing="false" onAction="#actionInsertExternalLink"
-                                   text="%menu_insert-external-link">
+                                   text="%menu.insert-external-link">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -144,7 +144,7 @@
                            <accelerator>
                               <KeyCodeCombination alt="DOWN" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator></MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#actionInsertHeading" text="%menu_insert-heading">
+                        <MenuItem mnemonicParsing="false" onAction="#actionInsertHeading" text="%menu.insert-heading">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -155,7 +155,7 @@
                            <accelerator>
                               <KeyCodeCombination alt="DOWN" code="H" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator></MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#actionInsertSnippet" text="%menu_insert-snippet">
+                        <MenuItem mnemonicParsing="false" onAction="#actionInsertSnippet" text="%menu.insert-snippet">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -166,7 +166,7 @@
                            <accelerator>
                               <KeyCodeCombination alt="DOWN" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator></MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#actionInsertTemplate" text="%menu_insert-template">
+                        <MenuItem mnemonicParsing="false" onAction="#actionInsertTemplate" text="%menu.insert-template">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -177,7 +177,7 @@
                            <accelerator>
                               <KeyCodeCombination alt="DOWN" code="T" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator></MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#actionAddCategories" text="%menu_add-categories">
+                        <MenuItem mnemonicParsing="false" onAction="#actionAddCategories" text="%menu.add-categories">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -190,9 +190,9 @@
                            </accelerator></MenuItem>
                      </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" text="%menu_application">
+                  <Menu mnemonicParsing="false" text="%menu.application">
                      <items>
-                        <MenuItem mnemonicParsing="false" onAction="#actionHelp" text="%menu_help">
+                        <MenuItem mnemonicParsing="false" onAction="#actionHelp" text="%menu.help">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -203,7 +203,7 @@
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="F1" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                            </accelerator></MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#actionAbout" text="%menu_about">
+                        <MenuItem mnemonicParsing="false" onAction="#actionAbout" text="%menu.about">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -211,7 +211,7 @@
                                  </image>
                               </ImageView>
                            </graphic></MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#actionQuit" text="%menu_quit">
+                        <MenuItem mnemonicParsing="false" onAction="#actionQuit" text="%menu.quit">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -241,7 +241,7 @@
                         </ImageView>
                      </graphic>
                      <tooltip>
-                        <Tooltip text="%toolbar_open" />
+                        <Tooltip text="%toolbar.open" />
                      </tooltip>
                   </MenuButton>
                  <Button mnemonicParsing="false" onAction="#actionSave" prefHeight="48.0" prefWidth="48.0">
@@ -253,7 +253,7 @@
                         </ImageView>
                      </graphic>
                      <tooltip>
-                        <Tooltip text="%toolbar_save" />
+                        <Tooltip text="%toolbar.save" />
                      </tooltip></Button>
                   <Separator orientation="VERTICAL" />
                   <Button fx:id="cutButton" mnemonicParsing="false" onAction="#actionCut" prefHeight="48.0"
@@ -266,7 +266,7 @@
                         </ImageView>
                      </graphic>
                      <tooltip>
-                        <Tooltip text="%toolbar_cut" />
+                        <Tooltip text="%toolbar.cut" />
                      </tooltip></Button>
                   <Button fx:id="copyButton" mnemonicParsing="false" onAction="#actionCopy" prefHeight="48.0"
                           prefWidth="48.0">
@@ -278,7 +278,7 @@
                         </ImageView>
                      </graphic>
                      <tooltip>
-                        <Tooltip text="%toolbar_copy" />
+                        <Tooltip text="%toolbar.copy" />
                      </tooltip></Button>
                   <Button fx:id="pasteButton" mnemonicParsing="false" onAction="#actionPaste" prefHeight="48.0"
                           prefWidth="48.0">
@@ -290,7 +290,7 @@
                         </ImageView>
                      </graphic>
                      <tooltip>
-                        <Tooltip text="%toolbar_paste" />
+                        <Tooltip text="%toolbar.paste" />
                      </tooltip></Button>
                   <Separator orientation="VERTICAL" />
                  <Button mnemonicParsing="false" onAction="#actionInsertWikiLink" prefHeight="48.0" prefWidth="48.0">
@@ -302,7 +302,7 @@
                         </ImageView>
                      </graphic>
                      <tooltip>
-                        <Tooltip text="%toolbar_insert-link" />
+                        <Tooltip text="%toolbar.insert-link" />
                      </tooltip></Button>
                   <Button mnemonicParsing="false" onAction="#actionInsertExternalLink" prefHeight="48.0"
                           prefWidth="48.0">
@@ -314,7 +314,7 @@
                         </ImageView>
                      </graphic>
                      <tooltip>
-                        <Tooltip text="%toolbar_insert-external-link" />
+                        <Tooltip text="%toolbar.insert-external-link" />
                      </tooltip></Button>
                  <Button mnemonicParsing="false" onAction="#actionInsertHeading" prefHeight="48.0" prefWidth="48.0">
                      <graphic>
@@ -325,7 +325,7 @@
                         </ImageView>
                      </graphic>
                      <tooltip>
-                        <Tooltip text="%toolbar_insert-heading" />
+                        <Tooltip text="%toolbar.insert-heading" />
                      </tooltip></Button>
                  <Button mnemonicParsing="false" onAction="#actionInsertSnippet" prefHeight="48.0" prefWidth="48.0">
                      <graphic>
@@ -336,7 +336,7 @@
                         </ImageView>
                      </graphic>
                      <tooltip>
-                        <Tooltip text="%toolbar_insert-snippet" />
+                        <Tooltip text="%toolbar.insert-snippet" />
                      </tooltip></Button>
                  <Button mnemonicParsing="false" onAction="#actionInsertTemplate" prefHeight="48.0" prefWidth="48.0">
                      <graphic>
@@ -347,7 +347,7 @@
                         </ImageView>
                      </graphic>
                      <tooltip>
-                        <Tooltip text="%toolbar_insert-template" />
+                        <Tooltip text="%toolbar.insert-template" />
                      </tooltip></Button>
                  <Button mnemonicParsing="false" onAction="#actionAddCategories" prefHeight="48.0" prefWidth="48.0">
                      <graphic>
@@ -358,7 +358,7 @@
                         </ImageView>
                      </graphic>
                      <tooltip>
-                        <Tooltip text="%toolbar_add-categories" />
+                        <Tooltip text="%toolbar.add-categories" />
                      </tooltip></Button>
               </items>
             </ToolBar>

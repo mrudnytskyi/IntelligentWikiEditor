@@ -97,9 +97,9 @@ public class Dialogs {
 	 */
 	public static Alert makeExitDialog() {
 		return makeQuestionDialog(
-				i18n.getString("question-dialog_title"),
-				i18n.getString("question-dialog_header-text_exit"),
-				i18n.getString("question-dialog_content-text_exit"));
+				i18n.getString("question-dialog.title"),
+				i18n.getString("question-dialog.header-text.exit"),
+				i18n.getString("question-dialog.content-text.exit"));
 	}
 
 	/**
@@ -109,16 +109,16 @@ public class Dialogs {
 	 */
 	public static TextInputDialog makeArticleInputDialog() {
 		TextInputDialog tid = makeTextInputDialog(
-				i18n.getString("text-input-dialog_title_article"),
-				i18n.getString("text-input-dialog_header-text_article"),
-				i18n.getString("text-input-dialog_content-text_article")
+				i18n.getString("text-input-dialog.title.article"),
+				i18n.getString("text-input-dialog.header-text.article"),
+				i18n.getString("text-input-dialog.content-text.article")
 		);
 
 		// dirty hack with popup menu
 		int popupWidth = 250;
 		tid.getEditor().setMinWidth(popupWidth);
 
-		tid.getEditor().setPromptText(i18n.getString("text-input-dialog_prompt-text_article"));
+		tid.getEditor().setPromptText(i18n.getString("text-input-dialog.prompt-text.article"));
 
 		return tid;
 	}
@@ -131,9 +131,9 @@ public class Dialogs {
 	public static Alert makeChooseHeadingTypeDialog() {
 		//TODO rewrite
 		Alert alert = (Alert) prepareDialog(new Alert(AlertType.CONFIRMATION),
-				i18n.getString("dialog_title_heading-type"),
-				i18n.getString("dialog_header-text_heading-type"),
-				i18n.getString("dialog_content-text_heading-type")
+				i18n.getString("dialog.title.heading-type"),
+				i18n.getString("dialog.header-text.heading-type"),
+				i18n.getString("dialog.content-text.heading-type")
 		);
 
 		ButtonType two = new ButtonType("2");
@@ -155,15 +155,15 @@ public class Dialogs {
 	 */
 	public static void showError(Exception e) {
 		Alert alert = makeErrorDialog(
-				i18n.getString("error-dialog_title"),
+				i18n.getString("error-dialog.title"),
 				String.join("", e.getClass().getSimpleName(), " : ", e.getLocalizedMessage()),
-				i18n.getString("error-dialog_header-text"));
+				i18n.getString("error-dialog.header-text"));
 
 		StringWriter sw = new StringWriter();
 		e.printStackTrace(new PrintWriter(sw));
 		String exceptionText = sw.toString();
 
-		appendExpandable(alert, new TextArea(exceptionText), i18n.getString("error-dialog_stacktrace-title"));
+		appendExpandable(alert, new TextArea(exceptionText), i18n.getString("error-dialog.stacktrace-title"));
 
 		alert.show();
 	}
@@ -173,9 +173,9 @@ public class Dialogs {
 	 */
 	public static void showNotImplementedError() {
 		Alert alert = makeErrorDialog(
-				i18n.getString("error-dialog_title"),
-				i18n.getString("error-dialog_header-text_not-implemented"),
-				i18n.getString("error-dialog_content-text_not-implemented"));
+				i18n.getString("error-dialog.title"),
+				i18n.getString("error-dialog.header-text.not-implemented"),
+				i18n.getString("error-dialog.content-text.not-implemented"));
 
 		alert.show();
 	}
@@ -186,8 +186,8 @@ public class Dialogs {
 	public static void showAboutDialog() {
 		//TODO: expand message to show also used libraries and their license
 		Alert alert = makeInfoDialog(
-				i18n.getString("info-dialog_title"),
-				i18n.getString("info-dialog_header-text_about"),
+				i18n.getString("info-dialog.title"),
+				i18n.getString("info-dialog.header-text.about"),
 				"Copyright (c) Myroslav Rudnytskyi, Kyiv, Ukraine, 2015"
 		);
 
