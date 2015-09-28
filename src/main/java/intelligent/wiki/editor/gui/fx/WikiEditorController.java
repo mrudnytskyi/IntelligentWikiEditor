@@ -16,6 +16,8 @@ package intelligent.wiki.editor.gui.fx;
 import intelligent.wiki.editor.bot.core.WikiArticle;
 import intelligent.wiki.editor.bot.io.FilesFacade;
 import intelligent.wiki.editor.bot.io.MediaWikiFacade;
+import intelligent.wiki.editor.gui.fx.dialogs.Dialogs;
+import intelligent.wiki.editor.gui.fx.dialogs.InsertLinkDialog;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -35,7 +37,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static intelligent.wiki.editor.gui.fx.Dialogs.*;
+import static intelligent.wiki.editor.gui.fx.dialogs.Dialogs.*;
 
 /**
  * Controller class for main window of wiki editor. Contains methods to make different actions.
@@ -50,6 +52,9 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	private final WikiArticle article = new WikiArticle("");
 	private ResourceBundle i18n;
 	private String currentOpenedFile;
+	private boolean textUpdate = false;
+	private boolean ignoreTextUpdate = false;
+	private Stage stage;
 
 	@FXML
 	private Button cutButton;
@@ -74,12 +79,6 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 
 	@FXML
 	private TextArea text;
-
-	private boolean textUpdate = false;
-
-	private boolean ignoreTextUpdate = false;
-
-	private Stage stage;
 
 	/**
 	 * {@inheritDoc}
@@ -137,6 +136,25 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 
 	private void ignoreTextUpdateOff() {
 		ignoreTextUpdate = false;
+	}
+
+	/**
+	 * Links these controller object with stage object from parameter
+	 *
+	 * @param stage stage object. Note, that null values cause {@link NullPointerException}
+	 */
+	public void setStage(Stage stage) {
+		this.stage = Objects.requireNonNull(stage, "Stage can not be null!");
+		stage.setOnCloseRequest(this);
+	}
+
+	/**
+	 * Method is called when user tries to close application using red cross on the window top.
+	 */
+	@Override
+	public void handle(WindowEvent event) {
+		actionQuit();
+		event.consume(); // stop event handling
 	}
 
 	public void actionNew() {
@@ -279,8 +297,14 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		}
 	}
 
+	/**
+	 * Shows {@link InsertLinkDialog} to input data for constructing link.
+	 */
 	public void actionInsertExternalLink() {
-		showNotImplementedError();
+		Optional<String> result = new InsertLinkDialog(text.getSelectedText()).showAndWait();
+		if (result.isPresent()) {
+			text.replaceSelection(result.get());
+		}
 	}
 
 	/**
@@ -338,24 +362,5 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 			}
 		}
 		Platform.exit();
-	}
-
-	/**
-	 * Links these controller object with stage object from parameter
-	 *
-	 * @param stage stage object. Note, that null values cause {@link NullPointerException}
-	 */
-	public void setStage(Stage stage) {
-		this.stage = Objects.requireNonNull(stage, "Stage can not be null!");
-		stage.setOnCloseRequest(this);
-	}
-
-	/**
-	 * Method is called when user tries to close application using red cross on the window top.
-	 */
-	@Override
-	public void handle(WindowEvent event) {
-		actionQuit();
-		event.consume(); // stop event handling
 	}
 }

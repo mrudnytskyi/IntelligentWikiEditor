@@ -13,6 +13,7 @@
  */
 package intelligent.wiki.editor.gui.fx;
 
+import intelligent.wiki.editor.gui.fx.dialogs.Dialogs;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

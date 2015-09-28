@@ -13,6 +13,8 @@
  */
 package intelligent.wiki.editor.gui.fx;
 
+import intelligent.wiki.editor.gui.fx.dialogs.Dialogs;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;

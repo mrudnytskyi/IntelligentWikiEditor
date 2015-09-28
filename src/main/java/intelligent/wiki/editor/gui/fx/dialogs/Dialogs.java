@@ -11,8 +11,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package intelligent.wiki.editor.gui.fx;
+package intelligent.wiki.editor.gui.fx.dialogs;
 
+import intelligent.wiki.editor.gui.fx.ResourceBundleFactory;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
@@ -43,34 +44,49 @@ public class Dialogs {
 	private Dialogs() {
 	}
 
-	private static Dialog prepareDialog(Dialog dialog, String title, String header, String content) {
+	protected static Dialog prepareDialog(Dialog dialog, String title, String header, String content) {
 		dialog.setTitle(title);
 		dialog.setHeaderText(header);
 		dialog.setContentText(content);
 		return dialog;
 	}
 
+	protected static Dialog appendExpandable(Dialog dialog, TextArea textArea, String previewLabelCaption) {
+		Label label = new Label(previewLabelCaption);
+
+		textArea.setEditable(false);
+		textArea.setWrapText(true);
+		textArea.setMaxWidth(Double.MAX_VALUE);
+		textArea.setMaxHeight(Double.MAX_VALUE);
+
+		GridPane.setVgrow(textArea, Priority.ALWAYS);
+		GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+		GridPane expContent = new GridPane();
+		expContent.setMaxWidth(Double.MAX_VALUE);
+		expContent.add(label, 0, 0);
+		expContent.add(textArea, 0, 1);
+
+		dialog.getDialogPane().setExpandableContent(expContent);
+		dialog.getDialogPane().setExpanded(true);
+
+		return dialog;
+	}
+
 	private static Alert makeErrorDialog(String title, String header, String content) {
 		log.severe(String.join(" ", header, content));
-
 		return (Alert) prepareDialog(new Alert(AlertType.ERROR), title, header, content);
 	}
 
 	private static TextInputDialog makeTextInputDialog(String title, String header, String content) {
-		log.info("Created text input dialog!");
-
 		return (TextInputDialog) prepareDialog(new TextInputDialog(), title, header, content);
 	}
 
 	private static Alert makeQuestionDialog(String title, String header, String content) {
-		log.info("Created question dialog!");
-
 		return (Alert) prepareDialog(new Alert(AlertType.CONFIRMATION), title, header, content);
 	}
 
 	private static Alert makeInfoDialog(String title, String header, String content) {
-		log.info("Created information dialog!");
-
 		return (Alert) prepareDialog(new Alert(AlertType.INFORMATION), title, header, content);
 	}
 
@@ -113,6 +129,7 @@ public class Dialogs {
 	 * @return dialog with cancel button and buttons with 2..6 captions
 	 */
 	public static Alert makeChooseHeadingTypeDialog() {
+		//TODO rewrite
 		Alert alert = (Alert) prepareDialog(new Alert(AlertType.CONFIRMATION),
 				i18n.getString("dialog_title_heading-type"),
 				i18n.getString("dialog_header-text_heading-type"),
@@ -146,23 +163,7 @@ public class Dialogs {
 		e.printStackTrace(new PrintWriter(sw));
 		String exceptionText = sw.toString();
 
-		Label label = new Label(i18n.getString("error-dialog_stacktrace-title"));
-
-		TextArea textArea = new TextArea(exceptionText);
-		textArea.setEditable(false);
-		textArea.setWrapText(true);
-
-		textArea.setMaxWidth(Double.MAX_VALUE);
-		textArea.setMaxHeight(Double.MAX_VALUE);
-		GridPane.setVgrow(textArea, Priority.ALWAYS);
-		GridPane.setHgrow(textArea, Priority.ALWAYS);
-
-		GridPane expContent = new GridPane();
-		expContent.setMaxWidth(Double.MAX_VALUE);
-		expContent.add(label, 0, 0);
-		expContent.add(textArea, 0, 1);
-
-		alert.getDialogPane().setExpandableContent(expContent);
+		appendExpandable(alert, new TextArea(exceptionText), i18n.getString("error-dialog_stacktrace-title"));
 
 		alert.show();
 	}
