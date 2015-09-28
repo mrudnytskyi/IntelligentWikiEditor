@@ -124,31 +124,6 @@ public class Dialogs {
 	}
 
 	/**
-	 * Method is used to create (not show!) choose heading type dialog.
-	 *
-	 * @return dialog with cancel button and buttons with 2..6 captions
-	 */
-	public static Alert makeChooseHeadingTypeDialog() {
-		//TODO rewrite
-		Alert alert = (Alert) prepareDialog(new Alert(AlertType.CONFIRMATION),
-				i18n.getString("dialog.title.heading-type"),
-				i18n.getString("dialog.header-text.heading-type"),
-				i18n.getString("dialog.content-text.heading-type")
-		);
-
-		ButtonType two = new ButtonType("2");
-		ButtonType three = new ButtonType("3");
-		ButtonType four = new ButtonType("4");
-		ButtonType five = new ButtonType("5");
-		ButtonType six = new ButtonType("6");
-		ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-		alert.getButtonTypes().setAll(two, three, four, five, six, cancel);
-
-		return alert;
-	}
-
-	/**
 	 * Method is used to show message when some exception occurs.
 	 *
 	 * @param e exception object

@@ -17,6 +17,7 @@ import intelligent.wiki.editor.bot.core.WikiArticle;
 import intelligent.wiki.editor.bot.io.FilesFacade;
 import intelligent.wiki.editor.bot.io.MediaWikiFacade;
 import intelligent.wiki.editor.gui.fx.dialogs.Dialogs;
+import intelligent.wiki.editor.gui.fx.dialogs.InsertHeadingDialog;
 import intelligent.wiki.editor.gui.fx.dialogs.InsertLinkDialog;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -32,7 +33,6 @@ import org.controlsfx.control.textfield.TextFields;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -312,19 +312,10 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 * is no selected text - heading will have empty caption.
 	 */
 	public void actionInsertHeading() {
-		Alert alert = makeChooseHeadingTypeDialog();
-		Optional<ButtonType> result = alert.showAndWait();
-		if (!result.get().getButtonData().isCancelButton()) {
-			char[] headingChars = new char[Integer.parseInt(result.get().getText())];
-			Arrays.fill(headingChars, '=');
-			String heading = new String(headingChars);
-			String line = System.lineSeparator();
-
-			if (text.getSelectedText() == null || text.getSelectedText().isEmpty()) {
-				text.insertText(text.getCaretPosition(), String.join("", line, heading, "  ", heading, line));
-			} else {
-				text.replaceSelection(String.join("", heading, text.getSelectedText(), heading));
-			}
+		Optional<String> result = new InsertHeadingDialog(text.getSelectedText()).showAndWait();
+		if (result.isPresent()) {
+			String newLine = System.lineSeparator();
+			text.replaceSelection(String.join("", newLine, result.get(), newLine));
 		}
 	}
 
