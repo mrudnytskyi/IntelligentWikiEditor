@@ -14,20 +14,11 @@ package intelligent.wiki.editor.gui;
  * GNU General Public License for more details.
  */
 
-import java.awt.BorderLayout;
-import java.awt.Color;
+import javax.swing.*;
+import javax.swing.text.*;
+import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
 
 /**
  * MessagesPane is a not-editable component, created to show different types of
@@ -44,6 +35,7 @@ import javax.swing.text.StyleContext;
  * @version 0.2 06.04.2014
  */
 //TODO: decide if refactore as console
+@Deprecated
 public class MessagesPane extends JPanel {
 
 	private static final long serialVersionUID = -7051388875654936594L;

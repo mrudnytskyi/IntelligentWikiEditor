@@ -28,6 +28,7 @@ import java.util.List;
  * @author Myroslav Rudnytskyi
  * @version 0.1 22.04.2015
  */
+@Deprecated
 public class NewProjectFrame extends ApplicationFrame {
 
 	private static final long serialVersionUID = 8695497808956299337L;

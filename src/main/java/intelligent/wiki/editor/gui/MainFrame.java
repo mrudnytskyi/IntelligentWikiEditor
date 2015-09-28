@@ -39,6 +39,7 @@ import java.util.List;
  * @author Myroslav Rudnytskyi
  * @version 0.2 18.04.2015
  */
+@Deprecated
 public class MainFrame extends ApplicationFrame {
 
 	private static final long serialVersionUID = -3904199062763114676L;
@@ -60,7 +61,7 @@ public class MainFrame extends ApplicationFrame {
 		super("Wiki Editor 1.0");
 		setLayout(new BorderLayout());
 		setSize(Toolkit.getDefaultToolkit().getScreenSize());
-		setExtendedState(Frame.MAXIMIZED_BOTH);
+		setExtendedState(MAXIMIZED_BOTH);
 		setJMenuBar(createMenu());
 		add(createContent(), BorderLayout.CENTER);
 		add(createToolbar(), BorderLayout.NORTH);
@@ -121,15 +122,15 @@ public class MainFrame extends ApplicationFrame {
 		actions.add(new Action(this, "About", "about",
 				"Show information about software", "src/main/resources/images/info.png",
 				"src/main/resources/images/info_big.png", new Integer(KeyEvent.VK_A)));
-		actions.add(ApplicationFrame.parametizeAction(
+		actions.add(parametizeAction(
 				new DefaultEditorKit.CutAction(), "Cut", "cut",
 				"Cut selected text fragment", "src/main/resources/images/cut.png",
 				"src/main/resources/images/cut_big.png", new Integer(KeyEvent.VK_T)));
-		actions.add(ApplicationFrame.parametizeAction(
+		actions.add(parametizeAction(
 				new DefaultEditorKit.CopyAction(), "Copy", "copy",
 				"Copy selected text fragment", "src/main/resources/images/copy.png",
 				"src/main/resources/images/copy_big.png", new Integer(KeyEvent.VK_C)));
-		actions.add(ApplicationFrame.parametizeAction(
+		actions.add(parametizeAction(
 				new DefaultEditorKit.PasteAction(), "Paste", "paste",
 				"Paste text fragment", "src/main/resources/images/paste.png", "src/main/resources/images/paste_big.png",
 				new Integer(KeyEvent.VK_P)));

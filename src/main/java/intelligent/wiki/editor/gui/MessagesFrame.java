@@ -21,6 +21,7 @@ import javax.swing.*;
  * @author Myroslav Rudnytskyi
  * @version 0.1 08.04.2015
  */
+@Deprecated
 public class MessagesFrame {
 	
 	private JFrame parent;

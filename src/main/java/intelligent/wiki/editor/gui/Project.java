@@ -22,6 +22,7 @@ import intelligent.wiki.editor.bot.nlp.Snippet;
  * @author Myroslav Rudnytskyi
  * @version 0.1 21.04.2015
  */
+@Deprecated
 public class Project {
 
 	private final String locationFolder;
