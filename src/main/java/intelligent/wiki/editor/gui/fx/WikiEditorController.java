@@ -19,6 +19,7 @@ import intelligent.wiki.editor.bot.io.MediaWikiFacade;
 import intelligent.wiki.editor.gui.fx.dialogs.Dialogs;
 import intelligent.wiki.editor.gui.fx.dialogs.InsertHeadingDialog;
 import intelligent.wiki.editor.gui.fx.dialogs.InsertLinkDialog;
+import intelligent.wiki.editor.gui.fx.dialogs.InsertWikiLinkDialog;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -88,6 +89,10 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		i18n = resources;
 		text.textProperty().bindBidirectional(article.textProperty());
 		text.setWrapText(true);
+		initBehavior();
+	}
+
+	private void initBehavior() {
 		text.textProperty().addListener((observable, oldValue, newValue) -> {
 			if (!ignoreTextUpdate) {
 				textUpdateOn();
@@ -284,16 +289,9 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 * is no selected text - this name will be also caption for link.
 	 */
 	public void actionInsertWikiLink() {
-		TextInputDialog tid = makeArticleInputDialog();
-
-		//TODO auto completion from list of all enabled articles
-		TextFields.bindAutoCompletion(tid.getEditor(), "TODO");
-		Optional<String> result = tid.showAndWait();
-
+		Optional<String> result = new InsertWikiLinkDialog(text.getSelectedText()).showAndWait();
 		if (result.isPresent()) {
-			String selected = text.getSelectedText();
-			String replaced = !selected.isEmpty() ? (result.get().isEmpty() ? "" : "|") + selected : "";
-			text.replaceSelection(String.join("", "[[", result.get(), replaced, "]]"));
+			text.replaceSelection(result.get());
 		}
 	}
 

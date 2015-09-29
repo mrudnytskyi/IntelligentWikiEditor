@@ -143,6 +143,15 @@ public final class MediaWikiFacade {
 		return text;
 	}
 
+	public static List<String> getAriclesStartingWith(String preffix) throws IOException {
+		// TODO write with limit (10). Now it is hardcoded
+		return getPagesStartingWith(preffix, null, WikiNamespace.ARTICLE);
+	}
+
+	public static boolean existArticle(String name) throws IOException {
+		return getArticleText(name) == null ? false : true;
+	}
+
 	/**
 	 * Gets list of all pages from specified namespace, starting with specified
 	 * preffix.
@@ -164,7 +173,7 @@ public final class MediaWikiFacade {
 						MediaWikiFacade.QUERY_LINK,
 						"&list=allpages&format=xml&apprefix=",
 						MediaWikiFacade.normalize(preffix), "&apnamespace=",
-						namespace.toString(), "&aplimit=500&apfrom=",
+						namespace.toString(), "&aplimit=10&apfrom=",    //500
 						continueFrom != null ? continueFrom : ""));
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
