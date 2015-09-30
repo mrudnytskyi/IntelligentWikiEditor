@@ -37,6 +37,7 @@ import java.util.ResourceBundle;
  * @author Myroslav Rudnytskyi
  * @version 27.09.2015
  */
+//TODO rewrite with DRY and move interface part to fxml!
 public class InsertLinkDialog extends Dialog<String> {
 
 	private final TextField urlTextField = TextFields.createClearableTextField();
@@ -55,14 +56,14 @@ public class InsertLinkDialog extends Dialog<String> {
 				i18n.getString("insert-link-dialog.header"),
 				i18n.getString("insert-link-dialog.content"));
 
-		initInputingGrid(captionText);
+		initContent(captionText);
 
 		Dialogs.appendExpandable(this, textArea, i18n.getString("insert-link-dialog.preview-label-text"));
 
 		initBehavior();
 	}
 
-	private void initInputingGrid(String captionText) {
+	private void initContent(String captionText) {
 		urlTextField.setPromptText("http://example.com");
 
 		if (captionText != null) {

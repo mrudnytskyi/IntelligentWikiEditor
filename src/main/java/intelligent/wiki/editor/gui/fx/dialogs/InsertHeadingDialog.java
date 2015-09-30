@@ -29,6 +29,7 @@ import java.util.ResourceBundle;
  * @author Myroslav Rudnytskyi
  * @version 27.09.2015
  */
+//TODO rewrite with DRY and move interface part to fxml!
 public class InsertHeadingDialog extends Dialog<String> {
 
 	private final String heading;

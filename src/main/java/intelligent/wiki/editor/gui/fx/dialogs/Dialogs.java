@@ -13,17 +13,18 @@
  */
 package intelligent.wiki.editor.gui.fx.dialogs;
 
+import intelligent.wiki.editor.bot.io.MediaWikiFacade;
 import intelligent.wiki.editor.gui.fx.ResourceBundleFactory;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import org.controlsfx.control.textfield.TextFields;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -145,5 +146,19 @@ public class Dialogs {
 		);
 
 		alert.show();
+	}
+
+	protected static void appendAutocompletion(TextField textField) {
+		TextFields.bindAutoCompletion(textField, param -> {
+			if (!param.getUserText().isEmpty()) {
+				try {
+					return MediaWikiFacade.getAriclesStartingWith(param.getUserText());
+				} catch (IOException e) {
+					log.warning("Autocompletion failed!");
+					log.severe(e.getMessage());
+				}
+			}
+			return new ArrayList<>();
+		});
 	}
 }

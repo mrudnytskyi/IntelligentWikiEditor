@@ -30,7 +30,6 @@ import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -41,6 +40,7 @@ import java.util.logging.Logger;
  * @author Myroslav Rudnytskyi
  * @version 25.09.2015
  */
+//TODO rewrite with DRY and move interface part to fxml!
 public class InsertWikiLinkDialog extends Dialog<String> {
 
 	private static final Logger log = Logger.getLogger(InsertWikiLinkDialog.class.getName());
@@ -130,17 +130,7 @@ public class InsertWikiLinkDialog extends Dialog<String> {
 						)
 		));
 
-		TextFields.bindAutoCompletion(nameTextField, param -> {
-			if (!param.getUserText().isEmpty()) {
-				try {
-					return MediaWikiFacade.getAriclesStartingWith(param.getUserText());
-				} catch (IOException e) {
-					log.warning("Autocompletion failed!");
-					log.severe(e.getMessage());
-				}
-			}
-			return new ArrayList<>();
-		});
+		Dialogs.appendAutocompletion(nameTextField);
 	}
 
 	private void simulateInserting(ButtonType okType) {

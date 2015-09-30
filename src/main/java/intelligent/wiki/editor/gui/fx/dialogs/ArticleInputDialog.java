@@ -28,7 +28,6 @@ import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -107,17 +106,7 @@ public class ArticleInputDialog extends Dialog<String> {
 						)
 		));
 
-		TextFields.bindAutoCompletion(inputTextField, param -> {
-			if (!param.getUserText().isEmpty()) {
-				try {
-					return MediaWikiFacade.getAriclesStartingWith(param.getUserText());
-				} catch (IOException e) {
-					log.warning("Autocompletion failed!");
-					log.severe(e.getMessage());
-				}
-			}
-			return new ArrayList<>();
-		});
+		Dialogs.appendAutocompletion(inputTextField);
 	}
 
 	private boolean isValidWikiLink(String name) {
