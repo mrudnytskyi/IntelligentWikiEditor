@@ -230,8 +230,8 @@
               <items>
                   <MenuButton mnemonicParsing="false" prefHeight="48.0" prefWidth="60.0">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#actionOpenFile" text="Open file"/>
-                        <MenuItem mnemonicParsing="false" onAction="#actionOpenURL" text="Load from URL"/>
+                        <MenuItem mnemonicParsing="false" onAction="#actionOpenFile" text="%menu.open-file"/>
+                        <MenuItem mnemonicParsing="false" onAction="#actionOpenURL" text="%menu.open-url"/>
                     </items>
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
