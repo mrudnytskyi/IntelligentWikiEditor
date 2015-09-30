@@ -14,8 +14,11 @@
 package intelligent.wiki.editor.gui.fx.dialogs;
 
 import intelligent.wiki.editor.gui.fx.ResourceBundleFactory;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
@@ -78,10 +81,6 @@ public class Dialogs {
 		return (Alert) prepareDialog(new Alert(AlertType.ERROR), title, header, content);
 	}
 
-	private static TextInputDialog makeTextInputDialog(String title, String header, String content) {
-		return (TextInputDialog) prepareDialog(new TextInputDialog(), title, header, content);
-	}
-
 	private static Alert makeQuestionDialog(String title, String header, String content) {
 		return (Alert) prepareDialog(new Alert(AlertType.CONFIRMATION), title, header, content);
 	}
@@ -100,27 +99,6 @@ public class Dialogs {
 				i18n.getString("question-dialog.title"),
 				i18n.getString("question-dialog.header-text.exit"),
 				i18n.getString("question-dialog.content-text.exit"));
-	}
-
-	/**
-	 * Method is used to create (not show!) input article name dialog.
-	 *
-	 * @return dialog with text input field for article name
-	 */
-	public static TextInputDialog makeArticleInputDialog() {
-		TextInputDialog tid = makeTextInputDialog(
-				i18n.getString("text-input-dialog.title.article"),
-				i18n.getString("text-input-dialog.header-text.article"),
-				i18n.getString("text-input-dialog.content-text.article")
-		);
-
-		// dirty hack with popup menu
-		int popupWidth = 250;
-		tid.getEditor().setMinWidth(popupWidth);
-
-		tid.getEditor().setPromptText(i18n.getString("text-input-dialog.prompt-text.article"));
-
-		return tid;
 	}
 
 	/**

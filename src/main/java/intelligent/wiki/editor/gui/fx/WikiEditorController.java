@@ -16,10 +16,7 @@ package intelligent.wiki.editor.gui.fx;
 import intelligent.wiki.editor.bot.core.WikiArticle;
 import intelligent.wiki.editor.bot.io.FilesFacade;
 import intelligent.wiki.editor.bot.io.MediaWikiFacade;
-import intelligent.wiki.editor.gui.fx.dialogs.Dialogs;
-import intelligent.wiki.editor.gui.fx.dialogs.InsertHeadingDialog;
-import intelligent.wiki.editor.gui.fx.dialogs.InsertLinkDialog;
-import intelligent.wiki.editor.gui.fx.dialogs.InsertWikiLinkDialog;
+import intelligent.wiki.editor.gui.fx.dialogs.*;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -29,7 +26,6 @@ import javafx.scene.input.Clipboard;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;
 import java.io.IOException;
@@ -194,11 +190,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 * Shows {@link TextInputDialog} to input article name for future loading.
 	 */
 	public void actionOpenURL() {
-		TextInputDialog tid = makeArticleInputDialog();
-
-		//TODO auto completion from list of all enabled articles
-		TextFields.bindAutoCompletion(tid.getEditor(), "TODO");
-		Optional<String> result = tid.showAndWait();
+		Optional<String> result = new ArticleInputDialog().showAndWait();
 
 		if (result.isPresent()) {
 			currentOpenedFile = null;
