@@ -21,6 +21,7 @@ package intelligent.wiki.editor.utils;
  * @author Myroslav Rudnytskyi
  * @version 0.1 27.04.2015
  */
+@Deprecated
 public interface AutoCompleteSource {
 
 	/**

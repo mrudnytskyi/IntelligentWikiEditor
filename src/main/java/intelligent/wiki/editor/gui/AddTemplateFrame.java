@@ -37,6 +37,7 @@ import java.util.List;
  * @author Myroslav Rudnytskyi
  * @version 0.1 27.04.2015
  */
+@Deprecated
 public class AddTemplateFrame extends ApplicationFrame {
 
 	private static final long serialVersionUID = -6937956054699961023L;

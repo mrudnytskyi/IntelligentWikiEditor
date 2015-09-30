@@ -14,30 +14,17 @@ package intelligent.wiki.editor.utils;
  * GNU General Public License for more details.
  */
 
-import java.awt.BorderLayout;
-import java.awt.Cursor;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.Objects;
-
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ListModel;
+import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.Objects;
 
 /**
  * Graphical component, used to make autocompleting function. Note, that it is
@@ -52,26 +39,19 @@ import javax.swing.text.Document;
  * @version 0.1 25.04.2015
  * @see AutoCompleteSource
  */
+@Deprecated
 public class AutoCompletePanel extends JPanel implements DocumentListener,
 		CaretListener, KeyListener {
 
 	private static final long serialVersionUID = 6566480860339877695L;
-
-	private int proposedItemsMaxCount = 10;
-
 	private final JTextField input = new JTextField();
-
 	private final JList<String> proposedItems = new JList<String>();
-
 	private final AutoCompleteSource source;
-
-	private boolean loaded = false;
-
-	private String[] allProposedItems;
-
 	private final String caption;
-
 	private final Action action;
+	private int proposedItemsMaxCount = 10;
+	private boolean loaded = false;
+	private String[] allProposedItems;
 
 	/**
 	 * Constructs new panel with specified content. Note, that

@@ -34,6 +34,7 @@ import java.util.List;
  * @author Myroslav Rudnytskyi
  * @version 0.1 28.04.2015
  */
+@Deprecated
 public class AddArticleFrame extends ApplicationFrame {
 
 	private static final long serialVersionUID = -9035746329104764814L;

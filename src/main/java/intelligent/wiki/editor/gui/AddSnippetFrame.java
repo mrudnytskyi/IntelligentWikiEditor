@@ -32,6 +32,7 @@ import java.util.List;
  * @version 0.1 19.04.2015
  */
 // TODO: database loading?
+@Deprecated
 public class AddSnippetFrame extends ApplicationFrame {
 
 	private static final long serialVersionUID = 5148754148151526106L;

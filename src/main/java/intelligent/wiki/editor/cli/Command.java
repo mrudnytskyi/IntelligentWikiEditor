@@ -1,4 +1,3 @@
-package intelligent.wiki.editor.cli;
 /*
  * Command.java	25.01.2015
  * Copyright (C) 2015 Myroslav Rudnytskyi
@@ -13,18 +12,16 @@ package intelligent.wiki.editor.cli;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
+package intelligent.wiki.editor.cli;
 
-import intelligent.wiki.editor.gui.MainFrame;
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
+import intelligent.wiki.editor.gui.fx.WikiEditor;
+import javafx.application.Application;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
 
 /**
  * Class represents abstract command. To write concrete commands, make
@@ -105,7 +102,7 @@ public abstract class Command {
 	public static class HelpCommand extends Command {
 		
 		@Parameter
-		private List<String> args = new ArrayList<String>();
+		private List<String> args = new ArrayList<>();
 		
 		@Parameter(names = "-i")
 		private boolean info;
@@ -113,7 +110,7 @@ public abstract class Command {
 		@Parameter(names = "-a")
 		private boolean available;
 		
-		private static String makePretty(String ... args) {
+		private static String makePretty(String... args) {
 			final int STRING_WIDTH = 70;
 			Object[] changedArgs = new Object[args.length];
 			int k = 0;
@@ -122,7 +119,7 @@ public abstract class Command {
 					changedArgs[k] = s;
 				} else {
 					int dividerPos = STRING_WIDTH;
-					List<Integer> insertPositions = new ArrayList<Integer>();
+					List<Integer> insertPositions = new ArrayList<>();
 					while (true) {
 						if (s.length() <= dividerPos) {
 							break;
@@ -157,7 +154,7 @@ public abstract class Command {
 		@Override
 		protected void act() {
 			if (info || args.isEmpty()) {
-				System.out.println("This is second version Wikipedia bot.");
+				System.out.println("This is second version Wikipedia editor.");
 			}
 			if (available) {
 				System.out.print("Now you can use: ");
@@ -206,13 +203,8 @@ public abstract class Command {
 
 		@Override
 		protected void act() {
-			String theme = "com.jtattoo.plaf.texture.TextureLookAndFeel";
-			try {
-				UIManager.setLookAndFeel(theme);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			SwingUtilities.invokeLater(() -> new MainFrame().setVisible(true));
+			Application.launch(WikiEditor.class);
+			new ExitCommand().act();
 		}
 
 		@Override
