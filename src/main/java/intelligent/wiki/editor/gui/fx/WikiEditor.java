@@ -57,7 +57,7 @@ public class WikiEditor extends Application {
 			ResourceBundle i18n = ResourceBundleFactory.getBundle(new Locale("uk", "ua"));
 			FXMLLoader loader = new FXMLLoader(fxml, i18n);
 			applicationRoot = loader.load();
-			((WikiEditorController) loader.getController()).setStage(primaryStage);
+			((WikiEditorController) loader.getController()).registerCloseHandler(primaryStage);
 		} catch (IOException e) {
 			Dialogs.showError(e);
 		}

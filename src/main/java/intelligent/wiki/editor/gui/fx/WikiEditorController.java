@@ -18,6 +18,8 @@ import intelligent.wiki.editor.bot.io.FilesFacade;
 import intelligent.wiki.editor.bot.io.MediaWikiFacade;
 import intelligent.wiki.editor.gui.fx.dialogs.*;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,7 +32,6 @@ import javafx.stage.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -49,31 +50,22 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	private final WikiArticle article = new WikiArticle("");
 	private ResourceBundle i18n;
 	private String currentOpenedFile;
-	private boolean textUpdate = false;
-	private boolean ignoreTextUpdate = false;
 	private Stage stage;
-
+	private TextUpdateTracker updateTracker = new TextUpdateTracker();
 	@FXML
 	private Button cutButton;
-
 	@FXML
 	private MenuItem cutMenuItem;
-
 	@FXML
 	private Button copyButton;
-
 	@FXML
 	private MenuItem copyMenuItem;
-
 	@FXML
 	private Button pasteButton;
-
 	@FXML
 	private MenuItem pasteMenuItem;
-
 	@FXML
 	private Tab tab;
-
 	@FXML
 	private TextArea text;
 
@@ -85,68 +77,38 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		i18n = resources;
 		text.textProperty().bindBidirectional(article.textProperty());
 		text.setWrapText(true);
-		initBehavior();
-	}
-
-	private void initBehavior() {
-		text.textProperty().addListener((observable, oldValue, newValue) -> {
-			if (!ignoreTextUpdate) {
-				textUpdateOn();
-			}
-		});
-		initCutCopyPasteBehavior();
-	}
-
-	private void initCutCopyPasteBehavior() {
-		text.setOnMouseMoved(event -> {
-			pasteButton.setDisable(!clipboard.hasString());
-			pasteMenuItem.setDisable(!clipboard.hasString());
-		});
+		text.textProperty().addListener(updateTracker);
+		text.setOnMouseMoved(event -> enablePasteAction(clipboard.hasString()));
 		text.selectedTextProperty().addListener(listener -> {
-			if (text.getSelectedText().length() != 0) {
-				cutButton.setDisable(false);
-				cutMenuItem.setDisable(false);
-				copyButton.setDisable(false);
-				copyMenuItem.setDisable(false);
-			} else {
-				cutButton.setDisable(true);
-				cutMenuItem.setDisable(true);
-				copyButton.setDisable(true);
-				copyMenuItem.setDisable(true);
-			}
+			boolean isSelection = text.getSelectedText().length() != 0;
+			enableCutAction(isSelection);
+			enableCopyAction(isSelection);
 		});
 	}
 
-	private void textUpdateOn() {
-		if (!textUpdate) {
-			tab.setStyle("-fx-font-weight: bold;");
-		}
-		textUpdate = true;
+	private void enableCopyAction(boolean state) {
+		copyButton.setDisable(!state);
+		copyMenuItem.setDisable(!state);
 	}
 
-	private void textUpdateOff() {
-		if (textUpdate) {
-			tab.setStyle("-fx-font-weight: normal;");
-		}
-		textUpdate = false;
+	private void enableCutAction(boolean state) {
+		cutButton.setDisable(!state);
+		cutMenuItem.setDisable(!state);
 	}
 
-	private void ignoreTextUpdateOn() {
-		ignoreTextUpdate = true;
-	}
-
-	private void ignoreTextUpdateOff() {
-		ignoreTextUpdate = false;
+	private void enablePasteAction(boolean state) {
+		pasteButton.setDisable(!state);
+		pasteMenuItem.setDisable(!state);
 	}
 
 	/**
-	 * Links these controller object with stage object from parameter
-	 *
-	 * @param stage stage object. Note, that null values cause {@link NullPointerException}
+	 * Sets this object as handler of closing requests. See {@link #handle(WindowEvent)} for details.
 	 */
-	public void setStage(Stage stage) {
-		this.stage = Objects.requireNonNull(stage, "Stage can not be null!");
-		stage.setOnCloseRequest(this);
+	public void registerCloseHandler(Stage stage) {
+		this.stage = stage;
+		if (stage != null) {
+			stage.setOnCloseRequest(this);
+		}
 	}
 
 	/**
@@ -166,43 +128,48 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 * Shows {@link FileChooser} dialog to select file for future opening.
 	 */
 	public void actionOpenFile() {
-		FileChooser chooser = new FileChooser();
-		chooser.setInitialDirectory(new File("."));
-		//TODO maybe change *.wpf to *.waf: not project, but article
-		chooser.getExtensionFilters().add(
-				new FileChooser.ExtensionFilter(i18n.getString("extension-filter.wpf"), "*.wpf"));
+		FileChooser chooser = createWikiArticleFileChooser();
 		File file = chooser.showOpenDialog(stage);
 		if (file != null) {
 			currentOpenedFile = file.getAbsolutePath();
-			ignoreTextUpdateOn();
+			updateTracker.startIgnoringUpdating();
 			try {
 				text.setText(FilesFacade.readTXT(currentOpenedFile));
 			} catch (IOException e) {
 				showError(e);
 			}
-			ignoreTextUpdateOff();
+			updateTracker.stopIgnoringUpdating();
 			tab.setText(file.getName());
-			textUpdateOff();
+			updateTracker.clearUpdated();
 		}
 	}
 
+	private FileChooser createWikiArticleFileChooser() {
+		FileChooser chooser = new FileChooser();
+		chooser.setInitialDirectory(new File("."));
+		//TODO maybe change *.wpf to *.waf: not project, but article
+		chooser.getExtensionFilters().add(
+				new FileChooser.ExtensionFilter(i18n.getString("extension-filter.wpf"), "*.wpf"));
+		return chooser;
+	}
+
 	/**
-	 * Shows {@link TextInputDialog} to input article name for future loading.
+	 * Shows {@link ArticleInputDialog} to input article name for future loading.
 	 */
 	public void actionOpenURL() {
 		Optional<String> result = new ArticleInputDialog().showAndWait();
 
 		if (result.isPresent()) {
 			currentOpenedFile = null;
-			ignoreTextUpdateOn();
+			updateTracker.startIgnoringUpdating();
 			try {
 				text.setText(MediaWikiFacade.getArticleText(result.get()));
 			} catch (IOException e) {
 				showError(e);
 			}
-			ignoreTextUpdateOff();
+			updateTracker.stopIgnoringUpdating();
 			tab.setText(result.get());
-			textUpdateOff();
+			updateTracker.clearUpdated();
 		}
 	}
 
@@ -217,7 +184,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 			} catch (IOException e) {
 				showError(e);
 			}
-			textUpdateOff();
+			updateTracker.clearUpdated();
 		} else {
 			actionSaveAs();
 		}
@@ -227,11 +194,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 * Shows {@link FileChooser} dialog to select file for future saving.
 	 */
 	public void actionSaveAs() {
-		FileChooser chooser = new FileChooser();
-		chooser.setInitialDirectory(new File("."));
-		//TODO maybe change *.wpf to *.waf: not project, but article
-		chooser.getExtensionFilters().add(
-				new FileChooser.ExtensionFilter(i18n.getString("extension-filter.wpf"), "*.wpf"));
+		FileChooser chooser = createWikiArticleFileChooser();
 		File file = chooser.showSaveDialog(stage);
 		if (file != null) {
 			try {
@@ -240,7 +203,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 				showError(e);
 			}
 			tab.setText(file.getName());
-			textUpdateOff();
+			updateTracker.clearUpdated();
 		}
 	}
 
@@ -277,7 +240,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	}
 
 	/**
-	 * Shows {@link TextInputDialog} to input article name for link. If there
+	 * Shows {@link InsertWikiLinkDialog} to input article name for link. If there
 	 * is no selected text - this name will be also caption for link.
 	 */
 	public void actionInsertWikiLink() {
@@ -298,7 +261,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	}
 
 	/**
-	 * Shows dialog to choose type of inserted heading. If there
+	 * Shows {@link InsertHeadingDialog} to choose type of inserted heading. If there
 	 * is no selected text - heading will have empty caption.
 	 */
 	public void actionInsertHeading() {
@@ -336,12 +299,52 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 * Closes application. If there is unsaved changes, question dialog is showing.
 	 */
 	public void actionQuit() {
-		if (textUpdate) {
+		if (updateTracker.isTextUpdated()) {
 			Optional<ButtonType> result = Dialogs.makeExitDialog().showAndWait();
-			if (!result.isPresent() || result.get() != ButtonType.OK) {
+			boolean noResult = !result.isPresent();
+			boolean noOKResult = result.get() != ButtonType.OK;
+			if (noResult || noOKResult) {
 				return;
 			}
 		}
 		Platform.exit();
+	}
+
+	private class TextUpdateTracker implements ChangeListener<String> {
+		boolean textUpdate = false;
+		boolean ignoreTextUpdate = false;
+
+		void setUpdated() {
+			if (!textUpdate) {
+				tab.setStyle("-fx-font-weight: bold;");
+			}
+			textUpdate = true;
+		}
+
+		void clearUpdated() {
+			if (textUpdate) {
+				tab.setStyle("-fx-font-weight: normal;");
+			}
+			textUpdate = false;
+		}
+
+		void startIgnoringUpdating() {
+			ignoreTextUpdate = true;
+		}
+
+		void stopIgnoringUpdating() {
+			ignoreTextUpdate = false;
+		}
+
+		boolean isTextUpdated() {
+			return textUpdate;
+		}
+
+		@Override
+		public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+			if (!ignoreTextUpdate) {
+				setUpdated();
+			}
+		}
 	}
 }
