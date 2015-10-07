@@ -44,6 +44,7 @@ import java.util.ResourceBundle;
  */
 public class WikiEditorController implements Initializable, EventHandler<WindowEvent> {
 
+	private final Clipboard clipboard = Clipboard.getSystemClipboard();
 	private final WikiArticle article = new WikiArticle("");
 	private final TextUpdateTracker updateTracker = new TextUpdateTracker();
 	private final DialogsFactory dialogs = new DialogsFactory();
@@ -76,7 +77,10 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		text.textProperty().bindBidirectional(article.textProperty());
 		text.setWrapText(true);
 		text.textProperty().addListener(updateTracker);
-		text.setOnMouseMoved(event -> enablePasteAction(Clipboard.getSystemClipboard().hasString()));
+		enableCutAction(false);
+		enableCopyAction(false);
+		enablePasteAction(clipboard.hasString());
+		text.setOnMouseMoved(event -> enablePasteAction(clipboard.hasString()));
 		text.selectedTextProperty().addListener(listener -> {
 			boolean isSelection = text.getSelectedText().length() != 0;
 			enableCutAction(isSelection);
