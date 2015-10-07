@@ -13,8 +13,6 @@
  */
 package intelligent.wiki.editor.gui.fx;
 
-import intelligent.wiki.editor.gui.fx.dialogs.Dialogs;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,7 +44,7 @@ public class ResourceBundleFactory {
 					new File("src/main/resources").toURI().toURL()});
 			log.info("Resources loader created successfully!");
 		} catch (MalformedURLException e) {
-			Dialogs.showError(e);
+			log.severe(e.toString());
 		}
 	}
 

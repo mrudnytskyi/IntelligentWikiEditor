@@ -16,7 +16,7 @@ package intelligent.wiki.editor.gui.fx;
 import intelligent.wiki.editor.bot.core.WikiArticle;
 import intelligent.wiki.editor.bot.io.FilesFacade;
 import intelligent.wiki.editor.bot.io.MediaWikiFacade;
-import intelligent.wiki.editor.gui.fx.dialogs.*;
+import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -35,8 +35,6 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static intelligent.wiki.editor.gui.fx.dialogs.Dialogs.*;
-
 /**
  * Controller class for main window of wiki editor. Contains methods to make different actions.
  * Note, that all these actions are <code>public</code> to be referred from <code>fxml</code> file.
@@ -46,12 +44,12 @@ import static intelligent.wiki.editor.gui.fx.dialogs.Dialogs.*;
  */
 public class WikiEditorController implements Initializable, EventHandler<WindowEvent> {
 
-	private final Clipboard clipboard = Clipboard.getSystemClipboard();
 	private final WikiArticle article = new WikiArticle("");
+	private final TextUpdateTracker updateTracker = new TextUpdateTracker();
+	private final DialogsFactory dialogs = new DialogsFactory();
 	private ResourceBundle i18n;
 	private String currentOpenedFile;
 	private Stage stage;
-	private TextUpdateTracker updateTracker = new TextUpdateTracker();
 	@FXML
 	private Button cutButton;
 	@FXML
@@ -78,7 +76,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		text.textProperty().bindBidirectional(article.textProperty());
 		text.setWrapText(true);
 		text.textProperty().addListener(updateTracker);
-		text.setOnMouseMoved(event -> enablePasteAction(clipboard.hasString()));
+		text.setOnMouseMoved(event -> enablePasteAction(Clipboard.getSystemClipboard().hasString()));
 		text.selectedTextProperty().addListener(listener -> {
 			boolean isSelection = text.getSelectedText().length() != 0;
 			enableCutAction(isSelection);
@@ -86,14 +84,14 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		});
 	}
 
-	private void enableCopyAction(boolean state) {
-		copyButton.setDisable(!state);
-		copyMenuItem.setDisable(!state);
-	}
-
 	private void enableCutAction(boolean state) {
 		cutButton.setDisable(!state);
 		cutMenuItem.setDisable(!state);
+	}
+
+	private void enableCopyAction(boolean state) {
+		copyButton.setDisable(!state);
+		copyMenuItem.setDisable(!state);
 	}
 
 	private void enablePasteAction(boolean state) {
@@ -121,7 +119,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	}
 
 	public void actionNew() {
-		showNotImplementedError();
+		dialogs.makeNotImplementedErrorDialog().show();
 	}
 
 	/**
@@ -136,7 +134,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 			try {
 				text.setText(FilesFacade.readTXT(currentOpenedFile));
 			} catch (IOException e) {
-				showError(e);
+				dialogs.makeErrorDialog(e).show();
 			}
 			updateTracker.stopIgnoringUpdating();
 			tab.setText(file.getName());
@@ -154,10 +152,10 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	}
 
 	/**
-	 * Shows {@link ArticleInputDialog} to input article name for future loading.
+	 * Shows dialog to input article name for future loading.
 	 */
 	public void actionOpenURL() {
-		Optional<String> result = new ArticleInputDialog().showAndWait();
+		Optional<String> result = dialogs.makeArticleNameInputDialog().showAndWait();
 
 		if (result.isPresent()) {
 			currentOpenedFile = null;
@@ -165,7 +163,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 			try {
 				text.setText(MediaWikiFacade.getArticleText(result.get()));
 			} catch (IOException e) {
-				showError(e);
+				dialogs.makeErrorDialog(e).show();
 			}
 			updateTracker.stopIgnoringUpdating();
 			tab.setText(result.get());
@@ -182,7 +180,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 			try {
 				FilesFacade.writeTXT(currentOpenedFile, text.getText());
 			} catch (IOException e) {
-				showError(e);
+				dialogs.makeErrorDialog(e).show();
 			}
 			updateTracker.clearUpdated();
 		} else {
@@ -200,7 +198,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 			try {
 				FilesFacade.writeTXT(file.getAbsolutePath(), text.getText());
 			} catch (IOException e) {
-				showError(e);
+				dialogs.makeErrorDialog(e).show();
 			}
 			tab.setText(file.getName());
 			updateTracker.clearUpdated();
@@ -208,7 +206,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	}
 
 	public void actionClose() {
-		showNotImplementedError();
+		dialogs.makeNotImplementedErrorDialog().show();
 	}
 
 	/**
@@ -240,32 +238,34 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	}
 
 	/**
-	 * Shows {@link InsertWikiLinkDialog} to input article name for link. If there
+	 * Shows dialog to input article name for link. If there
 	 * is no selected text - this name will be also caption for link.
 	 */
 	public void actionInsertWikiLink() {
-		Optional<String> result = new InsertWikiLinkDialog(text.getSelectedText()).showAndWait();
+		String selection = text.getSelectedText();
+		Optional<String> result = dialogs.makeInsertWikiLinkDialog(selection, selection).showAndWait();
 		if (result.isPresent()) {
 			text.replaceSelection(result.get());
 		}
 	}
 
 	/**
-	 * Shows {@link InsertLinkDialog} to input data for constructing link.
+	 * Shows dialog to input data for constructing link.
 	 */
 	public void actionInsertExternalLink() {
-		Optional<String> result = new InsertLinkDialog(text.getSelectedText()).showAndWait();
+		String selection = text.getSelectedText();
+		Optional<String> result = dialogs.makeInsertExternalLinkDialog(selection, selection).showAndWait();
 		if (result.isPresent()) {
 			text.replaceSelection(result.get());
 		}
 	}
 
 	/**
-	 * Shows {@link InsertHeadingDialog} to choose type of inserted heading. If there
+	 * Shows dialog to choose type of inserted heading. If there
 	 * is no selected text - heading will have empty caption.
 	 */
 	public void actionInsertHeading() {
-		Optional<String> result = new InsertHeadingDialog(text.getSelectedText()).showAndWait();
+		Optional<String> result = dialogs.makeInsertHeadingDialog(text.getSelectedText()).showAndWait();
 		if (result.isPresent()) {
 			String newLine = System.lineSeparator();
 			text.replaceSelection(String.join("", newLine, result.get(), newLine));
@@ -273,26 +273,26 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	}
 
 	public void actionInsertSnippet() {
-		showNotImplementedError();
+		dialogs.makeNotImplementedErrorDialog().show();
 	}
 
 	public void actionInsertTemplate() {
-		showNotImplementedError();
+		dialogs.makeNotImplementedErrorDialog().show();
 	}
 
 	public void actionAddCategories() {
-		showNotImplementedError();
+		dialogs.makeNotImplementedErrorDialog().show();
 	}
 
 	public void actionHelp() {
-		showNotImplementedError();
+		dialogs.makeNotImplementedErrorDialog().show();
 	}
 
 	/**
 	 * Shows message about author.
 	 */
 	public void actionAbout() {
-		showAboutDialog();
+		dialogs.makeAboutDialog().show();
 	}
 
 	/**
@@ -300,7 +300,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 */
 	public void actionQuit() {
 		if (updateTracker.isTextUpdated()) {
-			Optional<ButtonType> result = Dialogs.makeExitDialog().showAndWait();
+			Optional result = dialogs.makeExitDialog().showAndWait();
 			boolean noResult = !result.isPresent();
 			boolean noOKResult = result.get() != ButtonType.OK;
 			if (noResult || noOKResult) {
@@ -311,8 +311,8 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	}
 
 	private class TextUpdateTracker implements ChangeListener<String> {
-		boolean textUpdate = false;
-		boolean ignoreTextUpdate = false;
+		private boolean textUpdate = false;
+		private boolean ignoreTextUpdate = false;
 
 		void setUpdated() {
 			if (!textUpdate) {

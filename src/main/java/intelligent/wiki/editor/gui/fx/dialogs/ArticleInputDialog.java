@@ -14,23 +14,15 @@
 package intelligent.wiki.editor.gui.fx.dialogs;
 
 import intelligent.wiki.editor.bot.io.MediaWikiFacade;
-import intelligent.wiki.editor.gui.fx.ResourceBundleFactory;
 import javafx.application.Platform;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import org.controlsfx.control.textfield.TextFields;
-import org.controlsfx.validation.Severity;
-import org.controlsfx.validation.ValidationResult;
-import org.controlsfx.validation.ValidationSupport;
-import org.controlsfx.validation.Validator;
 
 import java.io.IOException;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * Class, representing dialog for inserting article name.
@@ -38,78 +30,46 @@ import java.util.logging.Logger;
  * @author Myroslav Rudnytskyi
  * @version 30.09.2015
  */
-//TODO rewrite with DRY and move interface part to fxml!
-public class ArticleInputDialog extends Dialog<String> {
+public class ArticleInputDialog extends InputDialog {
 
-	private static final Logger log = Logger.getLogger(ArticleInputDialog.class.getName());
-	private final TextField inputTextField = TextFields.createClearableTextField();
-	private ResourceBundle i18n = ResourceBundleFactory.getBundle(new Locale("uk", "ua"));
+	private final TextField articleNameInput = TextFields.createClearableTextField();
 
-	public ArticleInputDialog() {
+	protected ArticleInputDialog() {
+		super("article-input-dialog.title", "article-input-dialog.header", "article-input-dialog.content");
 		getDialogPane().getStyleClass().add("text-input-dialog");
 
-		Dialogs.prepareDialog(this,
-				i18n.getString("article-input-dialog.title"),
-				i18n.getString("article-input-dialog.header"),
-				i18n.getString("article-input-dialog.content"));
-
 		initContent();
-		initBehavior();
+		initButtons();
+		initInputControls();
 	}
 
 	private void initContent() {
-		GridPane grid = new GridPane();
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(20, 10, 10, 10));
-
-		grid.add(new Label(i18n.getString("article-input-dialog.name-label-text")), 0, 0);
-		grid.add(inputTextField, 1, 0);
-		GridPane.setHgrow(inputTextField, Priority.ALWAYS);
-
-		inputTextField.setPromptText(i18n.getString("article-input-dialog.prompt-text.article"));
-
-		getDialogPane().setContent(grid);
+		content.add(new Label(i18n.getString("article-input-dialog.name-label-text")), 0, 0);
+		content.add(articleNameInput, 1, 0);
+		GridPane.setHgrow(articleNameInput, Priority.ALWAYS);
 	}
 
-	private void initBehavior() {
-		ButtonType okType = new ButtonType(
-				i18n.getString("article-input-dialog.ok"), ButtonBar.ButtonData.OK_DONE);
-		ButtonType cancelType = new ButtonType(
-				i18n.getString("article-input-dialog.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
-		getDialogPane().getButtonTypes().addAll(okType, cancelType);
-
+	private void initButtons() {
 		Node okButton = getDialogPane().lookupButton(okType);
 		okButton.setDisable(true);
 
-		inputTextField.textProperty().addListener((observable, oldString, newString) -> {
-			okButton.setDisable(newString.trim().isEmpty() || !isValidWikiLink(newString));
+		articleNameInput.textProperty().addListener((observable, oldString, newString) -> {
+			okButton.setDisable(newString.trim().isEmpty() || !validate(newString));
 		});
-
-		Platform.runLater(inputTextField::requestFocus);
-
-		setResultConverter(pressedButton -> {
-			if (pressedButton.getButtonData().isCancelButton()) {
-				return null;
-			}
-			return inputTextField.getText();
-		});
-
-		new ValidationSupport().registerValidator(inputTextField, true, Validator.combine(
-				Validator.createEmptyValidator(i18n.getString("article-input-dialog.empty")),
-				(control, value) ->
-						ValidationResult.fromMessageIf(
-								control,
-								i18n.getString("article-input-dialog.not-exists"),
-								Severity.ERROR,
-								!isValidWikiLink(value.toString())
-						)
-		));
-
-		Dialogs.appendAutocompletion(inputTextField);
 	}
 
-	private boolean isValidWikiLink(String name) {
+	private void initInputControls() {
+		articleNameInput.setPromptText(i18n.getString("article-input-dialog.prompt-text.article"));
+
+		Platform.runLater(articleNameInput::requestFocus);
+
+		buildValidation(articleNameInput, "article-input-dialog.empty", "article-input-dialog.not-exists");
+
+		buildAutocompletion(articleNameInput);
+	}
+
+	@Override
+	protected boolean validate(String name) {
 		if (name == null || name.isEmpty()) {
 			return false;
 		}
@@ -121,5 +81,10 @@ public class ArticleInputDialog extends Dialog<String> {
 		}
 		// if an exception occurs - skip validation
 		return true;
+	}
+
+	@Override
+	public String getInputtedResult() {
+		return articleNameInput.getText();
 	}
 }

@@ -13,7 +13,7 @@
  */
 package intelligent.wiki.editor.gui.fx;
 
-import intelligent.wiki.editor.gui.fx.dialogs.Dialogs;
+import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -59,7 +59,7 @@ public class WikiEditor extends Application {
 			applicationRoot = loader.load();
 			((WikiEditorController) loader.getController()).registerCloseHandler(primaryStage);
 		} catch (IOException e) {
-			Dialogs.showError(e);
+			new DialogsFactory().makeErrorDialog(e).show();
 		}
 
 		Scene scene = new Scene(applicationRoot);
