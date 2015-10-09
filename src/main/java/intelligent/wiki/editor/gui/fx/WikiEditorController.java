@@ -137,11 +137,11 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 			updateTracker.startIgnoringUpdating();
 			try {
 				text.setText(FilesFacade.readTXT(currentOpenedFile));
+				tab.setText(file.getName());
 			} catch (IOException e) {
 				dialogs.makeErrorDialog(e).show();
 			}
 			updateTracker.stopIgnoringUpdating();
-			tab.setText(file.getName());
 			updateTracker.clearUpdated();
 		}
 	}
@@ -166,11 +166,11 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 			updateTracker.startIgnoringUpdating();
 			try {
 				text.setText(MediaWikiFacade.getArticleText(result.get()));
+				tab.setText(result.get());
 			} catch (IOException e) {
 				dialogs.makeErrorDialog(e).show();
 			}
 			updateTracker.stopIgnoringUpdating();
-			tab.setText(result.get());
 			updateTracker.clearUpdated();
 		}
 	}
@@ -201,10 +201,10 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		if (file != null) {
 			try {
 				FilesFacade.writeTXT(file.getAbsolutePath(), text.getText());
+				tab.setText(file.getName());
 			} catch (IOException e) {
 				dialogs.makeErrorDialog(e).show();
 			}
-			tab.setText(file.getName());
 			updateTracker.clearUpdated();
 		}
 	}
