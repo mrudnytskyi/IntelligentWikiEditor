@@ -15,7 +15,8 @@ package intelligent.wiki.editor.gui.fx;
 
 import intelligent.wiki.editor.bot.core.WikiArticle;
 import intelligent.wiki.editor.bot.io.FilesFacade;
-import intelligent.wiki.editor.bot.io.MediaWikiFacade;
+import intelligent.wiki.editor.bot.io.wiki.WikiFacade;
+import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -32,6 +33,7 @@ import javafx.stage.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -48,6 +50,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	private final WikiArticle article = new WikiArticle("");
 	private final TextUpdateTracker updateTracker = new TextUpdateTracker();
 	private final DialogsFactory dialogs = new DialogsFactory();
+	private final WikiOperations wiki = new WikiFacade(new Locale("uk"));
 	private ResourceBundle i18n;
 	private String currentOpenedFile;
 	private Stage stage;
@@ -135,14 +138,19 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		if (file != null) {
 			currentOpenedFile = file.getAbsolutePath();
 			updateTracker.startIgnoringUpdating();
-			try {
-				text.setText(FilesFacade.readTXT(currentOpenedFile));
-				tab.setText(file.getName());
-			} catch (IOException e) {
-				dialogs.makeErrorDialog(e).show();
-			}
-			updateTracker.stopIgnoringUpdating();
+			Platform.runLater(() -> openFile(file));
 			updateTracker.clearUpdated();
+		}
+	}
+
+	private void openFile(File file) {
+		try {
+			text.setText(FilesFacade.readTXT(file.getAbsolutePath()));
+			tab.setText(file.getName());
+		} catch (IOException e) {
+			dialogs.makeErrorDialog(e).show();
+		} finally {
+			updateTracker.stopIgnoringUpdating();
 		}
 	}
 
@@ -164,14 +172,19 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		if (result.isPresent()) {
 			currentOpenedFile = null;
 			updateTracker.startIgnoringUpdating();
-			try {
-				text.setText(MediaWikiFacade.getArticleText(result.get()));
-				tab.setText(result.get());
-			} catch (IOException e) {
-				dialogs.makeErrorDialog(e).show();
-			}
-			updateTracker.stopIgnoringUpdating();
+			Platform.runLater(() -> openURL(result.get()));
 			updateTracker.clearUpdated();
+		}
+	}
+
+	private void openURL(String textString) {
+		try {
+			text.setText(wiki.getArticleContent(textString));
+			tab.setText(textString);
+		} catch (IOException e) {
+			dialogs.makeErrorDialog(e).show();
+		} finally {
+			updateTracker.stopIgnoringUpdating();
 		}
 	}
 
@@ -181,14 +194,18 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 */
 	public void actionSave() {
 		if (currentOpenedFile != null) {
-			try {
-				FilesFacade.writeTXT(currentOpenedFile, text.getText());
-			} catch (IOException e) {
-				dialogs.makeErrorDialog(e).show();
-			}
+			Platform.runLater(this::saveFile);
 			updateTracker.clearUpdated();
 		} else {
 			actionSaveAs();
+		}
+	}
+
+	private void saveFile() {
+		try {
+			FilesFacade.writeTXT(currentOpenedFile, text.getText());
+		} catch (IOException e) {
+			dialogs.makeErrorDialog(e).show();
 		}
 	}
 
@@ -199,13 +216,17 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		FileChooser chooser = createWikiArticleFileChooser();
 		File file = chooser.showSaveDialog(stage);
 		if (file != null) {
-			try {
-				FilesFacade.writeTXT(file.getAbsolutePath(), text.getText());
-				tab.setText(file.getName());
-			} catch (IOException e) {
-				dialogs.makeErrorDialog(e).show();
-			}
+			Platform.runLater(() -> saveFileAs(file));
 			updateTracker.clearUpdated();
+		}
+	}
+
+	private void saveFileAs(File file) {
+		try {
+			FilesFacade.writeTXT(file.getAbsolutePath(), text.getText());
+			tab.setText(file.getName());
+		} catch (IOException e) {
+			dialogs.makeErrorDialog(e).show();
 		}
 	}
 

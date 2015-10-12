@@ -14,7 +14,6 @@
 
 package intelligent.wiki.editor.gui.fx.dialogs;
 
-import intelligent.wiki.editor.bot.io.MediaWikiFacade;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
@@ -87,11 +86,8 @@ public class ModifyWikiLinkDialog extends InputDialog {
 
 	@Override
 	protected boolean validate(String name) {
-		if (name == null || name.isEmpty()) {
-			return false;
-		}
 		try {
-			return MediaWikiFacade.existArticle(name);
+			return wiki.existsArticle(name);
 		} catch (IOException e) {
 			log.warning("Validation failed!");
 			log.severe(e.getMessage());

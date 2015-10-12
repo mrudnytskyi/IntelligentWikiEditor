@@ -44,17 +44,14 @@ import java.util.Objects;
  * 
  * @author Myroslav Rudnytskyi
  * @version 19.09.2015
+ * @deprecated singleton, use {@link intelligent.wiki.editor.bot.io.wiki.WikiFacade} instead
  */
+@Deprecated
 public final class MediaWikiFacade {
 
+	private static final String QUERY_LINK = "?action=query";
 	// https is necessary!
 	private static String WIKIPEDIA_API = "https://uk.wikipedia.org/w/api.php";
-	// https is necessary!
-	// TODO: will be used later, in getFiles method
-	@SuppressWarnings("unused")
-	private static String COMMONS_API =
-			"https://commons.wikimedia.org/w/api.php";
-	private static String QUERY_LINK = "?action=query";
 	private static Language lang = Language.UKRAINIAN;
 
 	/**
@@ -149,7 +146,7 @@ public final class MediaWikiFacade {
 	}
 
 	public static boolean existArticle(String name) throws IOException {
-		return getArticleText(name) == null ? false : true;
+		return getArticleText(name) != null;
 	}
 
 	/**
@@ -167,7 +164,7 @@ public final class MediaWikiFacade {
 													 String continueFrom, WikiNamespace namespace) throws IOException {
 
 		MediaWikiFacade.checkArguments(preffix);
-		List<String> pages = new ArrayList<String>();
+		List<String> pages = new ArrayList<>();
 		URL url =
 				new URL(String.join("", MediaWikiFacade.WIKIPEDIA_API,
 						MediaWikiFacade.QUERY_LINK,
@@ -315,6 +312,7 @@ public final class MediaWikiFacade {
 	 * @author Mir4ik
 	 * @version 0.1 27.10.2014
 	 */
+	@Deprecated
 	public enum Language {
 		UKRAINIAN("uk", "Файл:", "Категорія:", "Шаблон:"), ENGLISH("en",
 				"File:", "Category:", "Template:");
@@ -359,7 +357,9 @@ public final class MediaWikiFacade {
 	 *
 	 * @author Myroslav Rudnytskyi
 	 * @version 0.1 23.04.2015
+	 * @deprecated use {@link intelligent.wiki.editor.bot.io.wiki.WikiNamespace} instead
 	 */
+	@Deprecated
 	private enum WikiNamespace {
 		ARTICLE(0), MAIN(0), FILE(6), TEMPLATE(10), CATEGORY(14);
 

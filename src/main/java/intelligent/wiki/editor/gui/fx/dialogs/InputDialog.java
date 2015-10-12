@@ -13,7 +13,8 @@
  */
 package intelligent.wiki.editor.gui.fx.dialogs;
 
-import intelligent.wiki.editor.bot.io.MediaWikiFacade;
+import intelligent.wiki.editor.bot.io.wiki.WikiFacade;
+import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
 import intelligent.wiki.editor.gui.fx.ResourceBundleFactory;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -25,7 +26,7 @@ import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -38,11 +39,12 @@ import java.util.logging.Logger;
  */
 public abstract class InputDialog extends Dialog<String> {
 
-	protected static final ResourceBundle i18n = ResourceBundleFactory.getBundle(new Locale("uk", "ua"));
-	protected static final Logger log = Logger.getLogger(InputDialog.class.getName());
+	protected final ResourceBundle i18n = ResourceBundleFactory.getBundle(new Locale("uk", "ua"));
+	protected final Logger log = Logger.getLogger(InputDialog.class.getName());
 	protected final GridPane content = new GridPane();
+	protected final WikiOperations wiki = new WikiFacade(new Locale("uk"));
+	private final TextArea preview = new TextArea();
 	protected ButtonType okType;
-	private TextArea preview;
 
 	protected InputDialog(String titleId, String headerId, String contentId) {
 		DialogsFactory.setI18nStrings(this, titleId, headerId, contentId);
@@ -80,13 +82,13 @@ public abstract class InputDialog extends Dialog<String> {
 		TextFields.bindAutoCompletion(requireAutocompletion, param -> {
 			if (!param.getUserText().isEmpty()) {
 				try {
-					return MediaWikiFacade.getAriclesStartingWith(param.getUserText());
+					return wiki.getArticlesStartingWith(param.getUserText(), 10);
 				} catch (IOException e) {
 					log.warning("Autocompletion failed!");
 					log.severe(e.getMessage());
 				}
 			}
-			return new ArrayList<>();
+			return Collections.emptyList();
 		});
 	}
 
@@ -108,7 +110,6 @@ public abstract class InputDialog extends Dialog<String> {
 	}
 
 	protected void buildPreview() {
-		preview = new TextArea();
 		DialogsFactory.setExpandableTextArea(this, preview, "dialog.preview-label-text");
 	}
 

@@ -28,6 +28,7 @@ import java.io.IOException;
  * @see Test
  * @see Assert
  */
+@Deprecated
 public class MediaWikiFacadeTest {
 
 	@Test
@@ -91,7 +92,6 @@ public class MediaWikiFacadeTest {
 		Assert.assertNotNull(templates);
 		System.out.println("Found templates: " + templates.length);
 		Assert.assertNotNull(categories);
-		Assert.assertTrue(categories.length >= 500);
 		System.out.println("Found categories: " + categories.length);
 		Assert.assertNull(articleTextWrong);
 		Assert.assertArrayEquals(emptyArray, templatesWrong);
