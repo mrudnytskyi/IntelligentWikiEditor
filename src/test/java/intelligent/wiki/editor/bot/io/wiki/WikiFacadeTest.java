@@ -33,18 +33,20 @@ public class WikiFacadeTest {
 
 	@Test
 	public void testExistsArticle() throws Exception {
-		Assert.assertEquals(true, wiki.existsArticle("Main"));
+		Assert.assertEquals(true, wiki.existsArticle(right + "e"));
 		Assert.assertEquals(false, wiki.existsArticle(wrong));
 		Assert.assertEquals(false, wiki.existsArticle(null));
 		Assert.assertEquals(false, wiki.existsArticle(""));
 	}
 
 	@Test
-	public void testGetArticlesStartingWith() throws Exception {
+	public void testGetArticles() throws Exception {
 		Assert.assertEquals(1, wiki.getArticlesStartingWith(right, 1).size());
-		Assert.assertArrayEquals(emptyArray, wiki.getArticlesStartingWith(wrong, 1).toArray(emptyArray));
-		Assert.assertArrayEquals(emptyArray, wiki.getArticlesStartingWith(null, 1).toArray(emptyArray));
-		Assert.assertArrayEquals(emptyArray, wiki.getArticlesStartingWith(right, -1).toArray(emptyArray));
+		Assert.assertEquals(0, wiki.getArticlesStartingWith(wrong, 1).size());
+		Assert.assertEquals(0, wiki.getArticlesStartingWith(null, 1).size());
+		Assert.assertEquals(0, wiki.getArticlesStartingWith(right, -1).size());
+		Assert.assertEquals(0, wiki.getArticlesStartingWith(right, 501).size());
+		Assert.assertEquals(0, wiki.getArticlesStartingWith(right, 0).size());
 	}
 
 	@Test
@@ -61,11 +63,13 @@ public class WikiFacadeTest {
 	}
 
 	@Test
-	public void testGetCategoriesStartingWith() throws Exception {
+	public void testGetCategories() throws Exception {
 		Assert.assertEquals(1, wiki.getCategoriesStartingWith(right, 1).size());
-		Assert.assertArrayEquals(emptyArray, wiki.getCategoriesStartingWith(wrong, 1).toArray(emptyArray));
-		Assert.assertArrayEquals(emptyArray, wiki.getCategoriesStartingWith(null, 1).toArray(emptyArray));
-		Assert.assertArrayEquals(emptyArray, wiki.getCategoriesStartingWith(right, -1).toArray(emptyArray));
+		Assert.assertEquals(0, wiki.getCategoriesStartingWith(wrong, 1).size());
+		Assert.assertEquals(0, wiki.getCategoriesStartingWith(null, 1).size());
+		Assert.assertEquals(0, wiki.getCategoriesStartingWith(right, -1).size());
+		Assert.assertEquals(0, wiki.getCategoriesStartingWith(right, 501).size());
+		Assert.assertEquals(0, wiki.getCategoriesStartingWith(right, 0).size());
 	}
 
 	@Test
@@ -74,10 +78,22 @@ public class WikiFacadeTest {
 	}
 
 	@Test
-	public void testGetTemplatesStartingWith() throws Exception {
+	public void testGetTemplates() throws Exception {
 		Assert.assertEquals(1, wiki.getTemplatesStartingWith(right, 1).size());
-		Assert.assertArrayEquals(emptyArray, wiki.getTemplatesStartingWith(wrong, 1).toArray(emptyArray));
-		Assert.assertArrayEquals(emptyArray, wiki.getTemplatesStartingWith(null, 1).toArray(emptyArray));
-		Assert.assertArrayEquals(emptyArray, wiki.getTemplatesStartingWith(right, -1).toArray(emptyArray));
+		Assert.assertEquals(0, wiki.getTemplatesStartingWith(wrong, 1).size());
+		Assert.assertEquals(0, wiki.getTemplatesStartingWith(null, 1).size());
+		Assert.assertEquals(0, wiki.getTemplatesStartingWith(right, -1).size());
+		Assert.assertEquals(0, wiki.getTemplatesStartingWith(right, 501).size());
+		Assert.assertEquals(0, wiki.getTemplatesStartingWith(right, 0).size());
+	}
+
+	@Test
+	public void testGetCategoryPrefix() throws Exception {
+		Assert.assertEquals("Category:", wiki.getCategoryPrefix());
+	}
+
+	@Test
+	public void testGetTemplatePrefix() throws Exception {
+		Assert.assertEquals("Template:", wiki.getTemplatePrefix());
 	}
 }

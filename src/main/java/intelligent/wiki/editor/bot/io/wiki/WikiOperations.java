@@ -19,7 +19,8 @@ import java.util.List;
 /**
  * Interface specifying set of Wikipedia operations. Implemented by {@link WikiFacade}.
  * It is useful option to enhance testability, as it can easily be mocked or stubbed.
- * Note, that all it's methods can throw {@link IOException}.
+ * Note, that it's methods can throw {@link IOException} and their results depend on
+ * current configured language.
  *
  * @author Myroslav Rudnytskyi
  * @version 01.10.2015
@@ -42,6 +43,7 @@ public interface WikiOperations {
 	 * that article name depends on chosen language.
 	 *
 	 * @param prefix specified prefix
+	 * @param limit returned list size
 	 * @return list of pages, starting with specified prefix
 	 * @throws IOException if an I/O error occurs
 	 */
@@ -70,13 +72,23 @@ public interface WikiOperations {
 
 	/**
 	 * Returns list of categories names, starting with specified prefix. Note,
-	 * that category name depends on chosen language.
+	 * that category name depends on chosen language and will include
+	 * {@link #getCategoryPrefix() special string marker} before actual name.
 	 *
 	 * @param prefix specified prefix
+	 * @param limit returned list size
 	 * @return list of pages, starting with specified prefix
 	 * @throws IOException if an I/O error occurs
 	 */
 	List<String> getCategoriesStartingWith(String prefix, int limit) throws IOException;
+
+	/**
+	 * Returns special string marker, used to show, that this name is used in
+	 * wiki categories namespace. Note, that it depends on chosen language.
+	 *
+	 * @return string marker and colon, e. g. "Category:" for english wiki
+	 */
+	String getCategoryPrefix();
 
 	/**
 	 * Return <code>true</code> if there is template with specified name and
@@ -91,11 +103,21 @@ public interface WikiOperations {
 
 	/**
 	 * Return list of templates names, starting with specified preffix. Note,
-	 * that template name depends on chosen language.
+	 * that template name depends on chosen language and will include
+	 * {@link #getTemplatePrefix() special string marker} before actual name.
 	 *
 	 * @param prefix specified prefix
+	 * @param limit returned list size
 	 * @return array of pages, starting with specified prefix
 	 * @throws IOException if an I/O error occurs
 	 */
 	List<String> getTemplatesStartingWith(String prefix, int limit) throws IOException;
+
+	/**
+	 * Returns special string marker, used to show, that this name is used in
+	 * wiki templates namespace. Note, that it depends on chosen language.
+	 *
+	 * @return string marker and colon, e. g. "Template:" for english wiki
+	 */
+	String getTemplatePrefix();
 }
