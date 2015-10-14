@@ -35,7 +35,9 @@ import java.util.List;
  *
  * @author Myroslav Rudnytskyi
  * @version 10.10.2015
+ * @deprecated use {@link WikiQuery} in groovy implementation
  */
+@Deprecated
 public class WikiQueryJ {
 
 	private DocumentBuilder builder;
