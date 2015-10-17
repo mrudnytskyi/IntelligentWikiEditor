@@ -13,6 +13,8 @@
  */
 package intelligent.wiki.editor.bot.io.wiki;
 
+import intelligent.wiki.editor.bot.io.wiki.templatedata.TemplateParameter;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -122,7 +124,7 @@ public class WikiFacade implements WikiOperations {
 	@Override
 	public boolean existsCategory(String name) throws IOException {
 		//TODO
-		return false;
+		return true;
 	}
 
 	/**
@@ -139,14 +141,14 @@ public class WikiFacade implements WikiOperations {
 	}
 
 	@Override
-	public String getCategoryPrefix() {
+	public String getCategoryNamespacePrefix() {
 		return currentLanguage.getCategoryPrefix();
 	}
 
 	@Override
 	public boolean existsTemplate(String name) throws IOException {
 		//TODO
-		return false;
+		return true;
 	}
 
 	/**
@@ -163,8 +165,14 @@ public class WikiFacade implements WikiOperations {
 	}
 
 	@Override
-	public String getTemplatePrefix() {
+	public String getTemplateNamespacePrefix() {
 		return currentLanguage.getTemplatePrefix();
+	}
+
+	@Override
+	public List<TemplateParameter> getTemplateParameters(String name) throws IOException {
+		//TODO
+		return Collections.emptyList();
 	}
 
 	private List<String> getPagesStartingWith(String prefix, int limit, WikiNamespace namespace) throws IOException {

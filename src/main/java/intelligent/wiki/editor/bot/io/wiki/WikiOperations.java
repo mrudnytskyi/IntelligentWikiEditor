@@ -13,6 +13,8 @@
  */
 package intelligent.wiki.editor.bot.io.wiki;
 
+import intelligent.wiki.editor.bot.io.wiki.templatedata.TemplateParameter;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -28,7 +30,7 @@ import java.util.List;
 public interface WikiOperations {
 
 	/**
-	 * Return <code>true</code> if there is article with specified name and
+	 * Returns <code>true</code> if there is article with specified name and
 	 * <code>false</code> otherwise. Note, that article name depends on chosen
 	 * language.
 	 *
@@ -60,7 +62,7 @@ public interface WikiOperations {
 	String getArticleContent(String name) throws IOException;
 
 	/**
-	 * Return <code>true</code> if there is category with specified name and
+	 * Returns <code>true</code> if there is category with specified name and
 	 * <code>false</code> otherwise. Note, that category name depends on chosen
 	 * language.
 	 *
@@ -73,7 +75,7 @@ public interface WikiOperations {
 	/**
 	 * Returns list of categories names, starting with specified prefix. Note,
 	 * that category name depends on chosen language and will include
-	 * {@link #getCategoryPrefix() special string marker} before actual name.
+	 * {@link #getCategoryNamespacePrefix() special string marker} before actual name.
 	 *
 	 * @param prefix specified prefix
 	 * @param limit returned list size
@@ -88,10 +90,10 @@ public interface WikiOperations {
 	 *
 	 * @return string marker and colon, e. g. "Category:" for english wiki
 	 */
-	String getCategoryPrefix();
+	String getCategoryNamespacePrefix();
 
 	/**
-	 * Return <code>true</code> if there is template with specified name and
+	 * Returns <code>true</code> if there is template with specified name and
 	 * <code>false</code> otherwise. Note, that template name depends on chosen
 	 * language.
 	 *
@@ -102,13 +104,13 @@ public interface WikiOperations {
 	boolean existsTemplate(String name) throws IOException;
 
 	/**
-	 * Return list of templates names, starting with specified preffix. Note,
+	 * Returns list of templates names, starting with specified preffix. Note,
 	 * that template name depends on chosen language and will include
-	 * {@link #getTemplatePrefix() special string marker} before actual name.
+	 * {@link #getTemplateNamespacePrefix() special string marker} before actual name.
 	 *
 	 * @param prefix specified prefix
 	 * @param limit returned list size
-	 * @return array of pages, starting with specified prefix
+	 * @return list of pages, starting with specified prefix
 	 * @throws IOException if an I/O error occurs
 	 */
 	List<String> getTemplatesStartingWith(String prefix, int limit) throws IOException;
@@ -119,5 +121,15 @@ public interface WikiOperations {
 	 *
 	 * @return string marker and colon, e. g. "Template:" for english wiki
 	 */
-	String getTemplatePrefix();
+	String getTemplateNamespacePrefix();
+
+	/**
+	 * Returns template parameters list for specified template. Note, that
+	 * template name depends on chosen language.
+	 *
+	 * @param name specified template name
+	 * @return list of template parameter objects
+	 * @throws IOException if an I/O error occurs
+	 */
+	List<TemplateParameter> getTemplateParameters(String name) throws IOException;
 }

@@ -13,7 +13,8 @@
  */
 package intelligent.wiki.editor.bot.io;
 
-import intelligent.wiki.editor.bot.compiler.AST.TemplateParameter;
+import intelligent.wiki.editor.bot.io.wiki.templatedata.TemplateParameter;
+import intelligent.wiki.editor.bot.io.wiki.templatedata.TemplateParameterBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -292,12 +293,14 @@ public final class MediaWikiFacade {
 							object.get("description").getValueType() == ValueType.OBJECT ? object
 									.getJsonObject("description").getString(
 											"uk") : "null";
-					parameters[i] =
-							new TemplateParameter(entry.getKey(), description,
-									object.get("default").toString(),
-									object.getString("type"),
-									object.getBoolean("required"),
-									object.getBoolean("suggested"));
+					parameters[i] = TemplateParameterBuilder.parameterWithName(entry.getKey())
+							.withDescription(description)
+							.withDefaultValue(object.get("default").toString())
+							.withType(object.getString("type"))
+							.withRequiredFlag(object.getBoolean("required"))
+							.withSuggestedFlag(object.getBoolean("suggested"))
+							.withDeprecatedFlag(object.getBoolean("deprecated"))
+							.build();
 					i++;
 				}
 			}

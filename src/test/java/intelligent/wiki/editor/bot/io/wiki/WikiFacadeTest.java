@@ -102,11 +102,17 @@ public class WikiFacadeTest {
 
 	@Test
 	public void testGetCategoryPrefix() throws Exception {
-		Assert.assertEquals("Category:", wiki.getCategoryPrefix());
+		Assert.assertEquals("Category:", wiki.getCategoryNamespacePrefix());
 	}
 
 	@Test
 	public void testGetTemplatePrefix() throws Exception {
-		Assert.assertEquals("Template:", wiki.getTemplatePrefix());
+		Assert.assertEquals("Template:", wiki.getTemplateNamespacePrefix());
+	}
+
+	@Test
+	@Ignore("not implemented yet")
+	public void testGetTemplateParameters() throws Exception {
+		//TODO
 	}
 }

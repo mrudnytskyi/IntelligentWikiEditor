@@ -15,9 +15,9 @@ package intelligent.wiki.editor.gui;
  */
 
 import intelligent.wiki.editor.bot.compiler.AST.TemplateDeclaration;
-import intelligent.wiki.editor.bot.compiler.AST.TemplateParameter;
 import intelligent.wiki.editor.bot.io.MediaWikiFacade;
 import intelligent.wiki.editor.bot.io.MediaWikiFacade.Language;
+import intelligent.wiki.editor.bot.io.wiki.templatedata.TemplateParameter;
 import intelligent.wiki.editor.utils.AutoCompletePanel;
 import intelligent.wiki.editor.utils.AutoCompleteSource;
 

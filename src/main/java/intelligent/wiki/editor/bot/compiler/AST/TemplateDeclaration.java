@@ -14,12 +14,13 @@ package intelligent.wiki.editor.bot.compiler.AST;
  * GNU General Public License for more details.
  */
 
+import intelligent.wiki.editor.bot.compiler.Visitor;
+import intelligent.wiki.editor.bot.io.wiki.templatedata.TemplateParameter;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-
-import intelligent.wiki.editor.bot.compiler.Visitor;
 
 /**
  * Class represents template declaration node.
