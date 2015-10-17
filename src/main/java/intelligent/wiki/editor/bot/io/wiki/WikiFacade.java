@@ -14,7 +14,10 @@
 package intelligent.wiki.editor.bot.io.wiki;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -72,7 +75,12 @@ public class WikiFacade implements WikiOperations {
 	}
 
 	private String normalize(String arg) {
-		return arg.replace(' ', '_');
+		try {
+			return URLEncoder.encode(arg.trim(), StandardCharsets.UTF_8.toString());
+		} catch (UnsupportedEncodingException e) {
+			// can not catch
+		}
+		return arg;
 	}
 
 	/**

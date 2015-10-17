@@ -14,6 +14,7 @@
 package intelligent.wiki.editor.bot.io.wiki;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Locale;
@@ -29,11 +30,12 @@ public class WikiFacadeTest {
 	private final WikiOperations wiki = new WikiFacade(new Locale("en"));
 	private final String right = "Ukrain";
 	private final String wrong = "Urkaine";
-	private final String[] emptyArray = new String[]{};
 
 	@Test
 	public void testExistsArticle() throws Exception {
-		Assert.assertEquals(true, wiki.existsArticle(right + "e"));
+		Assert.assertEquals(true, wiki.existsArticle("Ukraine"));
+		Assert.assertEquals(true, wiki.existsArticle("  Ukraine  "));
+		Assert.assertEquals(true, wiki.existsArticle("Bright, Victoria"));
 		Assert.assertEquals(false, wiki.existsArticle(wrong));
 		Assert.assertEquals(false, wiki.existsArticle(null));
 		Assert.assertEquals(false, wiki.existsArticle(""));
@@ -42,6 +44,8 @@ public class WikiFacadeTest {
 	@Test
 	public void testGetArticles() throws Exception {
 		Assert.assertEquals(1, wiki.getArticlesStartingWith(right, 1).size());
+		Assert.assertEquals(1, wiki.getArticlesStartingWith("  Bright, Victoria  ", 1).size());
+		Assert.assertEquals(1, wiki.getArticlesStartingWith("Bright, Victoria", 1).size());
 		Assert.assertEquals(0, wiki.getArticlesStartingWith(wrong, 1).size());
 		Assert.assertEquals(0, wiki.getArticlesStartingWith(null, 1).size());
 		Assert.assertEquals(0, wiki.getArticlesStartingWith(right, -1).size());
@@ -51,13 +55,17 @@ public class WikiFacadeTest {
 
 	@Test
 	public void testGetArticleContent() throws Exception {
-		Assert.assertNotNull(wiki.getArticleContent("Main"));
+		Assert.assertNotEquals("", wiki.getArticleContent("Main"));
+		Assert.assertNotEquals("", wiki.getArticleContent("@"));
+		Assert.assertNotEquals("", wiki.getArticleContent("    Main    "));
+		Assert.assertNotEquals("", wiki.getArticleContent("Bright, Victoria"));
 		Assert.assertEquals("", wiki.getArticleContent(wrong));
 		Assert.assertEquals("", wiki.getArticleContent(null));
 		Assert.assertEquals("", wiki.getArticleContent(""));
 	}
 
 	@Test
+	@Ignore("not implemented yet")
 	public void testExistsCategory() throws Exception {
 		//TODO
 	}
@@ -65,6 +73,8 @@ public class WikiFacadeTest {
 	@Test
 	public void testGetCategories() throws Exception {
 		Assert.assertEquals(1, wiki.getCategoriesStartingWith(right, 1).size());
+		Assert.assertEquals(1, wiki.getCategoriesStartingWith("   Airliner seating   ", 1).size());
+		Assert.assertEquals(1, wiki.getCategoriesStartingWith("Airliner seating", 1).size());
 		Assert.assertEquals(0, wiki.getCategoriesStartingWith(wrong, 1).size());
 		Assert.assertEquals(0, wiki.getCategoriesStartingWith(null, 1).size());
 		Assert.assertEquals(0, wiki.getCategoriesStartingWith(right, -1).size());
@@ -73,6 +83,7 @@ public class WikiFacadeTest {
 	}
 
 	@Test
+	@Ignore("not implemented yet")
 	public void testExistsTemplate() throws Exception {
 		//TODO
 	}
@@ -80,6 +91,8 @@ public class WikiFacadeTest {
 	@Test
 	public void testGetTemplates() throws Exception {
 		Assert.assertEquals(1, wiki.getTemplatesStartingWith(right, 1).size());
+		Assert.assertEquals(1, wiki.getTemplatesStartingWith("    Loose Women ", 1).size());
+		Assert.assertEquals(1, wiki.getTemplatesStartingWith("Loose Women", 1).size());
 		Assert.assertEquals(0, wiki.getTemplatesStartingWith(wrong, 1).size());
 		Assert.assertEquals(0, wiki.getTemplatesStartingWith(null, 1).size());
 		Assert.assertEquals(0, wiki.getTemplatesStartingWith(right, -1).size());
