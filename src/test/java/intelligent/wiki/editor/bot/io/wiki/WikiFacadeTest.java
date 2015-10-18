@@ -14,7 +14,6 @@
 package intelligent.wiki.editor.bot.io.wiki;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Locale;
@@ -65,9 +64,19 @@ public class WikiFacadeTest {
 	}
 
 	@Test
-	@Ignore("not implemented yet")
 	public void testExistsCategory() throws Exception {
-		//TODO
+		Assert.assertEquals(true, wiki.existsCategory("Ukraine"));
+		Assert.assertEquals(true, wiki.existsCategory("    Airliner seating "));
+		Assert.assertEquals(true, wiki.existsCategory("Airliner seating"));
+		Assert.assertEquals(false, wiki.existsCategory(null));
+		Assert.assertEquals(false, wiki.existsCategory(""));
+		Assert.assertEquals(false, wiki.existsCategory("LALKA"));
+		String prefix = wiki.getCategoryNamespacePrefix();
+		Assert.assertEquals(true, wiki.existsCategory(prefix + "Ukraine"));
+		Assert.assertEquals(true, wiki.existsCategory(prefix + "Airliner seating "));
+		Assert.assertEquals(true, wiki.existsCategory(prefix + "Airliner seating"));
+		Assert.assertEquals(false, wiki.existsCategory(prefix + ""));
+		Assert.assertEquals(false, wiki.existsCategory(prefix + "LALK"));
 	}
 
 	@Test
@@ -83,9 +92,19 @@ public class WikiFacadeTest {
 	}
 
 	@Test
-	@Ignore("not implemented yet")
 	public void testExistsTemplate() throws Exception {
-		//TODO
+		Assert.assertEquals(true, wiki.existsTemplate("Ukraine"));
+		Assert.assertEquals(true, wiki.existsTemplate("    Loose Women "));
+		Assert.assertEquals(true, wiki.existsTemplate("Loose Women"));
+		Assert.assertEquals(false, wiki.existsTemplate(null));
+		Assert.assertEquals(false, wiki.existsTemplate(""));
+		Assert.assertEquals(false, wiki.existsTemplate("LALKA"));
+		String prefix = wiki.getTemplateNamespacePrefix();
+		Assert.assertEquals(true, wiki.existsTemplate(prefix + "Ukraine"));
+		Assert.assertEquals(true, wiki.existsTemplate(prefix + "Loose Women "));
+		Assert.assertEquals(true, wiki.existsTemplate(prefix + "Loose Women"));
+		Assert.assertEquals(false, wiki.existsTemplate(prefix + ""));
+		Assert.assertEquals(false, wiki.existsTemplate(prefix + "LALK"));
 	}
 
 	@Test
@@ -111,8 +130,16 @@ public class WikiFacadeTest {
 	}
 
 	@Test
-	@Ignore("not implemented yet")
 	public void testGetTemplateParameters() throws Exception {
-		//TODO
+		String prefix = wiki.getTemplateNamespacePrefix();
+		Assert.assertEquals(43, wiki.getTemplateParameters("Infobox football biography").size());
+		Assert.assertEquals(43, wiki.getTemplateParameters("  Infobox football biography  ").size());
+		Assert.assertEquals(43, wiki.getTemplateParameters(prefix + "Infobox football biography").size());
+		Assert.assertEquals(43, wiki.getTemplateParameters(prefix + "  Infobox football biography   ").size());
+		Assert.assertEquals(0, wiki.getTemplateParameters("").size());
+		Assert.assertEquals(0, wiki.getTemplateParameters(prefix + "").size());
+		Assert.assertEquals(0, wiki.getTemplateParameters(null).size());
+		Assert.assertEquals(0, wiki.getTemplateParameters(prefix + "Infobox").size());
+		Assert.assertEquals(0, wiki.getTemplateParameters("Infobox").size());
 	}
 }
