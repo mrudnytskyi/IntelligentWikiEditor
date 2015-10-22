@@ -1,4 +1,3 @@
-package intelligent.wiki.editor.bot.compiler.AST;
 /*
  * Content.java	20.11.2014
  * Copyright (C) 2014 Myroslav Rudnytskyi
@@ -13,6 +12,7 @@ package intelligent.wiki.editor.bot.compiler.AST;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
+package intelligent.wiki.editor.bot.compiler.AST;
 
 import intelligent.wiki.editor.bot.compiler.Visitor;
 
@@ -26,5 +26,7 @@ public interface Content {
 
 	void accept(Visitor visitor);
 
-	CharSequence getWikiSource();
+	default CharSequence getWikiSource() {
+		return toString();
+	}
 }

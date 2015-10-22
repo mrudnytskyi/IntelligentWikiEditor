@@ -1,4 +1,3 @@
-package intelligent.wiki.editor.bot.compiler.AST;
 /*
  * TemplateDeclaration.java	22.11.2014
  * Copyright (C) 2014 Myroslav Rudnytskyi
@@ -13,13 +12,13 @@ package intelligent.wiki.editor.bot.compiler.AST;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
+package intelligent.wiki.editor.bot.compiler.AST;
 
 import intelligent.wiki.editor.bot.compiler.Visitor;
-import intelligent.wiki.editor.bot.io.wiki.templatedata.TemplateParameter;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -32,61 +31,47 @@ public class TemplateDeclaration implements Content {
 
 	protected final String name;
 
-	protected final TemplateParameter[] parameters;
+	protected final List<TemplateArgument> args = new ArrayList<>();
 
-	protected final Map<TemplateParameter, String> parametersValues =
-			new LinkedHashMap<TemplateParameter, String>();
+	public TemplateDeclaration(String name, TemplateArgument... args) {
+		this(name, Arrays.asList(args));
+	}
 
-	public TemplateDeclaration(String name, TemplateParameter ... params) {
+	public TemplateDeclaration(String name, List<TemplateArgument> args) {
 		this.name = Objects.requireNonNull(name, "Template name null!");
-		parameters = params;
+		this.args.addAll(args);
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public TemplateParameter getParameter(String label) {
-		for (TemplateParameter parameter : parameters) {
-			if (parameter.getName().equals(label)) {
-				return parameter;
+	public TemplateArgument getArgument(String label) {
+		for (TemplateArgument current : args) {
+			if (current.getName().equals(label)) {
+				return current;
 			}
 		}
 		return null;
 	}
 
 	public String getValue(String name) {
-		TemplateParameter parameter = getParameter(name);
-		if (parameter == null) {
-			return null;
-		}
-		return parametersValues.get(name);
+		TemplateArgument arg = getArgument(name);
+		return arg == null ? null : arg.getValue();
 	}
 
-	public boolean putValue(String name, String value) {
-		TemplateParameter parameter = getParameter(name);
-		if (parameter == null) {
-			return false;
-		}
-		parametersValues.put(parameter, value);
-		return true;
+	public void putValue(String name, String value) {
+		getArgument(name).setValue(value);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder("{{" + name);
-		if (!parametersValues.isEmpty()) {
-			for (Entry<TemplateParameter, String> e : parametersValues
-					.entrySet()) {
-				String value = e.getValue();
-				if ((value == null) || value.equals("null")) {
-					if (e.getKey().getDefault() != null) {
-						value = e.getKey().getDefault();
-					}
-				} else {
-					sb.append("|").append(e.getKey().getName()).append("=")
-							.append(value);
-				}
+		StringBuilder sb = new StringBuilder();
+		sb.append("{{").append(name);
+		if (!args.isEmpty()) {
+			sb.append(System.lineSeparator());
+			for (TemplateArgument current : args) {
+				sb.append("|").append(current).append(System.lineSeparator());
 			}
 		}
 		sb.append("}}");
@@ -96,10 +81,5 @@ public class TemplateDeclaration implements Content {
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitTemplateDeclaration(this);
-	}
-
-	@Override
-	public CharSequence getWikiSource() {
-		return toString();
 	}
 }

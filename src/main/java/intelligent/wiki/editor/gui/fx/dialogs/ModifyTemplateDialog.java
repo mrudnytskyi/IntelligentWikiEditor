@@ -13,19 +13,16 @@
  */
 package intelligent.wiki.editor.gui.fx.dialogs;
 
-import intelligent.wiki.editor.bot.io.wiki.templatedata.TemplateParameter;
+import intelligent.wiki.editor.bot.compiler.AST.TemplateArgument;
+import intelligent.wiki.editor.bot.compiler.AST.TemplateDeclaration;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import javafx.util.Callback;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
@@ -39,9 +36,9 @@ import java.util.stream.Collectors;
  */
 public class ModifyTemplateDialog extends InputDialog {
 
-	private final TableView<Parameter> parametersTable = new TableView<>();
+	private final TableView<TemplateArgument> parametersTable = new TableView<>();
 	private final TextField nameInput = TextFields.createClearableTextField();
-	private ObservableList<Parameter> parameters = FXCollections.observableArrayList();
+	private ObservableList<TemplateArgument> parameters = FXCollections.observableArrayList();
 
 	protected ModifyTemplateDialog(String captionText, String titleId, String headerId, String contentId) {
 		super(titleId, headerId, contentId);
@@ -69,8 +66,9 @@ public class ModifyTemplateDialog extends InputDialog {
 
 		Button addButton = new Button("+");
 		addButton.setOnAction(e -> {
-			parameters.add(new Parameter(parameterNameInput.getText(), ""));
+			parameters.add(new TemplateArgument(parameterNameInput.getText()));
 			parameterNameInput.clear();
+			fillPreview();
 		});
 
 		content.add(parameterNameInput, 0, 2);
@@ -78,41 +76,36 @@ public class ModifyTemplateDialog extends InputDialog {
 	}
 
 	private void createTable() {
-		TableColumn nameColumn = new TableColumn(i18n.getString("insert-template-dialog.name-column"));
+		TableColumn<TemplateArgument, String> nameColumn = new TableColumn<>(i18n.getString("insert-template-dialog.name-column"));
 		nameColumn.setMinWidth(250);
-		TableColumn valueColumn = new TableColumn(i18n.getString("insert-template-dialog.value-column"));
+		TableColumn<TemplateArgument, String> valueColumn = new TableColumn<>(i18n.getString("insert-template-dialog.value-column"));
 		valueColumn.setMinWidth(250);
 
 		parametersTable.setEditable(true);
-		parametersTable.setRowFactory(tv -> new TableRow<Parameter>() {
+		parametersTable.setRowFactory(tv -> new TableRow<TemplateArgument>() {
 			@Override
-			public void updateItem(Parameter parameter, boolean empty) {
+			public void updateItem(TemplateArgument parameter, boolean empty) {
 				super.updateItem(parameter, empty);
 				setTooltip(new Tooltip(parameter == null ? "" : parameter.getDescription()));
 			}
 		});
 
-		Callback<TableColumn, TableCell> cellFactory = p -> new EditingCell();
-
-		nameColumn.setCellValueFactory(new PropertyValueFactory<Parameter, String>("name"));
-		valueColumn.setCellValueFactory(new PropertyValueFactory<Parameter, String>("default"));
-		valueColumn.setCellFactory(cellFactory);
-		valueColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Parameter, String>>() {
-			@Override
-			public void handle(TableColumn.CellEditEvent<Parameter, String> event) {
-				Parameter currentParameter = event.getTableView().getItems().get(event.getTablePosition().getRow());
-				if (validEntering(event)) {
-					currentParameter.setValue(event.getNewValue());
-				} else {
-					currentParameter.setValue(event.getOldValue());
-				}
-				fillPreview();
+		nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+		valueColumn.setCellValueFactory(new PropertyValueFactory<>("default"));
+		valueColumn.setCellFactory(p -> new EditingCell());
+		valueColumn.setOnEditCommit(event -> {
+			TemplateArgument current = event.getTableView().getItems().get(event.getTablePosition().getRow());
+			if (validEntering(event)) {
+				current.setValue(event.getNewValue());
+			} else {
+				current.setValue(event.getOldValue());
 			}
+			fillPreview();
 		});
 		parametersTable.getColumns().addAll(nameColumn, valueColumn);
 	}
 
-	private boolean validEntering(TableColumn.CellEditEvent<Parameter, String> event) {
+	private boolean validEntering(TableColumn.CellEditEvent<TemplateArgument, String> event) {
 		boolean notInputted = event.getNewValue().trim().isEmpty();
 		boolean isRequired = event.getRowValue().isRequired();
 		return !(isRequired && notInputted);
@@ -146,12 +139,12 @@ public class ModifyTemplateDialog extends InputDialog {
 	private void loadParameters(String templateName) {
 		parameters = FXCollections.observableArrayList();
 		try {
-			parameters.addAll(wiki.getTemplateParameters(templateName).stream().map(Parameter::new).collect(Collectors.toList()));
-			parametersTable.setItems(parameters);
+			parameters.addAll(wiki.getTemplateParameters(templateName).stream().map(TemplateArgument::new).collect(Collectors.toList()));
 		} catch (IOException e) {
 			log.warning("Loading failed!");
 			log.severe(e.getMessage());
 		}
+		parametersTable.setItems(parameters);
 	}
 
 	@Override
@@ -168,87 +161,15 @@ public class ModifyTemplateDialog extends InputDialog {
 
 	@Override
 	public String getInputtedResult() {
-		StringBuilder sb = new StringBuilder("{{");
-		String newLine = System.lineSeparator();
-		String templateName = nameInput.getText().trim();
-		String prefix = wiki.getTemplateNamespacePrefix();
-		if (!templateName.contains(prefix)) {
-			templateName = prefix + templateName;
-		}
-		sb.append(templateName).append(newLine);
-		for (Parameter current : parametersTable.getItems()) {
-			sb.append("| ").append(current).append(newLine);
-		}
-		sb.append("}}");
-		return sb.toString();
+		String templateName = addPrefixIfNotPresent(nameInput.getText(), wiki.getTemplateNamespacePrefix());
+		return new TemplateDeclaration(templateName, parameters).toString();
 	}
 
-	//TODO rename to TemplateArgumentImp, move to AST package, implements interface TA, which extends TemplateParameter
-	public class Parameter {
-		private TemplateParameter parameter;
-		private StringProperty value = new SimpleStringProperty();
-		private String name;
-
-		public Parameter(TemplateParameter parameter) {
-			this.parameter = parameter;
-		}
-
-		public Parameter(String name, String value) {
-			this.name = name;
-			setValue(value);
-		}
-
-		public String getName() {
-			if (parameter != null) {
-				return parameter.getName();
-			} else {
-				return name;
-			}
-		}
-
-		public String getDescription() {
-			if (parameter != null) {
-				return parameter.getDescription();
-			} else {
-				return "";
-			}
-		}
-
-		public String getDefault() {
-			if (parameter != null) {
-				return parameter.getDefault();
-			} else {
-				return "";
-			}
-		}
-
-		public boolean isRequired() {
-			if (parameter != null) {
-				return parameter.isRequired();
-			} else {
-				return false;
-			}
-		}
-
-		public String getValue() {
-			return value.get();
-		}
-
-		public void setValue(String value) {
-			this.value.set(value);
-		}
-
-		public StringProperty valueProperty() {
-			return value;
-		}
-
-		@Override
-		public String toString() {
-			return getName() + " = " + (value.get() == null ? getDefault() : value.get());
-		}
+	private String addPrefixIfNotPresent(String arg, String prefix) {
+		return arg.startsWith(prefix) ? arg.trim() : (prefix + arg).trim();
 	}
 
-	class EditingCell extends TableCell<Parameter, String> {
+	class EditingCell extends TableCell<TemplateArgument, String> {
 
 		private TextField textField;
 

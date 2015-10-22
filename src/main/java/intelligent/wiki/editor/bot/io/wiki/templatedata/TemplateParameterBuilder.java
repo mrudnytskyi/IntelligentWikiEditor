@@ -52,17 +52,17 @@ public class TemplateParameterBuilder {
 	}
 
 	public TemplateParameterBuilder withDescription(String description) {
-		this.description = description;
+		this.description = replaceNullWithEmpty(description);
 		return this;
 	}
 
 	public TemplateParameterBuilder withDefaultValue(String def) {
-		this.def = def;
+		this.def = replaceNullWithEmpty(def);
 		return this;
 	}
 
 	public TemplateParameterBuilder withType(String type) {
-		this.type = type;
+		this.type = replaceNullWithEmpty(type);
 		return this;
 	}
 
@@ -88,5 +88,9 @@ public class TemplateParameterBuilder {
 	 */
 	public TemplateParameter build() {
 		return new TemplateParameterImp(this);
+	}
+
+	private String replaceNullWithEmpty(String arg) {
+		return arg == null ? "" : arg;
 	}
 }

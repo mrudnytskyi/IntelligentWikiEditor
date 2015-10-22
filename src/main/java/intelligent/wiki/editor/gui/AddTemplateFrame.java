@@ -14,6 +14,7 @@ package intelligent.wiki.editor.gui;
  * GNU General Public License for more details.
  */
 
+import intelligent.wiki.editor.bot.compiler.AST.TemplateArgument;
 import intelligent.wiki.editor.bot.compiler.AST.TemplateDeclaration;
 import intelligent.wiki.editor.bot.io.MediaWikiFacade;
 import intelligent.wiki.editor.bot.io.MediaWikiFacade.Language;
@@ -109,8 +110,11 @@ public class AddTemplateFrame extends ApplicationFrame {
 						return;
 					}
 				}
-				TemplateDeclaration template = new TemplateDeclaration(
-						autoComplete.getInputedText(), params);
+				List<TemplateArgument> args = new ArrayList<>();
+				for (TemplateParameter current : params) {
+					args.add(new TemplateArgument(current));
+				}
+				TemplateDeclaration template = new TemplateDeclaration(autoComplete.getInputedText(), args);
 
 				for (int i = 0; i < tableModel.getRowCount(); i++) {
 					template.putValue(tableModel.getValueAt(i, NAME_COLUMN)
