@@ -86,9 +86,10 @@ public class DialogsFactory {
 	}
 
 	/**
-	 * Method is used to show message when some exception occurs.
+	 * Method is used to create (not show!) error dialog when some exception occurs.
 	 *
 	 * @param e exception object
+	 * @return constructed error dialog
 	 */
 	public Dialog makeErrorDialog(Exception e) {
 		Dialog alert = makeErrorDialog(
@@ -108,6 +109,8 @@ public class DialogsFactory {
 
 	/**
 	 * Method is used to stub not realized functions with error dialog.
+	 *
+	 * @return constructed not implemented error dialog
 	 */
 	public Dialog makeNotImplementedErrorDialog() {
 		return makeErrorDialog(
@@ -117,7 +120,9 @@ public class DialogsFactory {
 	}
 
 	/**
-	 * Method is used to show message about author.
+	 * Method is used to create (not show!) message about author.
+	 *
+	 * @return constructed about dialog
 	 */
 	public Dialog makeAboutDialog() {
 		//TODO: expand message to show also used libraries and their license, version and so on
@@ -136,8 +141,8 @@ public class DialogsFactory {
 	}
 
 	/**
-	 * @param linkText article name in wiki link object
-	 * @param captionText article caption in wiki link object
+	 * @param linkText text, placed in link text field
+	 * @param captionText text, placed in caption text field
 	 * @return created object of {@link ModifyWikiLinkDialog}
 	 */
 	public Dialog<String> makeInsertWikiLinkDialog(String linkText, String captionText) {
@@ -148,8 +153,8 @@ public class DialogsFactory {
 	}
 
 	/**
-	 * @param urlText url in link object
-	 * @param captionText url caption in link object
+	 * @param urlText text, placed in url text field
+	 * @param captionText text, placed in caption text field
 	 * @return created object of {@link ModifyLinkDialog}
 	 */
 	public Dialog<String> makeInsertExternalLinkDialog(String urlText, String captionText) {
@@ -160,7 +165,7 @@ public class DialogsFactory {
 	}
 
 	/**
-	 * @param headingText text in heading object
+	 * @param headingText text, placed in heading
 	 * @return created object of {@link ModifyHeadingDialog}
 	 */
 	public Dialog<String> makeInsertHeadingDialog(String headingText) {
@@ -168,5 +173,16 @@ public class DialogsFactory {
 				"insert-heading-dialog.title",
 				"insert-heading-dialog.header",
 				"insert-heading-dialog.content");
+	}
+
+	/**
+	 * @param captionText text, placed in template name text field
+	 * @return created object of {@link ModifyTemplateDialog}
+	 */
+	public Dialog<String> makeInsertTemplateDialog(String captionText) {
+		return new ModifyTemplateDialog(captionText,
+				"insert-template-dialog.title",
+				"insert-template-dialog.header",
+				"insert-template-dialog.content");
 	}
 }

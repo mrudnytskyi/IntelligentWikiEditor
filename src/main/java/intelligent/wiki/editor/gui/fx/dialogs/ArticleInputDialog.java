@@ -64,7 +64,7 @@ public class ArticleInputDialog extends InputDialog {
 
 		buildValidation(articleNameInput, "article-input-dialog.empty", "article-input-dialog.not-exists");
 
-		buildAutocompletion(articleNameInput);
+		buildArticleAutocompletion(articleNameInput);
 	}
 
 	@Override

@@ -69,7 +69,7 @@ public class ModifyWikiLinkDialog extends InputDialog {
 
 		buildValidation(linkInput, "insert-wiki-link-dialog.empty", "insert-wiki-link-dialog.not-exists");
 
-		buildAutocompletion(linkInput);
+		buildArticleAutocompletion(linkInput);
 	}
 
 	private void initButtons() {

@@ -83,6 +83,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		enableCutAction(false);
 		enableCopyAction(false);
 		enablePasteAction(clipboard.hasString());
+		//TODO bug - not only mouse, keyboard also can be used to paste?
 		text.setOnMouseMoved(event -> enablePasteAction(clipboard.hasString()));
 		text.selectedTextProperty().addListener(listener -> {
 			boolean isSelection = text.getSelectedText().length() != 0;
@@ -108,6 +109,8 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 
 	/**
 	 * Sets this object as handler of closing requests. See {@link #handle(WindowEvent)} for details.
+	 *
+	 * @param stage stage object, requiring close handler
 	 */
 	public void registerCloseHandler(Stage stage) {
 		this.stage = stage;
@@ -301,8 +304,15 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		dialogs.makeNotImplementedErrorDialog().show();
 	}
 
+	/**
+	 * Shows dialog to input data for constructing template.
+	 */
 	public void actionInsertTemplate() {
-		dialogs.makeNotImplementedErrorDialog().show();
+		String selection = text.getSelectedText();
+		Optional<String> result = dialogs.makeInsertTemplateDialog(selection).showAndWait();
+		if (result.isPresent()) {
+			text.replaceSelection(result.get());
+		}
 	}
 
 	public void actionAddCategories() {

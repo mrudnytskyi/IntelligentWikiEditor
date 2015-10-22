@@ -78,11 +78,25 @@ public abstract class InputDialog extends Dialog<String> {
 	 */
 	public abstract String getInputtedResult();
 
-	protected void buildAutocompletion(TextField requireAutocompletion) {
+	protected void buildArticleAutocompletion(TextField requireAutocompletion) {
 		TextFields.bindAutoCompletion(requireAutocompletion, param -> {
 			if (!param.getUserText().isEmpty()) {
 				try {
 					return wiki.getArticlesStartingWith(param.getUserText(), 10);
+				} catch (IOException e) {
+					log.warning("Autocompletion failed!");
+					log.severe(e.getMessage());
+				}
+			}
+			return Collections.emptyList();
+		});
+	}
+
+	protected void buildTemplateAutocompletion(TextField requireAutocompletion) {
+		TextFields.bindAutoCompletion(requireAutocompletion, param -> {
+			if (!param.getUserText().isEmpty()) {
+				try {
+					return wiki.getTemplatesStartingWith(param.getUserText(), 10);
 				} catch (IOException e) {
 					log.warning("Autocompletion failed!");
 					log.severe(e.getMessage());
