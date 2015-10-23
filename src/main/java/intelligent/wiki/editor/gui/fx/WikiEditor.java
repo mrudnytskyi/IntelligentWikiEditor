@@ -13,11 +13,10 @@
  */
 package intelligent.wiki.editor.gui.fx;
 
-import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
+import intelligent.wiki.editor.spring.SpringFXMLLoader;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -25,6 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 /**
  * Main class of wiki editor application, containing code to run it
@@ -35,34 +35,50 @@ import java.util.ResourceBundle;
  */
 public class WikiEditor extends Application {
 
-	private static final String WIKI_EDITOR_ROOT_FILE =
-			"src/main/resources/WikiEditorRoot.fxml";
+	private static final String WIKI_EDITOR_ROOT_FILE = "src/main/resources/WikiEditorRoot.fxml";
+	private static final Logger LOG = Logger.getLogger(WikiEditor.class.getName());
 
 	private Stage primaryStage;
-	private BorderPane applicationRoot;
 
 	/**
-	 * Method, called on wiki editor start-up.
+	 * Method, called on wiki editor GUI start-up.
 	 */
 	@Override
 	public void start(Stage primaryStage) {
+		assert primaryStage != null;
+		LOG.info("Starting application...");
 		this.primaryStage = primaryStage;
-		primaryStage.setTitle("Intelligent Wiki Editor 0.1");
-		showApplicationRoot();
+		primaryStage.setTitle("Intelligent Wiki Editor");
+		showApplicationRoot(createApplicationRoot());
 	}
 
-	private void showApplicationRoot() {
+	private Parent createApplicationRoot() {
 		try {
-			URL fxml = new File(WikiEditor.WIKI_EDITOR_ROOT_FILE).toURI().toURL();
-			ResourceBundle i18n = ResourceBundleFactory.getBundle(new Locale("uk", "ua"));
-			FXMLLoader loader = new FXMLLoader(fxml, i18n);
-			applicationRoot = loader.load();
-			((WikiEditorController) loader.getController()).registerCloseHandler(primaryStage);
+			return loadApplicationRoot();
 		} catch (IOException e) {
-			new DialogsFactory().makeErrorDialog(e).show();
+			LOG.severe("Fatal exception: can not load GUI because " + e);
+			System.exit(1);
 		}
+		return null; // unreachable
+	}
 
-		Scene scene = new Scene(applicationRoot);
+	private Parent loadApplicationRoot() throws IOException {
+		SpringFXMLLoader loader = new SpringFXMLLoader(createI18n());
+		URL fxml = new File(WIKI_EDITOR_ROOT_FILE).toURI().toURL();
+		Parent applicationRoot = loader.load(fxml);
+		primaryStage.setOnCloseRequest(loader.getController());
+		LOG.info("Application root loaded successfully!");
+		return applicationRoot;
+	}
+
+	private ResourceBundle createI18n() {
+		//TODO fix for my computer: remove in production!
+		Locale current = Locale.getDefault().equals(new Locale("ru", "RU")) ? new Locale("uk") : Locale.getDefault();
+		return ResourceBundleFactory.getBundle(current);
+	}
+
+	private void showApplicationRoot(Parent root) {
+		Scene scene = new Scene(root);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

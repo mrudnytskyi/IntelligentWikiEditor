@@ -15,7 +15,6 @@ package intelligent.wiki.editor.gui.fx;
 
 import intelligent.wiki.editor.bot.core.WikiArticle;
 import intelligent.wiki.editor.bot.io.FilesFacade;
-import intelligent.wiki.editor.bot.io.wiki.WikiFacade;
 import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
 import javafx.application.Platform;
@@ -27,13 +26,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -49,11 +48,12 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	private final Clipboard clipboard = Clipboard.getSystemClipboard();
 	private final WikiArticle article = new WikiArticle("");
 	private final TextUpdateTracker updateTracker = new TextUpdateTracker();
-	private final DialogsFactory dialogs = new DialogsFactory();
-	private final WikiOperations wiki = new WikiFacade(new Locale("uk"));
+	@Inject
+	private final DialogsFactory dialogs;
+	@Inject
+	private final WikiOperations wiki;
 	private ResourceBundle i18n;
 	private String currentOpenedFile;
-	private Stage stage;
 	@FXML
 	private Button cutButton;
 	@FXML
@@ -70,6 +70,17 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	private Tab tab;
 	@FXML
 	private TextArea text;
+
+	/**
+	 * Note, that parameters can not be <code>null</code>!
+	 *
+	 * @param wiki    object, performing operations with Wikipedia
+	 * @param dialogs object, creating dialogs
+	 */
+	public WikiEditorController(WikiOperations wiki, DialogsFactory dialogs) {
+		this.wiki = Objects.requireNonNull(wiki, "Null wiki operations object!");
+		this.dialogs = Objects.requireNonNull(dialogs, "Null dialogs creator object!");
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -108,18 +119,6 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	}
 
 	/**
-	 * Sets this object as handler of closing requests. See {@link #handle(WindowEvent)} for details.
-	 *
-	 * @param stage stage object, requiring close handler
-	 */
-	public void registerCloseHandler(Stage stage) {
-		this.stage = stage;
-		if (stage != null) {
-			stage.setOnCloseRequest(this);
-		}
-	}
-
-	/**
 	 * Method is called when user tries to close application using red cross on the window top.
 	 */
 	@Override
@@ -137,7 +136,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 */
 	public void actionOpenFile() {
 		FileChooser chooser = createWikiArticleFileChooser();
-		File file = chooser.showOpenDialog(stage);
+		File file = chooser.showOpenDialog(null);
 		if (file != null) {
 			currentOpenedFile = file.getAbsolutePath();
 			updateTracker.startIgnoringUpdating();
@@ -217,7 +216,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 */
 	public void actionSaveAs() {
 		FileChooser chooser = createWikiArticleFileChooser();
-		File file = chooser.showSaveDialog(stage);
+		File file = chooser.showSaveDialog(null);
 		if (file != null) {
 			Platform.runLater(() -> saveFileAs(file));
 			updateTracker.clearUpdated();
