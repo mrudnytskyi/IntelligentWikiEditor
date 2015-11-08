@@ -15,10 +15,17 @@ package intelligent.wiki.editor.spring;
 
 import intelligent.wiki.editor.bot.io.wiki.WikiFacade;
 import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
+import intelligent.wiki.editor.core.ArticleFacade;
+import intelligent.wiki.editor.core.ArticleOperations;
+import intelligent.wiki.editor.core.WikiArticleParser;
 import intelligent.wiki.editor.gui.fx.WikiEditorController;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
+import intelligent.wiki.editor.sweble.SwebleWikiArticleParser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.sweble.wikitext.engine.WtEngine;
+import org.sweble.wikitext.engine.WtEngineImpl;
+import org.sweble.wikitext.engine.utils.DefaultConfigEnWp;
 
 import java.util.Locale;
 
@@ -41,8 +48,24 @@ public class Config {
 		return new DialogsFactory();
 	}
 
+	// used indirectly!
 	@Bean
 	public WikiEditorController wikiEditorController() {
-		return new WikiEditorController(wikiOperations(), dialogsFactory());
+		return new WikiEditorController(wikiOperations(), dialogsFactory(), articleOperations());
+	}
+
+	@Bean
+	public ArticleOperations articleOperations() {
+		return new ArticleFacade(articleParser());
+	}
+
+	@Bean
+	public WikiArticleParser articleParser() {
+		return new SwebleWikiArticleParser(engine());
+	}
+
+	@Bean
+	public WtEngine engine() {
+		return new WtEngineImpl(DefaultConfigEnWp.generate());
 	}
 }

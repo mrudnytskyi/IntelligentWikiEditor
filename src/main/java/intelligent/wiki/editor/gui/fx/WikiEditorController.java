@@ -13,9 +13,9 @@
  */
 package intelligent.wiki.editor.gui.fx;
 
-import intelligent.wiki.editor.bot.core.WikiArticle;
 import intelligent.wiki.editor.bot.io.FilesFacade;
 import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
+import intelligent.wiki.editor.core.ArticleOperations;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -46,14 +46,15 @@ import java.util.ResourceBundle;
 public class WikiEditorController implements Initializable, EventHandler<WindowEvent> {
 
 	private final Clipboard clipboard = Clipboard.getSystemClipboard();
-	private final WikiArticle article = new WikiArticle("");
+	@Inject
+	private final ArticleOperations article;
 	private final TextUpdateTracker updateTracker = new TextUpdateTracker();
 	@Inject
 	private final DialogsFactory dialogs;
 	@Inject
 	private final WikiOperations wiki;
 	private ResourceBundle i18n;
-	private String currentOpenedFile;
+	private File currentOpenedFile;
 	@FXML
 	private Button cutButton;
 	@FXML
@@ -76,10 +77,12 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 *
 	 * @param wiki    object, performing operations with Wikipedia
 	 * @param dialogs object, creating dialogs
+	 * @param article object, performing operations wiki article
 	 */
-	public WikiEditorController(WikiOperations wiki, DialogsFactory dialogs) {
+	public WikiEditorController(WikiOperations wiki, DialogsFactory dialogs, ArticleOperations article) {
 		this.wiki = Objects.requireNonNull(wiki, "Null wiki operations object!");
-		this.dialogs = Objects.requireNonNull(dialogs, "Null dialogs creator object!");
+		this.dialogs = Objects.requireNonNull(dialogs, "Null dialogs factory object!");
+		this.article = Objects.requireNonNull(article, "Null article operations object!");
 	}
 
 	/**
@@ -88,9 +91,10 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		i18n = resources;
-		text.textProperty().bindBidirectional(article.textProperty());
+		article.articleTextProperty().bindBidirectional(text.textProperty());
 		text.setWrapText(true);
 		text.textProperty().addListener(updateTracker);
+		article.articleTitleProperty().bind(tab.textProperty());
 		enableCutAction(false);
 		enableCopyAction(false);
 		enablePasteAction(clipboard.hasString());
@@ -138,8 +142,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		FileChooser chooser = createWikiArticleFileChooser();
 		File file = chooser.showOpenDialog(null);
 		if (file != null) {
-			currentOpenedFile = file.getAbsolutePath();
-			updateTracker.startIgnoringUpdating();
+			currentOpenedFile = file;
 			Platform.runLater(() -> openFile(file));
 			updateTracker.clearUpdated();
 		}
@@ -147,8 +150,10 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 
 	private void openFile(File file) {
 		try {
-			text.setText(FilesFacade.readTXT(file.getAbsolutePath()));
+			updateTracker.startIgnoringUpdating();
+			String value = FilesFacade.readTXT(file.getAbsolutePath());
 			tab.setText(file.getName());
+			text.setText(value);
 		} catch (IOException e) {
 			dialogs.makeErrorDialog(e).show();
 		} finally {
@@ -156,10 +161,10 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		}
 	}
 
+	//TODO 1.maybe change wpf to waf: not project, but article 2. constant extracting 3. method extracting
 	private FileChooser createWikiArticleFileChooser() {
 		FileChooser chooser = new FileChooser();
 		chooser.setInitialDirectory(new File("."));
-		//TODO maybe change *.wpf to *.waf: not project, but article
 		chooser.getExtensionFilters().add(
 				new FileChooser.ExtensionFilter(i18n.getString("extension-filter.wpf"), "*.wpf"));
 		return chooser;
@@ -173,7 +178,6 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 
 		if (result.isPresent()) {
 			currentOpenedFile = null;
-			updateTracker.startIgnoringUpdating();
 			Platform.runLater(() -> openURL(result.get()));
 			updateTracker.clearUpdated();
 		}
@@ -181,8 +185,10 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 
 	private void openURL(String textString) {
 		try {
-			text.setText(wiki.getArticleContent(textString));
+			updateTracker.startIgnoringUpdating();
+			String articleContent = wiki.getArticleContent(textString);
 			tab.setText(textString);
+			text.setText(articleContent);
 		} catch (IOException e) {
 			dialogs.makeErrorDialog(e).show();
 		} finally {
@@ -196,18 +202,10 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 */
 	public void actionSave() {
 		if (currentOpenedFile != null) {
-			Platform.runLater(this::saveFile);
+			Platform.runLater(() -> saveFileAs(currentOpenedFile));
 			updateTracker.clearUpdated();
 		} else {
 			actionSaveAs();
-		}
-	}
-
-	private void saveFile() {
-		try {
-			FilesFacade.writeTXT(currentOpenedFile, text.getText());
-		} catch (IOException e) {
-			dialogs.makeErrorDialog(e).show();
 		}
 	}
 
