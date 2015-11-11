@@ -1,26 +1,23 @@
-package intelligent.wiki.editor;
 /*
- * DatabaseFacadeTest.java	18.04.2015
  * Copyright (C) 2015 Myroslav Rudnytskyi
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
 
-import java.io.IOException;
+package intelligent.wiki.editor.bot.io;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
-import intelligent.wiki.editor.bot.io.DatabaseFacade;
+import java.io.IOException;
 
 /**
  * Class for testing {@link DatabaseFacade} class.
@@ -28,7 +25,6 @@ import intelligent.wiki.editor.bot.io.DatabaseFacade;
  * @author Myroslav Rudnytskyi
  * @version 0.1 18.04.2015
  * @see Test
- * @see Assert
  */
 public class DatabaseFacadeTest {
 	
