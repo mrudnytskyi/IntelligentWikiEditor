@@ -14,35 +14,47 @@
 package intelligent.wiki.editor.sweble;
 
 import intelligent.wiki.editor.bot.compiler.AST.CategoryDeclaration;
+import intelligent.wiki.editor.bot.compiler.AST.Content;
 import intelligent.wiki.editor.core.WikiArticle;
+import javafx.scene.control.TreeItem;
+import org.sweble.wikitext.engine.nodes.EngPage;
 import org.sweble.wikitext.engine.nodes.EngProcessedPage;
+import org.sweble.wikitext.parser.nodes.WtNode;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
- * Class, representing Wikipedia article in application.
+ * Class, representing Wikipedia article realization using
+ * <a href=https://github.com/sweble/sweble-wikitext>Sweble library</a> in application.
+ * It is default implementation of {@link WikiArticle}.
+ * See {@link SwebleWikiArticleParser} for this class objects creation details.
  *
  * @author Myroslav Rudnytskyi
  * @version 19.09.2015
  */
 public class SwebleWikiArticle implements WikiArticle {
+	private final EngPage content;
 
-	private final EngProcessedPage articlePage;
-
-	public SwebleWikiArticle(EngProcessedPage articlePage) {
-		this.articlePage = articlePage;
+	public SwebleWikiArticle(EngProcessedPage content) {
+		this.content = Objects.requireNonNull(content.getPage(), "Null wiki article content!");
 	}
 
 	@Override
 	public List<CategoryDeclaration> getCategories() {
+		//TODO make it
 		return Collections.emptyList();
 	}
 
 	@Override
-	public String toString() {
-		return "SwebleWikiArticle{" +
-				"articlePage=" + articlePage +
-				'}';
+	public TreeItem<Content> getRoot() {
+		return createTree(content);
+	}
+
+	private TreeItem<Content> createTree(WtNode node) {
+		TreeItem<Content> tree = new TreeItem<>(new Node(node));
+		node.stream().forEach(current -> tree.getChildren().add(createTree(current)));
+		return tree;
 	}
 }

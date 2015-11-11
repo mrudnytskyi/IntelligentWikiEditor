@@ -370,7 +370,7 @@
          <children>
             <SplitPane dividerPositions="0.23385518590998042" prefHeight="600.0" prefWidth="1042.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <items>
-                  <TreeView prefHeight="598.0" prefWidth="155.0" />
+                   <TreeView fx:id="tree" prefHeight="598.0" prefWidth="155.0"/>
                      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
                        <tabs>
                            <Tab fx:id="tab">

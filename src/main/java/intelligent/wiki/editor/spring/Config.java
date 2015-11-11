@@ -15,8 +15,8 @@ package intelligent.wiki.editor.spring;
 
 import intelligent.wiki.editor.bot.io.wiki.WikiFacade;
 import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
-import intelligent.wiki.editor.core.ArticleFacade;
-import intelligent.wiki.editor.core.ArticleOperations;
+import intelligent.wiki.editor.core.ArticleModel;
+import intelligent.wiki.editor.core.ArticleModelImpl;
 import intelligent.wiki.editor.core.WikiArticleParser;
 import intelligent.wiki.editor.gui.fx.WikiEditorController;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
@@ -55,8 +55,8 @@ public class Config {
 	}
 
 	@Bean
-	public ArticleOperations articleOperations() {
-		return new ArticleFacade(articleParser());
+	public ArticleModel articleOperations() {
+		return new ArticleModelImpl(articleParser());
 	}
 
 	@Bean

@@ -14,7 +14,10 @@
 
 package intelligent.wiki.editor.core;
 
+import intelligent.wiki.editor.bot.compiler.AST.Content;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.TreeItem;
 
 /**
  * Interface, specifying set of operations with article in application.
@@ -22,10 +25,20 @@ import javafx.beans.property.StringProperty;
  * @author Myroslav Rudnytskyi
  * @version 25.10.2015
  */
-public interface ArticleOperations {
+public interface ArticleModel {
 
-	StringProperty articleTextProperty();
+	/**
+	 * @return property for wiki text (plain content) of article
+	 */
+	StringProperty textProperty();
 
-	StringProperty articleTitleProperty();
+	/**
+	 * @return property for title of article
+	 */
+	StringProperty titleProperty();
 
+	/**
+	 * @return property for tree root (AST content) of article
+	 */
+	ObjectProperty<TreeItem<Content>> rootProperty();
 }

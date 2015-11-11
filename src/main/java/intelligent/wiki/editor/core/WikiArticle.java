@@ -14,6 +14,8 @@
 package intelligent.wiki.editor.core;
 
 import intelligent.wiki.editor.bot.compiler.AST.CategoryDeclaration;
+import intelligent.wiki.editor.bot.compiler.AST.Content;
+import javafx.scene.control.TreeItem;
 
 import java.util.List;
 
@@ -26,4 +28,6 @@ import java.util.List;
 public interface WikiArticle {
 
 	List<CategoryDeclaration> getCategories();
+
+	TreeItem<Content> getRoot();
 }

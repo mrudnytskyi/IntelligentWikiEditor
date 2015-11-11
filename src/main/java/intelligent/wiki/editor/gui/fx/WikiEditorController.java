@@ -13,9 +13,10 @@
  */
 package intelligent.wiki.editor.gui.fx;
 
+import intelligent.wiki.editor.bot.compiler.AST.Content;
 import intelligent.wiki.editor.bot.io.FilesFacade;
 import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
-import intelligent.wiki.editor.core.ArticleOperations;
+import intelligent.wiki.editor.core.ArticleModel;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -47,7 +48,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 
 	private final Clipboard clipboard = Clipboard.getSystemClipboard();
 	@Inject
-	private final ArticleOperations article;
+	private final ArticleModel article;
 	private final TextUpdateTracker updateTracker = new TextUpdateTracker();
 	@Inject
 	private final DialogsFactory dialogs;
@@ -71,18 +72,20 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	private Tab tab;
 	@FXML
 	private TextArea text;
+	@FXML
+	private TreeView<Content> tree;
 
 	/**
 	 * Note, that parameters can not be <code>null</code>!
 	 *
 	 * @param wiki    object, performing operations with Wikipedia
 	 * @param dialogs object, creating dialogs
-	 * @param article object, performing operations wiki article
+	 * @param article object, storing article data
 	 */
-	public WikiEditorController(WikiOperations wiki, DialogsFactory dialogs, ArticleOperations article) {
+	public WikiEditorController(WikiOperations wiki, DialogsFactory dialogs, ArticleModel article) {
 		this.wiki = Objects.requireNonNull(wiki, "Null wiki operations object!");
 		this.dialogs = Objects.requireNonNull(dialogs, "Null dialogs factory object!");
-		this.article = Objects.requireNonNull(article, "Null article operations object!");
+		this.article = Objects.requireNonNull(article, "Null article model object!");
 	}
 
 	/**
@@ -91,10 +94,11 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		i18n = resources;
-		article.articleTextProperty().bindBidirectional(text.textProperty());
+		article.textProperty().bind(text.textProperty());
 		text.setWrapText(true);
 		text.textProperty().addListener(updateTracker);
-		article.articleTitleProperty().bind(tab.textProperty());
+		article.titleProperty().bind(tab.textProperty());
+		tree.rootProperty().bind(article.rootProperty());
 		enableCutAction(false);
 		enableCopyAction(false);
 		enablePasteAction(clipboard.hasString());

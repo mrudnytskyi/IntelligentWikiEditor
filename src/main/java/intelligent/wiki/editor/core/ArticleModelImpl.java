@@ -13,37 +13,36 @@
  */
 package intelligent.wiki.editor.core;
 
+import intelligent.wiki.editor.bot.compiler.AST.Content;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.TreeItem;
 
-import javax.inject.Inject;
-import java.util.logging.Logger;
+import java.util.Objects;
 
 /**
- * Default implementation of {@link ArticleOperations}.
+ * Default implementation of {@link ArticleModel}.
  *
  * @author Myroslav Rudnytskyi
  * @version 25.10.2015
  */
-public class ArticleFacade implements ArticleOperations {
+public class ArticleModelImpl implements ArticleModel {
+	private StringProperty text = new SimpleStringProperty();
+	private StringProperty title = new SimpleStringProperty();
+	private ObjectProperty<TreeItem<Content>> root = new SimpleObjectProperty<>();
 
-	private static final Logger LOG = Logger.getGlobal();
-	@Inject
-	private final WikiArticleParser parser;
-	private StringProperty articleText = new SimpleStringProperty();
-	private StringProperty articleTitle = new SimpleStringProperty();
-	private WikiArticle wikiArticle;
-
-	public ArticleFacade(WikiArticleParser parser) {
-		this.parser = parser;
-		articleText.addListener((observable, oldValue, newValue) -> {
-			wikiArticle = parser.parse(new ArticleImpl(articleTitle(), newValue));
-			LOG.info(wikiArticle.toString());
+	public ArticleModelImpl(WikiArticleParser parser) {
+		Objects.requireNonNull(parser, "Null wiki article parser!");
+		text.addListener((observable, oldValue, newValue) -> {
+			WikiArticle wikiArticle = parser.parse(new ArticleImpl(articleTitle(), newValue));
+			root.setValue(wikiArticle.getRoot());
 		});
 	}
 
 	private String articleTitle() {
-		String articleTitle = articleTitleProperty().get();
+		String articleTitle = titleProperty().get();
 		boolean isInvalid = articleTitle == null || articleTitle.isEmpty();
 		if (isInvalid) {
 			return "unknown";
@@ -56,12 +55,17 @@ public class ArticleFacade implements ArticleOperations {
 	}
 
 	@Override
-	public StringProperty articleTextProperty() {
-		return articleText;
+	public StringProperty textProperty() {
+		return text;
 	}
 
 	@Override
-	public StringProperty articleTitleProperty() {
-		return articleTitle;
+	public StringProperty titleProperty() {
+		return title;
+	}
+
+	@Override
+	public ObjectProperty<TreeItem<Content>> rootProperty() {
+		return root;
 	}
 }
