@@ -31,9 +31,6 @@ public class ModifyHeadingDialog extends InputDialog {
 	private final String headingText;
 	private final ToggleGroup radioButtons = new ToggleGroup();
 
-	/**
-	 * @param headingText text, selected in text area is inserted to caption of every radio button
-	 */
 	protected ModifyHeadingDialog(String headingText, String titleId, String headerId, String contentId) {
 		super(titleId, headerId, contentId);
 

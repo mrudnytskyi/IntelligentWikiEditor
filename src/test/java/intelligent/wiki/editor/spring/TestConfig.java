@@ -11,53 +11,27 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
+
 package intelligent.wiki.editor.spring;
 
-import intelligent.wiki.editor.bot.io.wiki.WikiFacade;
-import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
-import intelligent.wiki.editor.core.ArticleModel;
-import intelligent.wiki.editor.core.ArticleModelImpl;
+import intelligent.wiki.editor.core.SimpleArticle;
+import intelligent.wiki.editor.core.WikiArticle;
 import intelligent.wiki.editor.core.WikiArticleParser;
-import intelligent.wiki.editor.gui.fx.WikiEditorController;
-import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
 import intelligent.wiki.editor.sweble.SwebleWikiArticleParser;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
 import org.sweble.wikitext.engine.WtEngine;
 import org.sweble.wikitext.engine.WtEngineImpl;
 import org.sweble.wikitext.engine.utils.DefaultConfigEnWp;
 
-import java.util.Locale;
-
 /**
- * Spring configuration class for application.
+ * Spring configuration class for testing.
  *
  * @author Myroslav Rudnytskyi
- * @version 23.10.2015
+ * @version 11.11.2015
  */
-@Configuration
-public class Config {
-
-	@Bean
-	public WikiOperations wikiOperations() {
-		return new WikiFacade(new Locale("uk"));
-	}
-
-	@Bean
-	public DialogsFactory dialogsFactory() {
-		return new DialogsFactory();
-	}
-
-	@Bean
-	@SuppressWarnings("unused") // used indirectly!
-	public WikiEditorController wikiEditorController() {
-		return new WikiEditorController(wikiOperations(), dialogsFactory(), articleModel());
-	}
-
-	@Bean
-	public ArticleModel articleModel() {
-		return new ArticleModelImpl(articleParser());
-	}
+@ContextConfiguration
+public class TestConfig {
 
 	@Bean
 	public WikiArticleParser articleParser() {
@@ -67,5 +41,10 @@ public class Config {
 	@Bean
 	public WtEngine engine() {
 		return new WtEngineImpl(DefaultConfigEnWp.generate());
+	}
+
+	@Bean
+	public WikiArticle article() {
+		return articleParser().parse(new SimpleArticle());
 	}
 }

@@ -42,7 +42,10 @@ enum Language {
 		assert locale != null;
 		String languageCode = locale.getLanguage();
 
-		Optional<Language> searchResult = Arrays.stream(values()).filter(current -> languageCode.equals(current.toString())).findFirst();
+		Optional<Language> searchResult =
+				Arrays.stream(values())
+						.filter(current -> languageCode.equals(current.toString()))
+						.findFirst();
 		if (searchResult.isPresent()) {
 			return searchResult.get();
 		}

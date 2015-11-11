@@ -22,6 +22,7 @@ import org.sweble.wikitext.engine.PageTitle;
 import org.sweble.wikitext.engine.WtEngine;
 
 import javax.inject.Inject;
+import java.util.Objects;
 
 /**
  * Parser for creating {@link SwebleWikiArticle} from {@link Article} object.
@@ -35,7 +36,7 @@ public class SwebleWikiArticleParser implements WikiArticleParser {
 	private WtEngine parser;
 
 	public SwebleWikiArticleParser(WtEngine parser) {
-		this.parser = parser;
+		this.parser = Objects.requireNonNull(parser, "Null WtEngine parser!");
 	}
 
 	@Override
