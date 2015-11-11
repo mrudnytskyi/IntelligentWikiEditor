@@ -105,7 +105,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		//TODO bug - not only mouse, keyboard also can be used to paste?
 		text.setOnMouseMoved(event -> enablePasteAction(clipboard.hasString()));
 		text.selectedTextProperty().addListener(listener -> {
-			boolean isSelection = text.getSelectedText().length() != 0;
+			boolean isSelection = text.getSelection().getLength() != 0;
 			enableCutAction(isSelection);
 			enableCopyAction(isSelection);
 		});
