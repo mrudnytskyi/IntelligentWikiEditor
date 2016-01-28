@@ -13,7 +13,7 @@ Nowadays, project is under active development and can **NOT** be used.
 
 ***
 
-(c) Rudnytskyi Myroslav, 2014 - 
+(c) Rudnytskyi Myroslav, 2014 -
 
 [wb]: https://github.com/mrudnytskyi/WikiBot
 
@@ -31,7 +31,6 @@ Sorry, user guide is under construction ;(
 with XML files.
 * Library [JCommander](http://jcommander.org) was used to create rich 
 command-line interface.
-* Libraries [JTattoo](http://www.jtattoo.net) and 
-[ControlsFX](http://fxexperience.com/controlsfx/) were used to create perfect 
+* Library [ControlsFX](http://fxexperience.com/controlsfx/) was used to create perfect
 graphical-user interface.
 * Library [MySQL](https://www.mysql.com) provide access to the database.

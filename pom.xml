@@ -47,11 +47,6 @@
 			<version>1.4.8</version>
 		</dependency>
 		<dependency>
-			<groupId>com.jtattoo</groupId>
-			<artifactId>jtattoo</artifactId>
-			<version>1.6.11</version>
-		</dependency>
-		<dependency>
 			<groupId>commons-validator</groupId>
 			<artifactId>commons-validator</artifactId>
 			<version>1.4.1</version>
