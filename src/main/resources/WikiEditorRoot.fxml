@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import intelligent.wiki.editor.gui.fx.WikiMarkupArea?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.input.*?>
@@ -375,7 +376,7 @@
                        <tabs>
                            <Tab fx:id="tab">
                            <content>
-                              <TextArea fx:id="text" prefHeight="200.0" prefWidth="200.0" />
+                              <WikiMarkupArea fx:id="text" prefHeight="200.0" prefWidth="200.0" />
                            </content>
                         </Tab>
                     </tabs>

@@ -1,15 +1,16 @@
 /*
- * Text area ------------------------------------------------------------------
+ * Wiki markup area
  */
 
-.text-area {
+.wiki-area {
 	-fx-font-family: "Courier New";
 	-fx-font-size: 12.0pt;
 	-fx-background-color: white;
 	-fx-pref-column-coun: 80.0;
+	-fx-highlight-fill: lightgray;
 }
 
-.text-area:focused {
+.wiki-area:focused {
 	-fx-background-color: #FFFAD4;
 }
 
@@ -17,20 +18,20 @@
  * These next 3 properties are necessary to show 
  * special background color if text area is focused
  */
-.text-area .scroll-pane {
+.wiki-area .scroll-pane {
 	-fx-background-color: transparent;
 }
 
-.text-area .scroll-pane .viewport {
+.wiki-area .scroll-pane .viewport {
 	-fx-background-color: transparent;
 }
 
-.text-area .scroll-pane .content {
+.wiki-area .scroll-pane .content {
 	-fx-background-color: transparent;
 }
 
 /*
- * Menu -----------------------------------------------------------------------
+ * Menu
  */
 
 .menu .label {
@@ -52,7 +53,7 @@
 }
 
 /*
- * Toolbar --------------------------------------------------------------------
+ * Toolbar
  */
  
  .tool-bar {

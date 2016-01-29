@@ -31,6 +31,7 @@ Sorry, user guide is under construction ;(
 with XML files.
 * Library [JCommander](http://jcommander.org) was used to create rich 
 command-line interface.
-* Library [ControlsFX](http://fxexperience.com/controlsfx/) was used to create perfect
+* Libraries [RichTextFX](https://github.com/TomasMikula/RichTextFX) and
+[ControlsFX](http://fxexperience.com/controlsfx/) were used to create perfect
 graphical-user interface.
 * Library [MySQL](https://www.mysql.com) provide access to the database.

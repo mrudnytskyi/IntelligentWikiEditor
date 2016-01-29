@@ -71,7 +71,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	@FXML
 	private Tab tab;
 	@FXML
-	private TextArea text;
+	private WikiMarkupArea text;
 	@FXML
 	private TreeView<Content> tree;
 
@@ -95,7 +95,6 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	public void initialize(URL location, ResourceBundle resources) {
 		i18n = resources;
 		article.textProperty().bind(text.textProperty());
-		text.setWrapText(true);
 		text.textProperty().addListener(updateTracker);
 		article.titleProperty().bind(tab.textProperty());
 		tree.rootProperty().bind(article.rootProperty());
@@ -105,7 +104,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		//TODO bug - not only mouse, keyboard also can be used to paste?
 		text.setOnMouseMoved(event -> enablePasteAction(clipboard.hasString()));
 		text.selectedTextProperty().addListener(listener -> {
-			boolean isSelection = text.getSelection().getLength() != 0;
+			boolean isSelection = !text.getSelectedText().isEmpty();
 			enableCutAction(isSelection);
 			enableCopyAction(isSelection);
 		});
