@@ -1,27 +1,24 @@
-package intelligent.wiki.editor.bot;
 /*
- * Runner.java	12.11.2014
- * Copyright (C) 2014 Myroslav Rudnytskyi
- * 
+ * Copyright (C) 2016 Myroslav Rudnytskyi
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
 
-import java.util.Arrays;
-import java.util.Scanner;
-
-import intelligent.wiki.editor.cli.Command;
-import intelligent.wiki.editor.cli.CommandsManager;
+package intelligent.wiki.editor.cli;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
+
+import java.util.Arrays;
+import java.util.Scanner;
 
 /**
  * Class, containing code for system commands interpreter. Note, that system 
@@ -31,7 +28,7 @@ import com.beust.jcommander.ParameterException;
  * @author Myroslav Rudnytskyi
  * @version 0.1 12.11.2014
  */
-public class Runner {
+public class CommandsRunner {
 
 	public static void main(String[] args) {
 		System.out.println("Welcome! I am robot for text manipulating and "
@@ -51,12 +48,13 @@ public class Runner {
 			}
 			if (currCommand.isExit()) {
 				input.close();
+				break;
 			}
 			JCommander jc = new JCommander(currCommand);
 			try {
 				jc.parse(Arrays.copyOfRange(tokens, 1, tokens.length));
 			} catch (ParameterException e) {
-				System.err.println(e);
+				e.printStackTrace();
 			}
 			currCommand.doAction();
 		}

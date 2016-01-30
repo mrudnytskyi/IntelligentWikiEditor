@@ -23,6 +23,7 @@ import intelligent.wiki.editor.bot.compiler.AST.Math;
  * @author Myroslav Rudnytskyi
  * @version 0.1 08.10.2014
  */
+@Deprecated
 public class VisitorStub implements Visitor {
 
 	@Override

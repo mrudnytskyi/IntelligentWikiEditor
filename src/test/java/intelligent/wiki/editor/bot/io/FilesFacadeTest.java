@@ -29,9 +29,8 @@ import java.util.List;
  * @see Test
  * @see Assert
  */
+@Deprecated
 public class FilesFacadeTest {
-
-	//TODO rewrite
 
 	@Test
 	public void test() {
@@ -59,7 +58,7 @@ public class FilesFacadeTest {
 
 		private double[] array = {2.1, 0.3};
 
-		private List<String> list = new ArrayList<String>();
+		private List<String> list = new ArrayList<>();
 
 		public Obj() {
 			list.add("This");

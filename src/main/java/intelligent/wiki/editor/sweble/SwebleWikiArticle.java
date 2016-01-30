@@ -16,10 +16,11 @@ package intelligent.wiki.editor.sweble;
 import intelligent.wiki.editor.bot.compiler.AST.CategoryDeclaration;
 import intelligent.wiki.editor.bot.compiler.AST.Content;
 import intelligent.wiki.editor.core.WikiArticle;
+import intelligent.wiki.editor.sweble.AST.*;
 import javafx.scene.control.TreeItem;
 import org.sweble.wikitext.engine.nodes.EngPage;
 import org.sweble.wikitext.engine.nodes.EngProcessedPage;
-import org.sweble.wikitext.parser.nodes.WtNode;
+import org.sweble.wikitext.parser.nodes.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +36,7 @@ import java.util.Objects;
  * @version 19.09.2015
  */
 public class SwebleWikiArticle implements WikiArticle {
+
 	private final EngPage content;
 
 	public SwebleWikiArticle(EngProcessedPage content) {
@@ -53,8 +55,29 @@ public class SwebleWikiArticle implements WikiArticle {
 	}
 
 	private TreeItem<Content> createTree(WtNode node) {
-		TreeItem<Content> tree = new TreeItem<>(new Node(node));
-		node.stream().forEach(current -> tree.getChildren().add(createTree(current)));
+		TreeItem<Content> tree;
+		if (node instanceof WtBold) {
+			tree = new TreeItem<>(new BoldSweble((WtBold) node));
+		} else if (node instanceof WtItalics) {
+			tree = new TreeItem<>(new ItalicsSweble((WtItalics) node));
+		} else if (node instanceof WtExternalLink) {
+			tree = new TreeItem<>(new ExternalLinkSweble((WtExternalLink) node));
+		} else if (node instanceof WtInternalLink) {
+			tree = new TreeItem<>(new InternalLinkSweble((WtInternalLink) node));
+		} else if (node instanceof WtText) {
+			tree = new TreeItem<>(new TextSweble((WtText) node));
+		} else if (node instanceof WtSection) {
+			tree = new TreeItem<>(new SectionSweble((WtSection) node));
+//		} else if (node instanceof WtParagraph) {
+//			tree = new TreeItem<>();
+//		} else if (node instanceof WtOrderedList) {
+//			tree = new TreeItem<>();
+//		} else if (node instanceof WtUnorderedList) {
+//			tree = new TreeItem<>();
+		} else {
+			tree = new TreeItem<>(new Node(node));
+			node.stream().forEach(current -> tree.getChildren().add(createTree(current)));
+		}
 		return tree;
 	}
 }

@@ -14,6 +14,10 @@ package intelligent.wiki.editor.bot.io;
  * GNU General Public License for more details.
  */
 
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
+import com.mysql.jdbc.Statement;
+
 import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -21,10 +25,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
-import com.mysql.jdbc.Statement;
 
 /**
  * Class, created to get access to application database, named also knowledge
@@ -40,7 +40,7 @@ import com.mysql.jdbc.Statement;
  * @author Mir4ik
  * @version 0.2 28.08.2014
  */
-// TODO: add methods createDatabase(), loadDatabase(), saveDatabase()
+@Deprecated
 public final class DatabaseFacade {
 
 	private static final String DRIVER = "com.mysql.jdbc.Driver";
@@ -182,7 +182,7 @@ public final class DatabaseFacade {
 	 */
 	public static String[] getReplacement(String text) throws IOException {
 		Objects.requireNonNull(text, "Replacement text can not be null!");
-		List<String> results = new ArrayList<String>();
+		List<String> results = new ArrayList<>();
 		try (Connection connection = getConnection()) {
 			PreparedStatement statement = (PreparedStatement) 
 					connection.prepareStatement(GET_REPLACEMENT);

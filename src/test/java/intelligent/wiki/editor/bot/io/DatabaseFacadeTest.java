@@ -26,6 +26,7 @@ import java.io.IOException;
  * @version 0.1 18.04.2015
  * @see Test
  */
+@Deprecated
 public class DatabaseFacadeTest {
 	
 	@Test
@@ -39,7 +40,7 @@ public class DatabaseFacadeTest {
 			}
 			result = DatabaseFacade.getReplacement("test");
 		} catch (IOException e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		Assert.assertEquals(1, result.length);
 		Assert.assertEquals("test_link", result[0]);

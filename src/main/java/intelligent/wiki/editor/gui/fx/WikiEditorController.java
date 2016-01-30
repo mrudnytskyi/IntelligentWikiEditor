@@ -14,8 +14,8 @@
 package intelligent.wiki.editor.gui.fx;
 
 import intelligent.wiki.editor.bot.compiler.AST.Content;
-import intelligent.wiki.editor.bot.io.FilesFacade;
 import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
+import intelligent.wiki.editor.common.io.FilesFacade;
 import intelligent.wiki.editor.core.ArticleModel;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
 import javafx.application.Platform;

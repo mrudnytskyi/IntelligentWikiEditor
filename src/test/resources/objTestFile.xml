@@ -1,15 +1,16 @@
-<intelligent.wiki.editor.FilesFacadeTest_-Obj>
+<intelligent.wiki.editor.common.io.FileTestObject>
   <number>1994</number>
   <array>
     <double>2.1</double>
     <double>0.3</double>
   </array>
-  <list>
-    <string>This</string>
-    <string>is</string>
-    <string>test</string>
-    <string>String</string>
-    <string>~!@#$%^&amp;|:&quot;&lt;&gt;`\&apos;;/.,</string>
+  <list class="java.util.Arrays$ArrayList">
+    <a class="string-array">
+      <string>This</string>
+      <string>is</string>
+      <string>test</string>
+      <string>String</string>
+      <string>~!@#$%^&amp;|:&quot;&lt;&gt;`\&apos;;/.,</string>
+    </a>
   </list>
-  <outer-class/>
-</intelligent.wiki.editor.FilesFacadeTest_-Obj>
+</intelligent.wiki.editor.common.io.FileTestObject>
