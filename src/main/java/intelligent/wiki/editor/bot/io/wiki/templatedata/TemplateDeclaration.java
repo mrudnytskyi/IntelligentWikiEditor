@@ -1,20 +1,17 @@
 /*
- * TemplateDeclaration.java	22.11.2014
- * Copyright (C) 2014 Myroslav Rudnytskyi
- * 
+ * Copyright (C) 2016 Myroslav Rudnytskyi
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package intelligent.wiki.editor.bot.compiler.AST;
-
-import intelligent.wiki.editor.bot.compiler.Visitor;
+package intelligent.wiki.editor.bot.io.wiki.templatedata;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +24,7 @@ import java.util.Objects;
  * @author Myroslav Rudnytskyi
  * @version 0.1 22.11.2014
  */
-public class TemplateDeclaration implements Content {
+public class TemplateDeclaration {
 
 	protected final String name;
 
@@ -76,10 +73,5 @@ public class TemplateDeclaration implements Content {
 		}
 		sb.append("}}");
 		return sb.toString();
-	}
-
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visitTemplateDeclaration(this);
 	}
 }

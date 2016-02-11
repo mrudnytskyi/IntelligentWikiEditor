@@ -16,6 +16,7 @@ package intelligent.wiki.editor.bot.compiler;
 
 import intelligent.wiki.editor.bot.compiler.AST.*;
 import intelligent.wiki.editor.bot.compiler.AST.Math;
+import intelligent.wiki.editor.bot.io.wiki.templatedata.TemplateDeclaration;
 
 /**
  * Concrete realization of {@link Visitor} with methods, doing nothing.

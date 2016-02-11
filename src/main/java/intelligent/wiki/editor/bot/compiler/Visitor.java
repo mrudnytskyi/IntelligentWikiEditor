@@ -16,6 +16,8 @@ package intelligent.wiki.editor.bot.compiler;
 
 import intelligent.wiki.editor.bot.compiler.AST.*;
 import intelligent.wiki.editor.bot.compiler.AST.Math;
+import intelligent.wiki.editor.bot.io.wiki.templatedata.TemplateArgument;
+import intelligent.wiki.editor.bot.io.wiki.templatedata.TemplateDeclaration;
 
 /**
  * Interface for every class, working with article Abstract Syntax Tree.

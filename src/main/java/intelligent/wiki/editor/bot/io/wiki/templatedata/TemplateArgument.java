@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -12,12 +12,7 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.bot.compiler.AST;
-
-import intelligent.wiki.editor.bot.compiler.Visitor;
-import intelligent.wiki.editor.bot.io.wiki.templatedata.TemplateParameter;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+package intelligent.wiki.editor.bot.io.wiki.templatedata;
 
 /**
  * Class, representing template argument: {@link TemplateParameter template parameter}
@@ -26,10 +21,10 @@ import javafx.beans.property.StringProperty;
  * @author Myroslav Rudnytskyi
  * @version 23.10.2015
  */
-public class TemplateArgument implements TemplateParameter, Content {
+public class TemplateArgument implements TemplateParameter {
 	private final TemplateParameter parameter;
-	private final StringProperty value = new SimpleStringProperty();
 	private final String name;
+	private String value;
 
 	public TemplateArgument(TemplateParameter parameter) {
 		this.parameter = parameter;
@@ -82,32 +77,23 @@ public class TemplateArgument implements TemplateParameter, Content {
 	}
 
 	public String getValue() {
-		return value.get();
+		return value;
 	}
 
 	public void setValue(String value) {
-		this.value.set(value);
-	}
-
-	public StringProperty valueProperty() {
-		return value;
+		this.value = value;
 	}
 
 	@Override
 	public String toString() {
-		return getName() + " = " + (isValueProvided() ? value.get() : getDefault());
+		return getName() + " = " + (isValueProvided() ? value : getDefault());
 	}
 
 	private boolean isValueProvided() {
-		return value.get() != null;
+		return value != null;
 	}
 
 	private boolean isParameterProvided() {
 		return parameter != null;
-	}
-
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visitTemplateArgument(this);
 	}
 }
