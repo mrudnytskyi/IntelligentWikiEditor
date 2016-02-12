@@ -14,15 +14,18 @@
 
 package intelligent.wiki.editor.spring;
 
-import intelligent.wiki.editor.core.SimpleArticle;
-import intelligent.wiki.editor.core.WikiArticle;
-import intelligent.wiki.editor.core.WikiArticleParser;
+import intelligent.wiki.editor.core.*;
+import intelligent.wiki.editor.gui.fx.TreeItemFactory;
+import intelligent.wiki.editor.sweble.SwebleASTNode;
 import intelligent.wiki.editor.sweble.SwebleWikiArticleParser;
+import javafx.scene.control.TreeItem;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.sweble.wikitext.engine.WtEngine;
 import org.sweble.wikitext.engine.WtEngineImpl;
 import org.sweble.wikitext.engine.utils.DefaultConfigEnWp;
+import org.sweble.wikitext.parser.nodes.WtContentNode;
+import org.sweble.wikitext.parser.nodes.WtNode;
 
 /**
  * Spring configuration class for testing.
@@ -46,5 +49,35 @@ public class TestConfig {
 	@Bean
 	public WikiArticle article() {
 		return articleParser().parse(new SimpleArticle());
+	}
+
+	@Bean
+	public TreeItemFactory<ASTNode> simpleTreeItemFactory() {
+		return TreeItem::new;
+	}
+
+	@Bean
+	public WtNode contentNode() {
+		return new WtContentNode.WtContentNodeImpl() {};
+	}
+
+	@Bean
+	public ASTNode astNode() {
+		return new SwebleASTNode(contentNode(), null);
+	}
+
+	@Bean
+	public ASTNode childAstNode() {
+		return new SwebleASTNode(contentNode(), astNode());
+	}
+
+	@Bean
+	public ASTNodeID id() {
+		return new ASTNodeID();
+	}
+
+	@Bean
+	public ASTNodeID anotherId() {
+		return new ASTNodeID();
 	}
 }

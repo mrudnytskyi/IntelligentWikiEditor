@@ -16,7 +16,6 @@ package intelligent.wiki.editor.sweble;
 
 import intelligent.wiki.editor.core.*;
 import intelligent.wiki.editor.spring.TestConfig;
-import javafx.scene.control.TreeItem;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,8 +46,8 @@ public class SwebleWikiArticleParserTest {
 	public void testParseSimpleArticle() throws Exception {
 		WikiArticle article = parser.parse(new SimpleArticle());
 		Assert.assertEquals(SwebleWikiArticle.class, article.getClass());
-		Assert.assertEquals(TreeItem.class, article.getRoot().getClass());
-		Assert.assertEquals(true, article.getRoot().getValue() != null);
+		Assert.assertEquals(SwebleASTNode.class, article.getRoot().getClass());
+		Assert.assertEquals(true, article.getRoot() != null);
 	}
 
 	@Test(expected = WikiArticleParser.ParserException.class)

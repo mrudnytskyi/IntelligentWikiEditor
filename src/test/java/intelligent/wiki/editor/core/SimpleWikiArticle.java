@@ -14,24 +14,14 @@
 
 package intelligent.wiki.editor.core;
 
-import intelligent.wiki.editor.bot.compiler.AST.CategoryDeclaration;
-import intelligent.wiki.editor.bot.compiler.AST.Content;
-import javafx.scene.control.TreeItem;
-
-import java.util.List;
-
 /**
  * @author Myroslav Rudnytskyi
  * @version 11.11.2015
  */
 public class SimpleWikiArticle implements WikiArticle {
-	@Override
-	public List<CategoryDeclaration> getCategories() {
-		return null;
-	}
 
 	@Override
-	public TreeItem<Content> getRoot() {
+	public ASTNode getRoot() {
 		return null;
 	}
 }

@@ -31,7 +31,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class ArticleModelImplTest {
 
 	@Test(expected = NullPointerException.class)
-	public void testConstructor() throws Exception {
-		new ArticleModelImpl(null);
+	public void testConstructorFirstArg() throws Exception {
+		new ArticleModelImpl(null, node -> null);
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testConstructorSecondArg() throws Exception {
+		new ArticleModelImpl(article -> null, null);
 	}
 }

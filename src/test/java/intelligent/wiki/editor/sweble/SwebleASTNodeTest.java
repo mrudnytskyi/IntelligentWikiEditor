@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,7 +14,6 @@
 
 package intelligent.wiki.editor.sweble;
 
-import intelligent.wiki.editor.core.WikiArticle;
 import intelligent.wiki.editor.spring.TestConfig;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,30 +24,40 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 
 /**
- * Class for testing {@link SwebleWikiArticle} class.
+ * Class for testing {@link SwebleASTNode} class.
  *
  * @author Myroslav Rudnytskyi
- * @version 11.11.2015
+ * @version 12.02.2016
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestConfig.class})
-public class SwebleWikiArticleTest {
-
+public class SwebleASTNodeTest {
 	@Inject
-	private WikiArticle article;
+	private SwebleASTNode astNode;
+	@Inject
+	private SwebleASTNode childAstNode;
 
 	@Test(expected = NullPointerException.class)
-	public void testConstructor() throws Exception {
-		new SwebleWikiArticle(null);
+	public void textConstructor() throws Exception {
+		new SwebleASTNode(null, astNode);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testAddChildException() throws Exception {
+		astNode.addChild(astNode);
 	}
 
 	@Test
-	public void testGetRoot() throws Exception {
-		Assert.assertEquals(SwebleASTNode.class, article.getRoot().getClass());
-		Assert.assertEquals(true, article.getRoot() != null);
+	public void testAddChild() throws Exception {
+		astNode.addChild(childAstNode);
+		Assert.assertEquals(true, astNode.iterator().next().equals(childAstNode));
 	}
 
-	public void setArticle(WikiArticle article) {
-		this.article = article;
+	@Test
+	public void testEquals() throws Exception {
+		Assert.assertEquals(true, astNode.equals(astNode));
+		Assert.assertEquals(false, astNode.equals(childAstNode));
+		Assert.assertEquals(false, astNode.equals(null));
+		Assert.assertEquals(false, astNode.equals(new Object()));
 	}
 }
