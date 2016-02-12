@@ -13,9 +13,9 @@
  */
 package intelligent.wiki.editor.gui.fx;
 
-import intelligent.wiki.editor.bot.compiler.AST.Content;
 import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
 import intelligent.wiki.editor.common.io.FilesFacade;
+import intelligent.wiki.editor.core.ASTNode;
 import intelligent.wiki.editor.core.ArticleModel;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
 import javafx.application.Platform;
@@ -73,7 +73,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	@FXML
 	private WikiMarkupArea text;
 	@FXML
-	private TreeView<Content> tree;
+	private TreeView<ASTNode> tree;
 
 	/**
 	 * Note, that parameters can not be <code>null</code>!

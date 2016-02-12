@@ -13,13 +13,14 @@
  */
 package intelligent.wiki.editor.core;
 
-import intelligent.wiki.editor.bot.compiler.AST.Content;
+import intelligent.wiki.editor.gui.fx.TreeItemFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.TreeItem;
 
+import javax.inject.Inject;
 import java.util.Objects;
 
 /**
@@ -31,14 +32,18 @@ import java.util.Objects;
 public class ArticleModelImpl implements ArticleModel {
 	private StringProperty text = new SimpleStringProperty();
 	private StringProperty title = new SimpleStringProperty();
-	private ObjectProperty<TreeItem<Content>> root = new SimpleObjectProperty<>();
+	private ObjectProperty<TreeItem<ASTNode>> root = new SimpleObjectProperty<>();
+	@Inject
+	private TreeItemFactory<ASTNode> treeFactory;
 
-	public ArticleModelImpl(WikiArticleParser parser) {
+	public ArticleModelImpl(WikiArticleParser parser, TreeItemFactory<ASTNode> treeFactory) {
 		Objects.requireNonNull(parser, "Null wiki article parser!");
+		this.treeFactory = Objects.requireNonNull(treeFactory, "Null tree factory!");
 		text.addListener((observable, oldValue, newValue) -> {
 			WikiArticle wikiArticle = parser.parse(new ArticleImpl(articleTitle(), newValue));
-			root.setValue(wikiArticle.getRoot());
+			root.setValue(treeFactory.wrapNode(wikiArticle.getRoot()));
 		});
+		//TODO listener for root property, updating text on AST change
 	}
 
 	private String articleTitle() {
@@ -65,7 +70,7 @@ public class ArticleModelImpl implements ArticleModel {
 	}
 
 	@Override
-	public ObjectProperty<TreeItem<Content>> rootProperty() {
+	public ObjectProperty<TreeItem<ASTNode>> rootProperty() {
 		return root;
 	}
 }

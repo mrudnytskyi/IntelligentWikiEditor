@@ -13,12 +13,6 @@
  */
 package intelligent.wiki.editor.core;
 
-import intelligent.wiki.editor.bot.compiler.AST.CategoryDeclaration;
-import intelligent.wiki.editor.bot.compiler.AST.Content;
-import javafx.scene.control.TreeItem;
-
-import java.util.List;
-
 /**
  * Interface for wiki article object, containing already parsed AST nodes.
  *
@@ -27,7 +21,8 @@ import java.util.List;
  */
 public interface WikiArticle {
 
-	List<CategoryDeclaration> getCategories();
-
-	TreeItem<Content> getRoot();
+	/**
+	 * @return tree root (AST content) of article
+	 */
+	ASTNode getRoot();
 }

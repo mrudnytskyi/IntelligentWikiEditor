@@ -14,7 +14,6 @@
 
 package intelligent.wiki.editor.core;
 
-import intelligent.wiki.editor.bot.compiler.AST.Content;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.TreeItem;
@@ -40,5 +39,5 @@ public interface ArticleModel {
 	/**
 	 * @return property for tree root (AST content) of article
 	 */
-	ObjectProperty<TreeItem<Content>> rootProperty();
+	ObjectProperty<TreeItem<ASTNode>> rootProperty();
 }

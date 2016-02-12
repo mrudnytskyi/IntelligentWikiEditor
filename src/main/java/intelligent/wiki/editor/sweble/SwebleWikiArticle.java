@@ -13,16 +13,12 @@
  */
 package intelligent.wiki.editor.sweble;
 
-import intelligent.wiki.editor.bot.compiler.AST.CategoryDeclaration;
-import intelligent.wiki.editor.bot.compiler.AST.Content;
+import intelligent.wiki.editor.core.ASTNode;
 import intelligent.wiki.editor.core.WikiArticle;
-import javafx.scene.control.TreeItem;
 import org.sweble.wikitext.engine.nodes.EngPage;
 import org.sweble.wikitext.engine.nodes.EngProcessedPage;
 import org.sweble.wikitext.parser.nodes.WtNode;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -42,19 +38,13 @@ public class SwebleWikiArticle implements WikiArticle {
 	}
 
 	@Override
-	public List<CategoryDeclaration> getCategories() {
-		//TODO make it
-		return Collections.emptyList();
+	public ASTNode getRoot() {
+		return createTree(content, null);
 	}
 
-	@Override
-	public TreeItem<Content> getRoot() {
-		return createTree(content);
-	}
-
-	private TreeItem<Content> createTree(WtNode node) {
-		TreeItem<Content> tree = new TreeItem<>(new Node(node));
-		node.stream().forEach(current -> tree.getChildren().add(createTree(current)));
+	private ASTNode createTree(WtNode content, ASTNode parent) {
+		ASTNode tree = new SwebleASTNode(content, parent);
+		content.forEach(current -> tree.addChild(createTree(current, tree)));
 		return tree;
 	}
 }

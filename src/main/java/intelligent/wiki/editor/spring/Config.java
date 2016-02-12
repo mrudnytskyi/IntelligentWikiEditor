@@ -15,12 +15,15 @@ package intelligent.wiki.editor.spring;
 
 import intelligent.wiki.editor.bot.io.wiki.WikiFacade;
 import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
+import intelligent.wiki.editor.core.ASTNode;
 import intelligent.wiki.editor.core.ArticleModel;
 import intelligent.wiki.editor.core.ArticleModelImpl;
 import intelligent.wiki.editor.core.WikiArticleParser;
+import intelligent.wiki.editor.gui.fx.TreeItemFactory;
 import intelligent.wiki.editor.gui.fx.WikiEditorController;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
 import intelligent.wiki.editor.sweble.SwebleWikiArticleParser;
+import javafx.scene.control.TreeItem;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.sweble.wikitext.engine.WtEngine;
@@ -56,7 +59,12 @@ public class Config {
 
 	@Bean
 	public ArticleModel articleModel() {
-		return new ArticleModelImpl(articleParser());
+		return new ArticleModelImpl(articleParser(), simpleTreeItemFactory());
+	}
+
+	@Bean
+	public TreeItemFactory<ASTNode> simpleTreeItemFactory() {
+		return TreeItem::new;
 	}
 
 	@Bean
