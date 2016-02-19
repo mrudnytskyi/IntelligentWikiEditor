@@ -29,8 +29,6 @@ Sorry, user guide is under construction ;(
 ## Dependencies and thanks
 * Library [Xstream](http://x-stream.github.io) provide functionality to work 
 with XML files.
-* Library [JCommander](http://jcommander.org) was used to create rich 
-command-line interface.
 * Libraries [RichTextFX](https://github.com/TomasMikula/RichTextFX) and
 [ControlsFX](http://fxexperience.com/controlsfx/) were used to create perfect
 graphical-user interface.
