@@ -157,6 +157,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 			String value = FilesFacade.readTXT(file.getAbsolutePath());
 			tab.setText(file.getName());
 			text.setText(value);
+			text.moveCaretToStart();
 		} catch (IOException e) {
 			dialogs.makeErrorDialog(e).show();
 		} finally {
@@ -192,6 +193,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 			String articleContent = wiki.getArticleContent(textString);
 			tab.setText(textString);
 			text.setText(articleContent);
+			text.moveCaretToStart();
 		} catch (IOException e) {
 			dialogs.makeErrorDialog(e).show();
 		} finally {

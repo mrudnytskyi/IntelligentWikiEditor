@@ -56,4 +56,11 @@ public class WikiMarkupArea extends CodeArea {
 		clear();
 		appendText(text);
 	}
+
+	/**
+	 * Method moves caret to text area start position.
+	 */
+	public void moveCaretToStart() {
+		positionCaret(0);
+	}
 }
