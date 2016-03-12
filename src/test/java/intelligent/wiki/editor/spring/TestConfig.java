@@ -20,7 +20,7 @@ import intelligent.wiki.editor.sweble.SwebleASTNode;
 import intelligent.wiki.editor.sweble.SwebleWikiArticleParser;
 import javafx.scene.control.TreeItem;
 import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.context.annotation.Configuration;
 import org.sweble.wikitext.engine.WtEngine;
 import org.sweble.wikitext.engine.WtEngineImpl;
 import org.sweble.wikitext.engine.utils.DefaultConfigEnWp;
@@ -33,7 +33,7 @@ import org.sweble.wikitext.parser.nodes.WtNode;
  * @author Myroslav Rudnytskyi
  * @version 11.11.2015
  */
-@ContextConfiguration
+@Configuration
 public class TestConfig {
 
 	@Bean
