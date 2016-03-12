@@ -53,12 +53,12 @@ public interface ASTNode extends Iterable<ASTNode> {
 	void addChild(ASTNode child);
 
 	/**
-	 * @return String in human-readable form
+	 * @return representation in human-readable form
 	 */
 	String toString();
 
 	/**
-	 * @return String in wiki mark-up form
+	 * @return representation in mark-up form
 	 */
-	String getWikiText();
+	MarkupText getMarkupText();
 }
