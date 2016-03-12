@@ -17,6 +17,7 @@ package intelligent.wiki.editor.core_impl.sweble;
 import intelligent.wiki.editor.core_api.ASTNode;
 import intelligent.wiki.editor.core_api.MarkupText;
 import intelligent.wiki.editor.core_api.Parser;
+import intelligent.wiki.editor.core_api.Title;
 import org.sweble.wikitext.engine.PageId;
 import org.sweble.wikitext.engine.PageTitle;
 import org.sweble.wikitext.engine.WtEngine;
@@ -51,7 +52,7 @@ public class SwebleParser implements Parser {
 	}
 
 	private EngPage swebleParse(String markup) throws Exception {
-		PageId page = new PageId(PageTitle.make(parser.getWikiConfig(), "unnamed"), -1);
+		PageId page = new PageId(PageTitle.make(parser.getWikiConfig(), Title.NO_TITLE), -1);
 		return parser.postprocess(page, markup, null).getPage();
 	}
 
