@@ -17,18 +17,15 @@ import intelligent.wiki.editor.bot.io.wiki.WikiFacade;
 import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
 import intelligent.wiki.editor.core_api.ASTNode;
 import intelligent.wiki.editor.core_api.ArticleModel;
-import intelligent.wiki.editor.core_api.WikiArticleParser;
+import intelligent.wiki.editor.core_api.Parser;
 import intelligent.wiki.editor.core_impl.ArticleModelImpl;
-import intelligent.wiki.editor.core_impl.sweble.SwebleWikiArticleParser;
+import intelligent.wiki.editor.core_impl.sweble.SwebleParser;
 import intelligent.wiki.editor.gui.fx.TreeItemFactory;
 import intelligent.wiki.editor.gui.fx.WikiEditorController;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
 import javafx.scene.control.TreeItem;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.sweble.wikitext.engine.WtEngine;
-import org.sweble.wikitext.engine.WtEngineImpl;
-import org.sweble.wikitext.engine.utils.DefaultConfigEnWp;
 
 import java.util.Locale;
 
@@ -59,7 +56,7 @@ public class Config {
 
 	@Bean
 	public ArticleModel articleModel() {
-		return new ArticleModelImpl(articleParser(), simpleTreeItemFactory());
+		return new ArticleModelImpl(parser(), simpleTreeItemFactory());
 	}
 
 	@Bean
@@ -68,12 +65,8 @@ public class Config {
 	}
 
 	@Bean
-	public WikiArticleParser articleParser() {
-		return new SwebleWikiArticleParser(engine());
+	public Parser parser() {
+		return new SwebleParser();
 	}
 
-	@Bean
-	public WtEngine engine() {
-		return new WtEngineImpl(DefaultConfigEnWp.generate());
-	}
 }

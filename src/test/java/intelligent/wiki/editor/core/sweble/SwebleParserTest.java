@@ -14,9 +14,11 @@
 
 package intelligent.wiki.editor.core.sweble;
 
-import intelligent.wiki.editor.core_api.WikiArticle;
+import intelligent.wiki.editor.core.SimpleMarkup;
+import intelligent.wiki.editor.core_api.ASTNode;
+import intelligent.wiki.editor.core_api.Parser;
 import intelligent.wiki.editor.core_impl.sweble.SwebleASTNode;
-import intelligent.wiki.editor.core_impl.sweble.SwebleWikiArticle;
+import intelligent.wiki.editor.core_impl.sweble.SwebleParser;
 import intelligent.wiki.editor.spring.TestConfig;
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,30 +29,31 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 
 /**
- * Class for testing {@link SwebleWikiArticle} class.
+ * Class for testing {@link SwebleParser} class.
  *
  * @author Myroslav Rudnytskyi
  * @version 11.11.2015
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestConfig.class})
-public class SwebleWikiArticleTest {
+public class SwebleParserTest {
 
 	@Inject
-	private WikiArticle article;
-
-	@Test(expected = NullPointerException.class)
-	public void testConstructor() throws Exception {
-		new SwebleWikiArticle(null);
-	}
+	private Parser parser;
 
 	@Test
-	public void testGetRoot() throws Exception {
-		Assert.assertEquals(SwebleASTNode.class, article.getRoot().getClass());
-		Assert.assertEquals(true, article.getRoot() != null);
+	public void testParseSimpleArticle() throws Exception {
+		ASTNode article = parser.parse(new SimpleMarkup());
+		Assert.assertEquals(true, article != null);
+		Assert.assertEquals(SwebleASTNode.class, article.getClass());
 	}
 
-	public void setArticle(WikiArticle article) {
-		this.article = article;
+	@Test(expected = Parser.ParserException.class)
+	public void testParseNullArticle() throws Exception {
+		parser.parse(null);
+	}
+
+	public void setParser(Parser parser) {
+		this.parser = parser;
 	}
 }

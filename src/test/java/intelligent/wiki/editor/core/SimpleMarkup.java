@@ -14,21 +14,16 @@
 
 package intelligent.wiki.editor.core;
 
-import intelligent.wiki.editor.core_api.Article;
+import intelligent.wiki.editor.core_api.MarkupText;
 
 /**
  * @author Myroslav Rudnytskyi
  * @version 11.11.2015
  */
-public class WrongArticle implements Article {
+public class SimpleMarkup implements MarkupText {
 
 	@Override
-	public String getWikiText() {
-		return null;
-	}
-
-	@Override
-	public String getTitle() {
-		return null;
+	public String getMarkup() {
+		return "some wiki str";
 	}
 }

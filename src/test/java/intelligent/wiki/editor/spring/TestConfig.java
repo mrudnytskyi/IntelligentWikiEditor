@@ -14,20 +14,16 @@
 
 package intelligent.wiki.editor.spring;
 
-import intelligent.wiki.editor.core.SimpleArticle;
+import intelligent.wiki.editor.core.SimpleMarkup;
 import intelligent.wiki.editor.core_api.ASTNode;
-import intelligent.wiki.editor.core_api.WikiArticle;
-import intelligent.wiki.editor.core_api.WikiArticleParser;
+import intelligent.wiki.editor.core_api.Parser;
 import intelligent.wiki.editor.core_impl.ASTNodeID;
 import intelligent.wiki.editor.core_impl.sweble.SwebleASTNode;
-import intelligent.wiki.editor.core_impl.sweble.SwebleWikiArticleParser;
+import intelligent.wiki.editor.core_impl.sweble.SwebleParser;
 import intelligent.wiki.editor.gui.fx.TreeItemFactory;
 import javafx.scene.control.TreeItem;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.sweble.wikitext.engine.WtEngine;
-import org.sweble.wikitext.engine.WtEngineImpl;
-import org.sweble.wikitext.engine.utils.DefaultConfigEnWp;
 import org.sweble.wikitext.parser.nodes.WtContentNode;
 import org.sweble.wikitext.parser.nodes.WtNode;
 
@@ -41,18 +37,13 @@ import org.sweble.wikitext.parser.nodes.WtNode;
 public class TestConfig {
 
 	@Bean
-	public WikiArticleParser articleParser() {
-		return new SwebleWikiArticleParser(engine());
+	public Parser parser() {
+		return new SwebleParser();
 	}
 
 	@Bean
-	public WtEngine engine() {
-		return new WtEngineImpl(DefaultConfigEnWp.generate());
-	}
-
-	@Bean
-	public WikiArticle article() {
-		return articleParser().parse(new SimpleArticle());
+	public ASTNode root() {
+		return parser().parse(new SimpleMarkup());
 	}
 
 	@Bean

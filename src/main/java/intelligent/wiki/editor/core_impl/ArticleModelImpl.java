@@ -15,8 +15,7 @@ package intelligent.wiki.editor.core_impl;
 
 import intelligent.wiki.editor.core_api.ASTNode;
 import intelligent.wiki.editor.core_api.ArticleModel;
-import intelligent.wiki.editor.core_api.WikiArticle;
-import intelligent.wiki.editor.core_api.WikiArticleParser;
+import intelligent.wiki.editor.core_api.Parser;
 import intelligent.wiki.editor.gui.fx.TreeItemFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -40,12 +39,12 @@ public class ArticleModelImpl implements ArticleModel {
 	@Inject
 	private TreeItemFactory<ASTNode> treeFactory;
 
-	public ArticleModelImpl(WikiArticleParser parser, TreeItemFactory<ASTNode> treeFactory) {
+	public ArticleModelImpl(Parser parser, TreeItemFactory<ASTNode> treeFactory) {
 		Objects.requireNonNull(parser, "Null wiki article parser!");
 		this.treeFactory = Objects.requireNonNull(treeFactory, "Null tree factory!");
 		text.addListener((observable, oldValue, newValue) -> {
-			WikiArticle wikiArticle = parser.parse(new ArticleImpl(articleTitle(), newValue));
-			root.setValue(treeFactory.wrapNode(wikiArticle.getRoot()));
+			ASTNode wikiArticle = parser.parse(new WikiMarkup(newValue));
+			root.setValue(treeFactory.wrapNode(wikiArticle));
 		});
 		//TODO listener for root property, updating text on AST change
 	}
