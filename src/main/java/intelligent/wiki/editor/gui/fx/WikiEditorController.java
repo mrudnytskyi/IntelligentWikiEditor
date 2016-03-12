@@ -16,7 +16,6 @@ package intelligent.wiki.editor.gui.fx;
 import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
 import intelligent.wiki.editor.common.io.FilesFacade;
 import intelligent.wiki.editor.core_api.ASTNode;
-import intelligent.wiki.editor.core_api.ArticleModel;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -48,7 +47,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 
 	private final Clipboard clipboard = Clipboard.getSystemClipboard();
 	@Inject
-	private final ArticleModel article;
+	private final ObservableArticle article;
 	private final TextUpdateTracker updateTracker = new TextUpdateTracker();
 	@Inject
 	private final DialogsFactory dialogs;
@@ -82,7 +81,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 * @param dialogs object, creating dialogs
 	 * @param article object, storing article data
 	 */
-	public WikiEditorController(WikiOperations wiki, DialogsFactory dialogs, ArticleModel article) {
+	public WikiEditorController(WikiOperations wiki, DialogsFactory dialogs, ObservableArticle article) {
 		this.wiki = Objects.requireNonNull(wiki, "Null wiki operations object!");
 		this.dialogs = Objects.requireNonNull(dialogs, "Null dialogs factory object!");
 		this.article = Objects.requireNonNull(article, "Null article model object!");

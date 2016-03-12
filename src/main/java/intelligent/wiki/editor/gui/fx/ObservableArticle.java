@@ -12,22 +12,23 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.core_api;
+package intelligent.wiki.editor.gui.fx;
 
+import intelligent.wiki.editor.core_api.ASTNode;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.TreeItem;
 
 /**
- * Interface, specifying set of operations with article in application.
+ * Interface, specifying API to observe article updates in JavaFX application.
  *
  * @author Myroslav Rudnytskyi
  * @version 25.10.2015
  */
-public interface ArticleModel {
+public interface ObservableArticle {
 
 	/**
-	 * @return property for wiki text (plain content) of article
+	 * @return property for markup text (plain content) of article
 	 */
 	StringProperty textProperty();
 

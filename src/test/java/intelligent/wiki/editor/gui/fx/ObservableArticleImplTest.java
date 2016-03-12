@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -12,9 +12,8 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.core;
+package intelligent.wiki.editor.gui.fx;
 
-import intelligent.wiki.editor.core_impl.ArticleModelImpl;
 import intelligent.wiki.editor.spring.TestConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,22 +21,22 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * Class for testing {@link ArticleModelImpl} class.
+ * Class for testing {@link ObservableArticleImpl} class.
  *
  * @author Myroslav Rudnytskyi
  * @version 11.11.2015
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestConfig.class})
-public class ArticleModelImplTest {
+public class ObservableArticleImplTest {
 
 	@Test(expected = NullPointerException.class)
 	public void testConstructorFirstArg() throws Exception {
-		new ArticleModelImpl(null, node -> null);
+		new ObservableArticleImpl(null, node -> null);
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void testConstructorSecondArg() throws Exception {
-		new ArticleModelImpl(article -> null, null);
+		new ObservableArticleImpl(article -> null, null);
 	}
 }

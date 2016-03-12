@@ -16,10 +16,10 @@ package intelligent.wiki.editor.spring;
 import intelligent.wiki.editor.bot.io.wiki.WikiFacade;
 import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
 import intelligent.wiki.editor.core_api.ASTNode;
-import intelligent.wiki.editor.core_api.ArticleModel;
 import intelligent.wiki.editor.core_api.Parser;
-import intelligent.wiki.editor.core_impl.ArticleModelImpl;
 import intelligent.wiki.editor.core_impl.sweble.SwebleParser;
+import intelligent.wiki.editor.gui.fx.ObservableArticle;
+import intelligent.wiki.editor.gui.fx.ObservableArticleImpl;
 import intelligent.wiki.editor.gui.fx.TreeItemFactory;
 import intelligent.wiki.editor.gui.fx.WikiEditorController;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
@@ -55,8 +55,8 @@ public class Config {
 	}
 
 	@Bean
-	public ArticleModel articleModel() {
-		return new ArticleModelImpl(parser(), simpleTreeItemFactory());
+	public ObservableArticle articleModel() {
+		return new ObservableArticleImpl(parser(), simpleTreeItemFactory());
 	}
 
 	@Bean

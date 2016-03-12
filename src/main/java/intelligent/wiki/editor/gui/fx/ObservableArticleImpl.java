@@ -11,40 +11,37 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package intelligent.wiki.editor.core_impl;
+package intelligent.wiki.editor.gui.fx;
 
 import intelligent.wiki.editor.core_api.ASTNode;
-import intelligent.wiki.editor.core_api.ArticleModel;
 import intelligent.wiki.editor.core_api.Parser;
-import intelligent.wiki.editor.gui.fx.TreeItemFactory;
+import intelligent.wiki.editor.core_api.Title;
+import intelligent.wiki.editor.core_impl.WikiMarkup;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.TreeItem;
 
-import javax.inject.Inject;
 import java.util.Objects;
 
 /**
- * Default implementation of {@link ArticleModel}.
+ * Default implementation of {@link ObservableArticle}.
  *
  * @author Myroslav Rudnytskyi
  * @version 25.10.2015
  */
-public class ArticleModelImpl implements ArticleModel {
-	private StringProperty text = new SimpleStringProperty();
-	private StringProperty title = new SimpleStringProperty();
-	private ObjectProperty<TreeItem<ASTNode>> root = new SimpleObjectProperty<>();
-	@Inject
-	private TreeItemFactory<ASTNode> treeFactory;
+public class ObservableArticleImpl implements ObservableArticle {
+	private final StringProperty text = new SimpleStringProperty();
+	private final StringProperty title = new SimpleStringProperty();
+	private final ObjectProperty<TreeItem<ASTNode>> root = new SimpleObjectProperty<>();
 
-	public ArticleModelImpl(Parser parser, TreeItemFactory<ASTNode> treeFactory) {
-		Objects.requireNonNull(parser, "Null wiki article parser!");
-		this.treeFactory = Objects.requireNonNull(treeFactory, "Null tree factory!");
+	public ObservableArticleImpl(Parser parser, TreeItemFactory<ASTNode> treeItemFactory) {
+		Objects.requireNonNull(parser, "Null parser!");
+		Objects.requireNonNull(treeItemFactory, "Null tree item factory!");
 		text.addListener((observable, oldValue, newValue) -> {
 			ASTNode wikiArticle = parser.parse(new WikiMarkup(newValue));
-			root.setValue(treeFactory.wrapNode(wikiArticle));
+			root.setValue(treeItemFactory.wrapNode(wikiArticle));
 		});
 		//TODO listener for root property, updating text on AST change
 	}
@@ -53,7 +50,7 @@ public class ArticleModelImpl implements ArticleModel {
 		String articleTitle = titleProperty().get();
 		boolean isInvalid = articleTitle == null || articleTitle.isEmpty();
 		if (isInvalid) {
-			return "unknown";
+			return Title.NO_TITLE;
 		} else {
 			//TODO wpf constant DRY WikiEditorController
 			String fileEnding = ".wpf";
