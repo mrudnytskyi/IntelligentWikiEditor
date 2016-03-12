@@ -14,6 +14,7 @@
 
 package intelligent.wiki.editor.core;
 
+import intelligent.wiki.editor.core_impl.ArticleModelImpl;
 import intelligent.wiki.editor.spring.TestConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -14,6 +14,8 @@
 
 package intelligent.wiki.editor.core;
 
+import intelligent.wiki.editor.core_api.Article;
+
 /**
  * @author Myroslav Rudnytskyi
  * @version 11.11.2015

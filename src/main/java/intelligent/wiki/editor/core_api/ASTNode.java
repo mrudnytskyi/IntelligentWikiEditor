@@ -12,7 +12,9 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.core;
+package intelligent.wiki.editor.core_api;
+
+import intelligent.wiki.editor.core_impl.ASTNodeID;
 
 /**
  * Interface represents every node in article AST. Note, tht it extends

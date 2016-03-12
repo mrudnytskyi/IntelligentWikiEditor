@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,11 +11,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
+
 /**
- * Package, containing parsing implementation using
- * <a href=https://github.com/sweble/sweble-wikitext>sweble library</a>.
+ * Package, containing business objects interfaces: wiki article API, parsers API and so on.
  *
  * @author Myroslav Rudnytskyi
- * @version 24.10.2015
+ * @version 12.03.2016
  */
-package intelligent.wiki.editor.sweble;
+package intelligent.wiki.editor.core_api;

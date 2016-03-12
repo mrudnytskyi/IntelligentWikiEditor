@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,8 +11,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package intelligent.wiki.editor.core;
+package intelligent.wiki.editor.core_impl;
 
+import intelligent.wiki.editor.core_api.ASTNode;
+import intelligent.wiki.editor.core_api.ArticleModel;
+import intelligent.wiki.editor.core_api.WikiArticle;
+import intelligent.wiki.editor.core_api.WikiArticleParser;
 import intelligent.wiki.editor.gui.fx.TreeItemFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

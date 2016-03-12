@@ -12,11 +12,11 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.sweble;
+package intelligent.wiki.editor.core_impl.sweble;
 
-import intelligent.wiki.editor.core.Article;
-import intelligent.wiki.editor.core.WikiArticle;
-import intelligent.wiki.editor.core.WikiArticleParser;
+import intelligent.wiki.editor.core_api.Article;
+import intelligent.wiki.editor.core_api.WikiArticle;
+import intelligent.wiki.editor.core_api.WikiArticleParser;
 import org.sweble.wikitext.engine.PageId;
 import org.sweble.wikitext.engine.PageTitle;
 import org.sweble.wikitext.engine.WtEngine;

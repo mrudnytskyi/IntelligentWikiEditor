@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.core;
+package intelligent.wiki.editor.core_api;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;

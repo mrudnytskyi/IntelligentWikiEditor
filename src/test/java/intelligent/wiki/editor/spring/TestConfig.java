@@ -14,10 +14,14 @@
 
 package intelligent.wiki.editor.spring;
 
-import intelligent.wiki.editor.core.*;
+import intelligent.wiki.editor.core.SimpleArticle;
+import intelligent.wiki.editor.core_api.ASTNode;
+import intelligent.wiki.editor.core_api.WikiArticle;
+import intelligent.wiki.editor.core_api.WikiArticleParser;
+import intelligent.wiki.editor.core_impl.ASTNodeID;
+import intelligent.wiki.editor.core_impl.sweble.SwebleASTNode;
+import intelligent.wiki.editor.core_impl.sweble.SwebleWikiArticleParser;
 import intelligent.wiki.editor.gui.fx.TreeItemFactory;
-import intelligent.wiki.editor.sweble.SwebleASTNode;
-import intelligent.wiki.editor.sweble.SwebleWikiArticleParser;
 import javafx.scene.control.TreeItem;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -11,10 +11,10 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package intelligent.wiki.editor.sweble;
+package intelligent.wiki.editor.core_impl.sweble;
 
-import intelligent.wiki.editor.core.ASTNode;
-import intelligent.wiki.editor.core.WikiArticle;
+import intelligent.wiki.editor.core_api.ASTNode;
+import intelligent.wiki.editor.core_api.WikiArticle;
 import org.sweble.wikitext.engine.nodes.EngPage;
 import org.sweble.wikitext.engine.nodes.EngProcessedPage;
 import org.sweble.wikitext.parser.nodes.WtNode;

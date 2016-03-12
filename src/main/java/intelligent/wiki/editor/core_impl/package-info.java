@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,18 +11,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package intelligent.wiki.editor.core;
 
 /**
- * Interface for wiki article object, containing already parsed AST nodes.
+ * Package, containing default business objects implementation: classes for wiki article, parsers and so on.
  *
  * @author Myroslav Rudnytskyi
- * @version 24.10.2015
+ * @version 12.03.2016
  */
-public interface WikiArticle {
-
-	/**
-	 * @return tree root (AST content) of article
-	 */
-	ASTNode getRoot();
-}
+package intelligent.wiki.editor.core_impl;
