@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,11 +11,27 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
+package intelligent.wiki.editor.core_api;
+
 /**
- * Package, containing parsing implementation using
- * <a href=https://github.com/sweble/sweble-wikitext>sweble library</a>.
+ * Interface for article object, containing article title, markup text and AST representation.
  *
  * @author Myroslav Rudnytskyi
- * @version 24.10.2015
+ * @version 08.11.2015
  */
-package intelligent.wiki.editor.sweble;
+public interface Article {
+
+	Article EMPTY_ARTICLE = new EmptyArticle();
+
+	MarkupText getMarkupText();
+
+	void setMarkupText(MarkupText text);
+
+	Title getTitle();
+
+	void setTitle(Title title);
+
+	ASTNode getASTRoot();
+
+	void setASTRoot(ASTNode root);
+}

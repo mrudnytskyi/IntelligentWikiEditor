@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,18 +11,22 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package intelligent.wiki.editor.core;
+
+package intelligent.wiki.editor.core_api;
+
+import intelligent.wiki.editor.core_impl.WikiMarkup;
 
 /**
- * Interface for wiki article object, containing already parsed AST nodes.
+ * Interface encapsulates information about markup text representation.
  *
  * @author Myroslav Rudnytskyi
- * @version 24.10.2015
+ * @version 12.03.2016
+ * @see WikiMarkup
  */
-public interface WikiArticle {
+public interface MarkupText {
 
 	/**
-	 * @return tree root (AST content) of article
+	 * @return markup text in string representation
 	 */
-	ASTNode getRoot();
+	String getMarkup();
 }

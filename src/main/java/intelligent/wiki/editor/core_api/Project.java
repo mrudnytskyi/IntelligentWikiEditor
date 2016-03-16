@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,11 +11,22 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
+
+package intelligent.wiki.editor.core_api;
+
 /**
- * Package, containing core classes for editor: classes, connected with wiki article, parsers and so on.
- * They are loose coupled, so can be used in another projects as separate modules.
+ * This interface provides <a href=https://en.wikipedia.org/wiki/Facade_pattern>facade</a> to model package
+ * for easy manipulating complex business objects.
  *
  * @author Myroslav Rudnytskyi
- * @version 25.10.2015
+ * @version 12.03.2016
+ * @see intelligent.wiki.editor.core_impl.WikiProject
  */
-package intelligent.wiki.editor.core;
+public interface Project {
+
+	void makeArticle(String title, String text);
+
+	Article getArticle();
+
+	Parser getParser();
+}

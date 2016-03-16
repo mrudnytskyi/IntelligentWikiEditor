@@ -12,10 +12,11 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.sweble;
+package intelligent.wiki.editor.core_impl.sweble;
 
-import intelligent.wiki.editor.core.ASTNode;
-import intelligent.wiki.editor.core.ASTNodeID;
+import intelligent.wiki.editor.core_api.ASTNode;
+import intelligent.wiki.editor.core_api.ASTNodeID;
+import intelligent.wiki.editor.core_api.MarkupText;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.sweble.wikitext.parser.nodes.WtNode;
 
@@ -65,8 +66,8 @@ public class SwebleASTNode implements ASTNode {
 	}
 
 	@Override
-	public String getWikiText() {
-		return "";
+	public MarkupText getMarkupText() {
+		return null;
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -12,16 +12,18 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.core;
+package intelligent.wiki.editor.core_api;
 
 /**
+ * Interface encapsulates information about article title representation.
+ *
  * @author Myroslav Rudnytskyi
- * @version 11.11.2015
+ * @version 12.03.2016
+ * @see intelligent.wiki.editor.core_impl.WikiArticleTitle
  */
-public class SimpleWikiArticle implements WikiArticle {
+public interface Title {
 
-	@Override
-	public ASTNode getRoot() {
-		return null;
-	}
+	String NO_TITLE = "unnamed";
+
+	String getName();
 }

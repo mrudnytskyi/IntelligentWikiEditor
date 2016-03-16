@@ -14,30 +14,16 @@
 
 package intelligent.wiki.editor.core;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.StringProperty;
-import javafx.scene.control.TreeItem;
+import intelligent.wiki.editor.core_api.MarkupText;
 
 /**
- * Interface, specifying set of operations with article in application.
- *
  * @author Myroslav Rudnytskyi
- * @version 25.10.2015
+ * @version 11.11.2015
  */
-public interface ArticleModel {
+public class SimpleMarkup implements MarkupText {
 
-	/**
-	 * @return property for wiki text (plain content) of article
-	 */
-	StringProperty textProperty();
-
-	/**
-	 * @return property for title of article
-	 */
-	StringProperty titleProperty();
-
-	/**
-	 * @return property for tree root (AST content) of article
-	 */
-	ObjectProperty<TreeItem<ASTNode>> rootProperty();
+	@Override
+	public String getMarkup() {
+		return "some wiki str";
+	}
 }

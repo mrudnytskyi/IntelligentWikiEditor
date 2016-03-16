@@ -12,9 +12,13 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.sweble;
+package intelligent.wiki.editor.core.sweble;
 
-import intelligent.wiki.editor.core.*;
+import intelligent.wiki.editor.core.SimpleMarkup;
+import intelligent.wiki.editor.core_api.ASTNode;
+import intelligent.wiki.editor.core_api.Parser;
+import intelligent.wiki.editor.core_impl.sweble.SwebleASTNode;
+import intelligent.wiki.editor.core_impl.sweble.SwebleParser;
 import intelligent.wiki.editor.spring.TestConfig;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,47 +29,31 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 
 /**
- * Class for testing {@link SwebleWikiArticleParser} class.
+ * Class for testing {@link SwebleParser} class.
  *
  * @author Myroslav Rudnytskyi
  * @version 11.11.2015
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestConfig.class})
-public class SwebleWikiArticleParserTest {
+public class SwebleParserTest {
 
 	@Inject
-	private WikiArticleParser parser;
-
-	@Test(expected = NullPointerException.class)
-	public void testConstructor() throws Exception {
-		new SwebleWikiArticleParser(null);
-	}
+	private Parser parser;
 
 	@Test
 	public void testParseSimpleArticle() throws Exception {
-		WikiArticle article = parser.parse(new SimpleArticle());
-		Assert.assertEquals(SwebleWikiArticle.class, article.getClass());
-		Assert.assertEquals(SwebleASTNode.class, article.getRoot().getClass());
-		Assert.assertEquals(true, article.getRoot() != null);
+		ASTNode article = parser.parse(new SimpleMarkup());
+		Assert.assertEquals(true, article != null);
+		Assert.assertEquals(SwebleASTNode.class, article.getClass());
 	}
 
-	@Test(expected = WikiArticleParser.ParserException.class)
-	public void testParseEmptyTitleArticle() throws Exception {
-		parser.parse(new EmptyTitleArticle());
-	}
-
-	@Test(expected = WikiArticleParser.ParserException.class)
+	@Test(expected = Parser.ParserException.class)
 	public void testParseNullArticle() throws Exception {
 		parser.parse(null);
 	}
 
-	@Test(expected = WikiArticleParser.ParserException.class)
-	public void testParseWrongArticle() throws Exception {
-		parser.parse(new WrongArticle());
-	}
-
-	public void setParser(WikiArticleParser parser) {
+	public void setParser(Parser parser) {
 		this.parser = parser;
 	}
 }

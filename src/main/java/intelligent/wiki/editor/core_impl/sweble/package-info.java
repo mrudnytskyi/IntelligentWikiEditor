@@ -11,22 +11,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-
-package intelligent.wiki.editor.core;
-
 /**
+ * Package, containing parsing implementation using
+ * <a href=https://github.com/sweble/sweble-wikitext>sweble library</a>.
+ *
  * @author Myroslav Rudnytskyi
- * @version 11.11.2015
+ * @version 24.10.2015
  */
-public class WrongArticle implements Article {
-
-	@Override
-	public String getWikiText() {
-		return null;
-	}
-
-	@Override
-	public String getTitle() {
-		return null;
-	}
-}
+package intelligent.wiki.editor.core_impl.sweble;

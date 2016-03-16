@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.core;
+package intelligent.wiki.editor.core_api;
 
 /**
  * Class encapsulates unique id and was created to simplify checking nodes

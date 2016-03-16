@@ -12,8 +12,9 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.sweble;
+package intelligent.wiki.editor.core.sweble;
 
+import intelligent.wiki.editor.core_impl.sweble.SwebleASTNode;
 import intelligent.wiki.editor.spring.TestConfig;
 import org.junit.Assert;
 import org.junit.Test;

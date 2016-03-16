@@ -15,20 +15,17 @@ package intelligent.wiki.editor.spring;
 
 import intelligent.wiki.editor.bot.io.wiki.WikiFacade;
 import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
-import intelligent.wiki.editor.core.ASTNode;
-import intelligent.wiki.editor.core.ArticleModel;
-import intelligent.wiki.editor.core.ArticleModelImpl;
-import intelligent.wiki.editor.core.WikiArticleParser;
+import intelligent.wiki.editor.core_api.ASTNode;
+import intelligent.wiki.editor.core_api.Parser;
+import intelligent.wiki.editor.core_api.Project;
+import intelligent.wiki.editor.core_impl.WikiProject;
+import intelligent.wiki.editor.core_impl.sweble.SwebleParser;
 import intelligent.wiki.editor.gui.fx.TreeItemFactory;
 import intelligent.wiki.editor.gui.fx.WikiEditorController;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
-import intelligent.wiki.editor.sweble.SwebleWikiArticleParser;
 import javafx.scene.control.TreeItem;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.sweble.wikitext.engine.WtEngine;
-import org.sweble.wikitext.engine.WtEngineImpl;
-import org.sweble.wikitext.engine.utils.DefaultConfigEnWp;
 
 import java.util.Locale;
 
@@ -54,12 +51,12 @@ public class Config {
 	@Bean
 	@SuppressWarnings("unused") // used indirectly!
 	public WikiEditorController wikiEditorController() {
-		return new WikiEditorController(wikiOperations(), dialogsFactory(), articleModel());
+		return new WikiEditorController(wikiOperations(), dialogsFactory(), project(), simpleTreeItemFactory());
 	}
 
 	@Bean
-	public ArticleModel articleModel() {
-		return new ArticleModelImpl(articleParser(), simpleTreeItemFactory());
+	public Project project() {
+		return new WikiProject(parser());
 	}
 
 	@Bean
@@ -68,12 +65,8 @@ public class Config {
 	}
 
 	@Bean
-	public WikiArticleParser articleParser() {
-		return new SwebleWikiArticleParser(engine());
+	public Parser parser() {
+		return new SwebleParser();
 	}
 
-	@Bean
-	public WtEngine engine() {
-		return new WtEngineImpl(DefaultConfigEnWp.generate());
-	}
 }

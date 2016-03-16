@@ -14,7 +14,7 @@
 
 package intelligent.wiki.editor.gui.fx;
 
-import intelligent.wiki.editor.core.ASTNode;
+import intelligent.wiki.editor.core_api.ASTNode;
 import intelligent.wiki.editor.spring.TestConfig;
 import org.junit.Assert;
 import org.junit.Test;

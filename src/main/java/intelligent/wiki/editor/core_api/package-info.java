@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -12,30 +12,10 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.core;
-
 /**
- * Default implementation for {@link Article}.
+ * Package, containing business objects interfaces: wiki article API, parsers API and so on.
  *
  * @author Myroslav Rudnytskyi
- * @version 25.10.2015
+ * @version 12.03.2016
  */
-public class ArticleImpl implements Article {
-	private final String wikiText;
-	private final String title;
-
-	public ArticleImpl(String title, String wikiText) {
-		this.wikiText = wikiText;
-		this.title = title;
-	}
-
-	@Override
-	public String getWikiText() {
-		return wikiText;
-	}
-
-	@Override
-	public String getTitle() {
-		return title;
-	}
-}
+package intelligent.wiki.editor.core_api;

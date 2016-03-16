@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.core;
+package intelligent.wiki.editor.core_api;
 
 /**
  * Interface represents every node in article AST. Note, tht it extends
@@ -51,12 +51,12 @@ public interface ASTNode extends Iterable<ASTNode> {
 	void addChild(ASTNode child);
 
 	/**
-	 * @return String in human-readable form
+	 * @return representation in human-readable form
 	 */
 	String toString();
 
 	/**
-	 * @return String in wiki mark-up form
+	 * @return representation in mark-up form
 	 */
-	String getWikiText();
+	MarkupText getMarkupText();
 }

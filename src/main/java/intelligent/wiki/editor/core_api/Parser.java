@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,26 +11,34 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package intelligent.wiki.editor.core;
+package intelligent.wiki.editor.core_api;
 
 /**
- * Interface for parser, creating {@link WikiArticle} object.
+ * Interface for parser, transforming markup text objects ({@link MarkupText}) into abstract syntax tree (AST)
+ * nodes ({@link ASTNode}).
  *
  * @author Myroslav Rudnytskyi
  * @version 24.10.2015
+ * @see intelligent.wiki.editor.core_impl.sweble.SwebleParser
  */
-public interface WikiArticleParser {
+public interface Parser {
 
 	/**
 	 * Method for creating wiki article object.
 	 *
 	 * @param article object, containing wiki text
-	 * @return AST tree, packed in wiki article object
+	 * @return AST root object
 	 * @throws ParserException if an exception occurs
 	 */
-	WikiArticle parse(Article article) throws ParserException;
+	ASTNode parse(MarkupText article) throws ParserException;
 
+	/**
+	 * Class for wrapping any exceptions, thrown during parsing. Note, that it is <b>unchecked</b> exception.
+	 */
 	class ParserException extends RuntimeException {
+
+		public ParserException() {
+		}
 
 		public ParserException(String message) {
 			super(message);
@@ -42,6 +50,10 @@ public interface WikiArticleParser {
 
 		public ParserException(Throwable cause) {
 			super(cause);
+		}
+
+		public ParserException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+			super(message, cause, enableSuppression, writableStackTrace);
 		}
 	}
 }
