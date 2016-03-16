@@ -14,14 +14,24 @@
 package intelligent.wiki.editor.core_api;
 
 /**
- * Interface for article object, containing named wiki text.
+ * Interface for article object, containing article title, markup text and AST representation.
  *
  * @author Myroslav Rudnytskyi
  * @version 08.11.2015
  */
 public interface Article {
 
-	String getWikiText();
+	Article EMPTY_ARTICLE = new EmptyArticle();
 
-	String getTitle();
+	MarkupText getMarkupText();
+
+	void setMarkupText(MarkupText text);
+
+	Title getTitle();
+
+	void setTitle(Title title);
+
+	ASTNode getASTRoot();
+
+	void setASTRoot(ASTNode root);
 }

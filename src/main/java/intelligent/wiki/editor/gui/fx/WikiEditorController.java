@@ -16,6 +16,8 @@ package intelligent.wiki.editor.gui.fx;
 import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
 import intelligent.wiki.editor.common.io.FilesFacade;
 import intelligent.wiki.editor.core_api.ASTNode;
+import intelligent.wiki.editor.core_api.Article;
+import intelligent.wiki.editor.core_api.Project;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -47,12 +49,15 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 
 	private final Clipboard clipboard = Clipboard.getSystemClipboard();
 	@Inject
-	private final ObservableArticle article;
+	private final Project project;
+	@Inject
+	private final TreeItemFactory<ASTNode> treeItemFactory;
 	private final TextUpdateTracker updateTracker = new TextUpdateTracker();
 	@Inject
 	private final DialogsFactory dialogs;
 	@Inject
 	private final WikiOperations wiki;
+	private ObservableArticle article;
 	private ResourceBundle i18n;
 	private File currentOpenedFile;
 	@FXML
@@ -79,12 +84,15 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 *
 	 * @param wiki    object, performing operations with Wikipedia
 	 * @param dialogs object, creating dialogs
-	 * @param article object, storing article data
+	 * @param project project object
+	 * @param treeItems factory for tree items
 	 */
-	public WikiEditorController(WikiOperations wiki, DialogsFactory dialogs, ObservableArticle article) {
+	public WikiEditorController(WikiOperations wiki, DialogsFactory dialogs, Project project, TreeItemFactory<ASTNode> treeItems) {
 		this.wiki = Objects.requireNonNull(wiki, "Null wiki operations object!");
 		this.dialogs = Objects.requireNonNull(dialogs, "Null dialogs factory object!");
-		this.article = Objects.requireNonNull(article, "Null article model object!");
+		this.project = Objects.requireNonNull(project, "Null project object!");
+		this.treeItemFactory = Objects.requireNonNull(treeItems, "Tree item factory null!");
+		article = new ObservableArticleAdapter(Article.EMPTY_ARTICLE, treeItems);
 	}
 
 	/**
@@ -93,10 +101,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		i18n = resources;
-		article.textProperty().bind(text.textProperty());
 		text.textProperty().addListener(updateTracker);
-		article.titleProperty().bind(tab.textProperty());
-		tree.rootProperty().bind(article.rootProperty());
 		enableCutAction(false);
 		enableCopyAction(false);
 		enablePasteAction(clipboard.hasString());
@@ -153,10 +158,8 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	private void openFile(File file) {
 		try {
 			updateTracker.startIgnoringUpdating();
-			String value = FilesFacade.readTXT(file.getAbsolutePath());
-			tab.setText(file.getName());
-			text.setText(value);
-			text.moveCaretToStart();
+			String articleContent = FilesFacade.readTXT(file.getAbsolutePath());
+			open(file.getName(), articleContent);
 		} catch (IOException e) {
 			dialogs.makeErrorDialog(e).show();
 		} finally {
@@ -186,18 +189,31 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		}
 	}
 
-	private void openURL(String textString) {
+	private void openURL(String articleNameURL) {
 		try {
 			updateTracker.startIgnoringUpdating();
-			String articleContent = wiki.getArticleContent(textString);
-			tab.setText(textString);
-			text.setText(articleContent);
-			text.moveCaretToStart();
+			String articleContent = wiki.getArticleContent(articleNameURL);
+			open(articleNameURL, articleContent);
 		} catch (IOException e) {
 			dialogs.makeErrorDialog(e).show();
 		} finally {
 			updateTracker.stopIgnoringUpdating();
 		}
+	}
+
+	private void open(String articleTitle, String articleContent) {
+		tab.setText(articleTitle);
+		project.makeArticle(articleTitle, articleContent);
+		article = new ObservableArticleAdapter(project.getArticle(), treeItemFactory);
+		updateBindings();
+		text.setText(articleContent);
+		text.moveCaretToStart();
+	}
+
+	private void updateBindings() {
+		article.textProperty().bind(text.textProperty());
+		article.titleProperty().bind(tab.textProperty());
+		tree.rootProperty().bind(article.rootProperty());
 	}
 
 	/**

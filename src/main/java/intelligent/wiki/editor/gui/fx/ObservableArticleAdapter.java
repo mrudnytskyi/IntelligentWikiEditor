@@ -14,9 +14,7 @@
 package intelligent.wiki.editor.gui.fx;
 
 import intelligent.wiki.editor.core_api.ASTNode;
-import intelligent.wiki.editor.core_api.Parser;
-import intelligent.wiki.editor.core_api.Title;
-import intelligent.wiki.editor.core_impl.WikiMarkup;
+import intelligent.wiki.editor.core_api.Article;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -26,37 +24,32 @@ import javafx.scene.control.TreeItem;
 import java.util.Objects;
 
 /**
- * Default implementation of {@link ObservableArticle}.
+ * Class for wrapping {@link Article} object to provide suitable interface for observing article changes in JavaFX
+ * code. So, it is <a href=https://en.wikipedia.org/wiki/Adapter_pattern>adapter</a> for wiki article. Note, that
+ * it is default implementation of {@link ObservableArticle}.
  *
  * @author Myroslav Rudnytskyi
  * @version 25.10.2015
  */
-public class ObservableArticleImpl implements ObservableArticle {
+public class ObservableArticleAdapter implements ObservableArticle {
+
 	private final StringProperty text = new SimpleStringProperty();
 	private final StringProperty title = new SimpleStringProperty();
 	private final ObjectProperty<TreeItem<ASTNode>> root = new SimpleObjectProperty<>();
+	private final Article article;
+	private final TreeItemFactory<ASTNode> treeItemFactory;
 
-	public ObservableArticleImpl(Parser parser, TreeItemFactory<ASTNode> treeItemFactory) {
-		Objects.requireNonNull(parser, "Null parser!");
-		Objects.requireNonNull(treeItemFactory, "Null tree item factory!");
-		text.addListener((observable, oldValue, newValue) -> {
-			ASTNode wikiArticle = parser.parse(new WikiMarkup(newValue));
-			root.setValue(treeItemFactory.wrapNode(wikiArticle));
-		});
+	public ObservableArticleAdapter(Article article, TreeItemFactory<ASTNode> treeItemFactory) {
+		this.article = Objects.requireNonNull(article, "Null article!");
+		this.treeItemFactory = Objects.requireNonNull(treeItemFactory, "Null tree item factory!");
+		enableASTUpdating();
 		//TODO listener for root property, updating text on AST change
 	}
 
-	private String articleTitle() {
-		String articleTitle = titleProperty().get();
-		boolean isInvalid = articleTitle == null || articleTitle.isEmpty();
-		if (isInvalid) {
-			return Title.NO_TITLE;
-		} else {
-			//TODO wpf constant DRY WikiEditorController
-			String fileEnding = ".wpf";
-			boolean isFromFile = articleTitle.endsWith(fileEnding);
-			return isFromFile ? articleTitle.substring(0, articleTitle.length() - fileEnding.length()) : articleTitle;
-		}
+	private void enableASTUpdating() {
+		text.addListener((observable, oldValue, newValue) -> {
+			root.setValue(treeItemFactory.wrapNode(article.getASTRoot()));
+		});
 	}
 
 	@Override

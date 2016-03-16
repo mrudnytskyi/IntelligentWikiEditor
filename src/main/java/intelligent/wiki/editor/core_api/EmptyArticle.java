@@ -12,32 +12,41 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.core_impl;
-
-import intelligent.wiki.editor.core_api.Article;
+package intelligent.wiki.editor.core_api;
 
 /**
- * Default implementation for {@link Article}.
+ * Implementation of <a href=https://en.wikipedia.org/wiki/Null_Object_pattern>Null Object pattern</a> for
+ * {@link Article} abstraction.
  *
  * @author Myroslav Rudnytskyi
- * @version 25.10.2015
+ * @version 16.03.2016
  */
-public class ArticleImpl implements Article {
-	private final String wikiText;
-	private final String title;
+public class EmptyArticle implements Article {
 
-	public ArticleImpl(String title, String wikiText) {
-		this.wikiText = wikiText;
-		this.title = title;
+	@Override
+	public MarkupText getMarkupText() {
+		return () -> "";
 	}
 
 	@Override
-	public String getWikiText() {
-		return wikiText;
+	public void setMarkupText(MarkupText text) {
 	}
 
 	@Override
-	public String getTitle() {
-		return title;
+	public Title getTitle() {
+		return () -> "";
+	}
+
+	@Override
+	public void setTitle(Title title) {
+	}
+
+	@Override
+	public ASTNode getASTRoot() {
+		return null;
+	}
+
+	@Override
+	public void setASTRoot(ASTNode root) {
 	}
 }
