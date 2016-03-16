@@ -16,8 +16,8 @@ package intelligent.wiki.editor.spring;
 
 import intelligent.wiki.editor.core.SimpleMarkup;
 import intelligent.wiki.editor.core_api.ASTNode;
+import intelligent.wiki.editor.core_api.ASTNodeID;
 import intelligent.wiki.editor.core_api.Parser;
-import intelligent.wiki.editor.core_impl.ASTNodeID;
 import intelligent.wiki.editor.core_impl.sweble.SwebleASTNode;
 import intelligent.wiki.editor.core_impl.sweble.SwebleParser;
 import intelligent.wiki.editor.gui.fx.TreeItemFactory;

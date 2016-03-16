@@ -14,7 +14,7 @@
 
 package intelligent.wiki.editor.core;
 
-import intelligent.wiki.editor.core_impl.ASTNodeID;
+import intelligent.wiki.editor.core_api.ASTNodeID;
 import intelligent.wiki.editor.spring.TestConfig;
 import org.junit.Assert;
 import org.junit.Test;

@@ -15,8 +15,8 @@
 package intelligent.wiki.editor.core_impl.sweble;
 
 import intelligent.wiki.editor.core_api.ASTNode;
+import intelligent.wiki.editor.core_api.ASTNodeID;
 import intelligent.wiki.editor.core_api.MarkupText;
-import intelligent.wiki.editor.core_impl.ASTNodeID;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.sweble.wikitext.parser.nodes.WtNode;
 

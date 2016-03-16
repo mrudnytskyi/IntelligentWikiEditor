@@ -14,8 +14,6 @@
 
 package intelligent.wiki.editor.core_api;
 
-import intelligent.wiki.editor.core_impl.ASTNodeID;
-
 /**
  * Interface represents every node in article AST. Note, tht it extends
  * {@code Iterable}, so you can iterate over children in such manner:
