@@ -16,6 +16,7 @@ package intelligent.wiki.editor.core_impl.sweble;
 
 import intelligent.wiki.editor.core_api.ASTNode;
 import intelligent.wiki.editor.core_api.ASTNodeID;
+import intelligent.wiki.editor.core_api.ASTNodeType;
 import intelligent.wiki.editor.core_api.MarkupText;
 import intelligent.wiki.editor.core_impl.WikiMarkup;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -73,6 +74,15 @@ public class SwebleASTNode implements ASTNode {
 		StringWriter sw = new StringWriter();
 		WtPrettyPrinter.print(sw, node);
 		return new WikiMarkup(sw.toString());
+	}
+
+	@Override
+	public ASTNodeType getType() {
+		return new SwebleASTNodeType(this);
+	}
+
+	protected WtNode getNode() {
+		return node;
 	}
 
 	@Override

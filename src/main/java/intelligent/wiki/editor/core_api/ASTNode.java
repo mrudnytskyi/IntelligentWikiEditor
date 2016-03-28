@@ -59,4 +59,9 @@ public interface ASTNode extends Iterable<ASTNode> {
 	 * @return representation in mark-up form
 	 */
 	MarkupText getMarkupText();
+
+	/**
+	 * @return node type for identifying
+	 */
+	ASTNodeType getType();
 }
