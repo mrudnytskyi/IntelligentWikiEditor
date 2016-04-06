@@ -69,11 +69,20 @@ public class SwebleASTNode implements ASTNode {
 		children.add(child);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Note, that if current node isn't root, empty Markup is returned
+	 */
 	@Override
 	public MarkupText getMarkupText() {
-		StringWriter sw = new StringWriter();
-		WtPrettyPrinter.print(sw, node);
-		return new WikiMarkup(sw.toString());
+		// TODO: bug in Sweble, write workaround
+		String str = "";
+		try {
+			WtPrettyPrinter.print(new StringWriter(), node);
+		} catch (Exception e) {
+			// ignore
+		}
+		return new WikiMarkup(str);
 	}
 
 	@Override
