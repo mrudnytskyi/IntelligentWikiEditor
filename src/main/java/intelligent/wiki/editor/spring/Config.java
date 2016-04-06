@@ -23,6 +23,8 @@ import intelligent.wiki.editor.core_impl.sweble.SwebleParser;
 import intelligent.wiki.editor.gui.fx.TreeItemFactory;
 import intelligent.wiki.editor.gui.fx.WikiEditorController;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
+import intelligent.wiki.editor.services_api.inspections.Problems;
+import intelligent.wiki.editor.services_impl.inspections.ProblemsHolder;
 import javafx.scene.control.TreeItem;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,8 +57,13 @@ public class Config {
 	}
 
 	@Bean
+	public Problems problemsHolder() {
+		return new ProblemsHolder();
+	}
+
+	@Bean
 	public Project project() {
-		return new WikiProject(parser());
+		return new WikiProject(parser(), problemsHolder());
 	}
 
 	@Bean

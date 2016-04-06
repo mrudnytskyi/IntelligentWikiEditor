@@ -17,6 +17,7 @@ package intelligent.wiki.editor.core_impl;
 import intelligent.wiki.editor.core_api.Article;
 import intelligent.wiki.editor.core_api.Parser;
 import intelligent.wiki.editor.core_api.Project;
+import intelligent.wiki.editor.services_api.inspections.Problems;
 
 import javax.inject.Inject;
 import java.util.Objects;
@@ -30,10 +31,13 @@ import java.util.Objects;
 public class WikiProject implements Project {
 	@Inject
 	private final Parser parser;
+	@Inject
+	private final Problems problems;
 	private Article article;
 
-	public WikiProject(Parser parser) {
+	public WikiProject(Parser parser, Problems problems) {
 		this.parser = Objects.requireNonNull(parser, "Null parser!");
+		this.problems = Objects.requireNonNull(problems, "Null problems holder!");
 	}
 
 	@Override
@@ -54,5 +58,10 @@ public class WikiProject implements Project {
 	@Override
 	public Parser getParser() {
 		return parser;
+	}
+
+	@Override
+	public Problems getProblemsHolder() {
+		return problems;
 	}
 }

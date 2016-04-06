@@ -14,6 +14,8 @@
 
 package intelligent.wiki.editor.core_api;
 
+import java.util.Set;
+
 /**
  * Implementation of <a href=https://en.wikipedia.org/wiki/Null_Object_pattern>Null Object pattern</a> for
  * {@link Article} abstraction.
@@ -25,7 +27,17 @@ public class EmptyArticle implements Article {
 
 	@Override
 	public MarkupText getMarkupText() {
-		return () -> "";
+		return new MarkupText() {
+			@Override
+			public String getMarkup() {
+				return "";
+			}
+
+			@Override
+			public boolean contains(Set<String> words) {
+				return false;
+			}
+		};
 	}
 
 	@Override

@@ -12,25 +12,29 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.core_api;
+package intelligent.wiki.editor.services_impl.inspections;
 
+import intelligent.wiki.editor.core_api.ASTNode;
+import intelligent.wiki.editor.services_api.inspections.Inspection;
 import intelligent.wiki.editor.services_api.inspections.Problems;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * This interface provides <a href=https://en.wikipedia.org/wiki/Facade_pattern>facade</a> to model package
- * for easy manipulating complex business objects.
- *
  * @author Myroslav Rudnytskyi
- * @version 12.03.2016
- * @see intelligent.wiki.editor.core_impl.WikiProject
+ * @version 31.03.2016
  */
-public interface Project {
+public class ProblemsHolder implements Problems {
+	private Map<Class<? extends Inspection>, ASTNode> problems = new HashMap<>();
 
-	void makeArticle(String title, String text);
+	@Override
+	public void registerProblem(Class<? extends Inspection> inspector, ASTNode suspect) {
+		problems.put(inspector, suspect);
+	}
 
-	Article getArticle();
-
-	Parser getParser();
-
-	Problems getProblemsHolder();
+	@Override
+	public boolean isEmpty() {
+		return problems.isEmpty();
+	}
 }

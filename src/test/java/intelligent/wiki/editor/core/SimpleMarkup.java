@@ -16,6 +16,8 @@ package intelligent.wiki.editor.core;
 
 import intelligent.wiki.editor.core_api.MarkupText;
 
+import java.util.Set;
+
 /**
  * @author Myroslav Rudnytskyi
  * @version 11.11.2015
@@ -25,5 +27,10 @@ public class SimpleMarkup implements MarkupText {
 	@Override
 	public String getMarkup() {
 		return "some wiki str";
+	}
+
+	@Override
+	public boolean contains(Set<String> words) {
+		return false;
 	}
 }

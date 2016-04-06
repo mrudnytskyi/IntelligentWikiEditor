@@ -12,25 +12,10 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.core_api;
-
-import intelligent.wiki.editor.services_api.inspections.Problems;
-
 /**
- * This interface provides <a href=https://en.wikipedia.org/wiki/Facade_pattern>facade</a> to model package
- * for easy manipulating complex business objects.
+ * Package, containing classes for checking wiki article style (inspections).
  *
  * @author Myroslav Rudnytskyi
- * @version 12.03.2016
- * @see intelligent.wiki.editor.core_impl.WikiProject
+ * @version 27.02.2016
  */
-public interface Project {
-
-	void makeArticle(String title, String text);
-
-	Article getArticle();
-
-	Parser getParser();
-
-	Problems getProblemsHolder();
-}
+package intelligent.wiki.editor.services_impl.inspections;

@@ -31,4 +31,9 @@ public interface Problems {
 	 * @param suspect   AST node, which is, probably, source of problem
 	 */
 	void registerProblem(Class<? extends Inspection> inspector, ASTNode suspect);
+
+	/**
+	 * @return {@code true} if there is no registered problems and {@code false} otherwise
+	 */
+	boolean isEmpty();
 }

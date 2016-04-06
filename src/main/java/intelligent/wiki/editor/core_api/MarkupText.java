@@ -16,6 +16,8 @@ package intelligent.wiki.editor.core_api;
 
 import intelligent.wiki.editor.core_impl.WikiMarkup;
 
+import java.util.Set;
+
 /**
  * Interface encapsulates information about markup text representation.
  *
@@ -29,4 +31,10 @@ public interface MarkupText {
 	 * @return markup text in string representation
 	 */
 	String getMarkup();
+
+	/**
+	 * @param words set, storing words to search for
+	 * @return {@code true} if text contains any word from set
+	 */
+	boolean contains(Set<String> words);
 }

@@ -17,6 +17,7 @@ package intelligent.wiki.editor.core_impl;
 import intelligent.wiki.editor.core_api.MarkupText;
 
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Class represents object of <a href=https://en.wikipedia.org/wiki/Help:Wiki_markup>Wiki markup</a> and is default
@@ -37,5 +38,16 @@ public class WikiMarkup implements MarkupText {
 	@Override
 	public String getMarkup() {
 		return markup.toString();
+	}
+
+	@Override
+	public boolean contains(Set<String> words) {
+		String str = markup.toString();
+		for (String word : words) {
+			if (str.contains(word)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
