@@ -75,6 +75,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	@FXML
 	private Tab tab;
 	@FXML
+	//TODO: use interface after fixing bug with enabling paste
 	private WikiMarkupArea text;
 	@FXML
 	private TreeView<ASTNode> tree;
@@ -101,14 +102,14 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		i18n = resources;
-		text.textProperty().addListener(updateTracker);
+		text.codeProperty().addListener(updateTracker);
 		enableCutAction(false);
 		enableCopyAction(false);
 		enablePasteAction(clipboard.hasString());
 		//TODO bug - not only mouse, keyboard also can be used to paste?
 		text.setOnMouseMoved(event -> enablePasteAction(clipboard.hasString()));
-		text.selectedTextProperty().addListener(listener -> {
-			boolean isSelection = !text.getSelectedText().isEmpty();
+		text.selectedCodeProperty().addListener(listener -> {
+			boolean isSelection = !text.getSelectedCode().isEmpty();
 			enableCutAction(isSelection);
 			enableCopyAction(isSelection);
 		});
@@ -206,12 +207,12 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		project.makeArticle(articleTitle, articleContent);
 		article = new ObservableArticleAdapter(project.getArticle(), treeItemFactory);
 		updateBindings();
-		text.setText(articleContent);
-		text.moveCaretToStart();
+		text.setCode(articleContent);
+		text.moveStart();
 	}
 
 	private void updateBindings() {
-		article.textProperty().bind(text.textProperty());
+		article.textProperty().bind(text.codeProperty());
 		article.titleProperty().bind(tab.textProperty());
 		tree.rootProperty().bind(article.rootProperty());
 	}
@@ -243,7 +244,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 
 	private void saveFileAs(File file) {
 		try {
-			FilesFacade.writeTXT(file.getAbsolutePath(), text.getText());
+			FilesFacade.writeTXT(file.getAbsolutePath(), text.getCode());
 			tab.setText(file.getName());
 		} catch (IOException e) {
 			dialogs.makeErrorDialog(e).show();
@@ -287,7 +288,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 * is no selected text - this name will be also caption for link.
 	 */
 	public void actionInsertWikiLink() {
-		String selection = text.getSelectedText();
+		String selection = text.getSelectedCode();
 		Optional<String> result = dialogs.makeInsertWikiLinkDialog(selection, selection).showAndWait();
 		if (result.isPresent()) {
 			text.replaceSelection(result.get());
@@ -298,7 +299,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 * Shows dialog to input data for constructing link.
 	 */
 	public void actionInsertExternalLink() {
-		String selection = text.getSelectedText();
+		String selection = text.getSelectedCode();
 		Optional<String> result = dialogs.makeInsertExternalLinkDialog(selection, selection).showAndWait();
 		if (result.isPresent()) {
 			text.replaceSelection(result.get());
@@ -310,7 +311,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 * is no selected text - heading will have empty caption.
 	 */
 	public void actionInsertHeading() {
-		Optional<String> result = dialogs.makeInsertHeadingDialog(text.getSelectedText()).showAndWait();
+		Optional<String> result = dialogs.makeInsertHeadingDialog(text.getSelectedCode()).showAndWait();
 		if (result.isPresent()) {
 			String newLine = System.lineSeparator();
 			text.replaceSelection(String.join("", newLine, result.get(), newLine));
@@ -325,7 +326,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 * Shows dialog to input data for constructing template.
 	 */
 	public void actionInsertTemplate() {
-		String selection = text.getSelectedText();
+		String selection = text.getSelectedCode();
 		Optional<String> result = dialogs.makeInsertTemplateDialog(selection).showAndWait();
 		if (result.isPresent()) {
 			text.replaceSelection(result.get());
