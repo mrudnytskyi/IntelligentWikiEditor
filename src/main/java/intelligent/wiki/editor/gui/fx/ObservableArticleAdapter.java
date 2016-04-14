@@ -15,6 +15,7 @@ package intelligent.wiki.editor.gui.fx;
 
 import intelligent.wiki.editor.core_api.ASTNode;
 import intelligent.wiki.editor.core_api.Article;
+import intelligent.wiki.editor.core_api.Project;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -36,11 +37,11 @@ public class ObservableArticleAdapter implements ObservableArticle {
 	private final StringProperty text = new SimpleStringProperty();
 	private final StringProperty title = new SimpleStringProperty();
 	private final ObjectProperty<TreeItem<ASTNode>> root = new SimpleObjectProperty<>();
-	private final Article article;
+	private final Project project;
 	private final TreeItemFactory<ASTNode> treeItemFactory;
 
-	public ObservableArticleAdapter(Article article, TreeItemFactory<ASTNode> treeItemFactory) {
-		this.article = Objects.requireNonNull(article, "Null article!");
+	public ObservableArticleAdapter(Project project, TreeItemFactory<ASTNode> treeItemFactory) {
+		this.project = Objects.requireNonNull(project, "Null project!");
 		this.treeItemFactory = Objects.requireNonNull(treeItemFactory, "Null tree item factory!");
 		enableASTUpdating();
 		//TODO listener for root property, updating text on AST change
@@ -48,7 +49,10 @@ public class ObservableArticleAdapter implements ObservableArticle {
 
 	private void enableASTUpdating() {
 		text.addListener((observable, oldValue, newValue) -> {
-			root.setValue(treeItemFactory.wrapNode(article.getASTRoot()));
+			if (!newValue.isEmpty()) {
+				project.makeArticle(project.getArticle().getTitle().getName(), newValue);
+				root.setValue(treeItemFactory.wrapNode(project.getArticle().getASTRoot()));
+			}
 		});
 	}
 

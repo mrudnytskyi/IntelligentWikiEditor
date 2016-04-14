@@ -16,7 +16,6 @@ package intelligent.wiki.editor.gui.fx;
 import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
 import intelligent.wiki.editor.common.io.FilesFacade;
 import intelligent.wiki.editor.core_api.ASTNode;
-import intelligent.wiki.editor.core_api.Article;
 import intelligent.wiki.editor.core_api.Project;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
 import javafx.application.Platform;
@@ -92,7 +91,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		this.dialogs = Objects.requireNonNull(dialogs, "Null dialogs factory object!");
 		this.project = Objects.requireNonNull(project, "Null project object!");
 		this.treeItemFactory = Objects.requireNonNull(treeItems, "Tree item factory null!");
-		article = new ObservableArticleAdapter(Article.EMPTY_ARTICLE, treeItems);
+		article = new ObservableArticleAdapter(project, treeItems);
 	}
 
 	/**
@@ -204,7 +203,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	private void open(String articleTitle, String articleContent) {
 		tab.setText(articleTitle);
 		project.makeArticle(articleTitle, articleContent);
-		article = new ObservableArticleAdapter(project.getArticle(), treeItemFactory);
+		article = new ObservableArticleAdapter(project, treeItemFactory);
 		updateBindings();
 		text.setText(articleContent);
 		text.moveCaretToStart();
