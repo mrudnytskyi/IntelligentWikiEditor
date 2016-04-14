@@ -17,6 +17,7 @@ import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
 import intelligent.wiki.editor.common.io.FilesFacade;
 import intelligent.wiki.editor.core_api.ASTNode;
 import intelligent.wiki.editor.core_api.Project;
+import intelligent.wiki.editor.gui.fx.actions.JavaFxActions;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -24,8 +25,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.scene.control.*;
-import javafx.scene.input.Clipboard;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
 
@@ -37,6 +38,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static intelligent.wiki.editor.gui.actions.ActionId.*;
+import static intelligent.wiki.editor.gui.fx.actions.JavaFxAction.toButton;
+import static intelligent.wiki.editor.gui.fx.actions.JavaFxAction.toMenuItem;
+
 /**
  * Controller class for main window of wiki editor. Contains methods to make different actions.
  * Note, that all these actions are <code>public</code> to be referred from <code>fxml</code> file.
@@ -45,8 +50,6 @@ import java.util.ResourceBundle;
  * @version 20.09.2015
  */
 public class WikiEditorController implements Initializable, EventHandler<WindowEvent> {
-
-	private final Clipboard clipboard = Clipboard.getSystemClipboard();
 	@Inject
 	private final Project project;
 	@Inject
@@ -56,27 +59,20 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	private final DialogsFactory dialogs;
 	@Inject
 	private final WikiOperations wiki;
+	@FXML
+	public Menu editMenuItem;
+	@FXML
+	public ToolBar toolbar;
 	private ObservableArticle article;
 	private ResourceBundle i18n;
 	private File currentOpenedFile;
 	@FXML
-	private Button cutButton;
-	@FXML
-	private MenuItem cutMenuItem;
-	@FXML
-	private Button copyButton;
-	@FXML
-	private MenuItem copyMenuItem;
-	@FXML
-	private Button pasteButton;
-	@FXML
-	private MenuItem pasteMenuItem;
-	@FXML
 	private Tab tab;
 	@FXML
-	private WikiMarkupArea text;
+	private ObservableCodeArea text;
 	@FXML
 	private TreeView<ASTNode> tree;
+	private JavaFxActions actions;
 
 	/**
 	 * Note, that parameters can not be <code>null</code>!
@@ -100,32 +96,20 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		i18n = resources;
-		text.textProperty().addListener(updateTracker);
-		enableCutAction(false);
-		enableCopyAction(false);
-		enablePasteAction(clipboard.hasString());
-		//TODO bug - not only mouse, keyboard also can be used to paste?
-		text.setOnMouseMoved(event -> enablePasteAction(clipboard.hasString()));
-		text.selectedTextProperty().addListener(listener -> {
-			boolean isSelection = !text.getSelectedText().isEmpty();
-			enableCutAction(isSelection);
-			enableCopyAction(isSelection);
-		});
+		text.codeProperty().addListener(updateTracker);
+		actions = new JavaFxActions(text);
+		editMenuItem.getItems().addAll(
+				toMenuItem(actions.get(CUT)), toMenuItem(actions.get(COPY)), toMenuItem(actions.get(PASTE)));
+		toolbar.getItems().addAll(new Separator(Orientation.VERTICAL),
+				toButton(actions.get(CUT)), toButton(actions.get(COPY)), toButton(actions.get(PASTE)));
+		text.contentMenuProperty().setValue(createCodeAreaMenu());
 	}
 
-	private void enableCutAction(boolean state) {
-		cutButton.setDisable(!state);
-		cutMenuItem.setDisable(!state);
-	}
-
-	private void enableCopyAction(boolean state) {
-		copyButton.setDisable(!state);
-		copyMenuItem.setDisable(!state);
-	}
-
-	private void enablePasteAction(boolean state) {
-		pasteButton.setDisable(!state);
-		pasteMenuItem.setDisable(!state);
+	private ContextMenu createCodeAreaMenu() {
+		ContextMenu menu = new ContextMenu();
+		menu.getItems().addAll(
+				toMenuItem(actions.get(CUT)), toMenuItem(actions.get(COPY)), toMenuItem(actions.get(PASTE)));
+		return menu;
 	}
 
 	/**
@@ -205,12 +189,12 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		project.makeArticle(articleTitle, articleContent);
 		article = new ObservableArticleAdapter(project, treeItemFactory);
 		updateBindings();
-		text.setText(articleContent);
-		text.moveCaretToStart();
+		text.setCode(articleContent);
+		text.moveStart();
 	}
 
 	private void updateBindings() {
-		article.textProperty().bind(text.textProperty());
+		article.textProperty().bind(text.codeProperty());
 		article.titleProperty().bind(tab.textProperty());
 		tree.rootProperty().bind(article.rootProperty());
 	}
@@ -242,7 +226,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 
 	private void saveFileAs(File file) {
 		try {
-			FilesFacade.writeTXT(file.getAbsolutePath(), text.getText());
+			FilesFacade.writeTXT(file.getAbsolutePath(), text.getCode());
 			tab.setText(file.getName());
 		} catch (IOException e) {
 			dialogs.makeErrorDialog(e).show();
@@ -251,27 +235,6 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 
 	public void actionClose() {
 		dialogs.makeNotImplementedErrorDialog().show();
-	}
-
-	/**
-	 * Cuts selected text fragment.
-	 */
-	public void actionCut() {
-		text.cut();
-	}
-
-	/**
-	 * Copies selected text fragment.
-	 */
-	public void actionCopy() {
-		text.copy();
-	}
-
-	/**
-	 * Pastes selected text fragment.
-	 */
-	public void actionPaste() {
-		text.paste();
 	}
 
 	/**
@@ -286,7 +249,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 * is no selected text - this name will be also caption for link.
 	 */
 	public void actionInsertWikiLink() {
-		String selection = text.getSelectedText();
+		String selection = text.getSelectedCode();
 		Optional<String> result = dialogs.makeInsertWikiLinkDialog(selection, selection).showAndWait();
 		if (result.isPresent()) {
 			text.replaceSelection(result.get());
@@ -297,7 +260,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 * Shows dialog to input data for constructing link.
 	 */
 	public void actionInsertExternalLink() {
-		String selection = text.getSelectedText();
+		String selection = text.getSelectedCode();
 		Optional<String> result = dialogs.makeInsertExternalLinkDialog(selection, selection).showAndWait();
 		if (result.isPresent()) {
 			text.replaceSelection(result.get());
@@ -309,7 +272,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 * is no selected text - heading will have empty caption.
 	 */
 	public void actionInsertHeading() {
-		Optional<String> result = dialogs.makeInsertHeadingDialog(text.getSelectedText()).showAndWait();
+		Optional<String> result = dialogs.makeInsertHeadingDialog(text.getSelectedCode()).showAndWait();
 		if (result.isPresent()) {
 			String newLine = System.lineSeparator();
 			text.replaceSelection(String.join("", newLine, result.get(), newLine));
@@ -324,7 +287,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	 * Shows dialog to input data for constructing template.
 	 */
 	public void actionInsertTemplate() {
-		String selection = text.getSelectedText();
+		String selection = text.getSelectedCode();
 		Optional<String> result = dialogs.makeInsertTemplateDialog(selection).showAndWait();
 		if (result.isPresent()) {
 			text.replaceSelection(result.get());
