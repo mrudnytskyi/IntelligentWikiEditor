@@ -18,6 +18,7 @@ import intelligent.wiki.editor.common.io.FilesFacade;
 import intelligent.wiki.editor.core_api.ASTNode;
 import intelligent.wiki.editor.core_api.Article;
 import intelligent.wiki.editor.core_api.Project;
+import intelligent.wiki.editor.gui.fx.actions.JavaFxActions;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -25,8 +26,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.scene.control.*;
-import javafx.scene.input.Clipboard;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
 
@@ -38,6 +39,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static intelligent.wiki.editor.gui.actions.ActionId.*;
+import static intelligent.wiki.editor.gui.fx.actions.JavaFxAction.toButton;
+import static intelligent.wiki.editor.gui.fx.actions.JavaFxAction.toMenuItem;
+
 /**
  * Controller class for main window of wiki editor. Contains methods to make different actions.
  * Note, that all these actions are <code>public</code> to be referred from <code>fxml</code> file.
@@ -46,8 +51,6 @@ import java.util.ResourceBundle;
  * @version 20.09.2015
  */
 public class WikiEditorController implements Initializable, EventHandler<WindowEvent> {
-
-	private final Clipboard clipboard = Clipboard.getSystemClipboard();
 	@Inject
 	private final Project project;
 	@Inject
@@ -57,28 +60,20 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	private final DialogsFactory dialogs;
 	@Inject
 	private final WikiOperations wiki;
+	@FXML
+	public Menu editMenuItem;
+	@FXML
+	public ToolBar toolbar;
 	private ObservableArticle article;
 	private ResourceBundle i18n;
 	private File currentOpenedFile;
 	@FXML
-	private Button cutButton;
-	@FXML
-	private MenuItem cutMenuItem;
-	@FXML
-	private Button copyButton;
-	@FXML
-	private MenuItem copyMenuItem;
-	@FXML
-	private Button pasteButton;
-	@FXML
-	private MenuItem pasteMenuItem;
-	@FXML
 	private Tab tab;
 	@FXML
-	//TODO: use interface after fixing bug with enabling paste
-	private WikiMarkupArea text;
+	private ObservableCodeArea text;
 	@FXML
 	private TreeView<ASTNode> tree;
+	private JavaFxActions actions;
 
 	/**
 	 * Note, that parameters can not be <code>null</code>!
@@ -103,31 +98,19 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	public void initialize(URL location, ResourceBundle resources) {
 		i18n = resources;
 		text.codeProperty().addListener(updateTracker);
-		enableCutAction(false);
-		enableCopyAction(false);
-		enablePasteAction(clipboard.hasString());
-		//TODO bug - not only mouse, keyboard also can be used to paste?
-		text.setOnMouseMoved(event -> enablePasteAction(clipboard.hasString()));
-		text.selectedCodeProperty().addListener(listener -> {
-			boolean isSelection = !text.getSelectedCode().isEmpty();
-			enableCutAction(isSelection);
-			enableCopyAction(isSelection);
-		});
+		actions = new JavaFxActions(text);
+		editMenuItem.getItems().addAll(
+				toMenuItem(actions.get(CUT)), toMenuItem(actions.get(COPY)), toMenuItem(actions.get(PASTE)));
+		toolbar.getItems().addAll(new Separator(Orientation.VERTICAL),
+				toButton(actions.get(CUT)), toButton(actions.get(COPY)), toButton(actions.get(PASTE)));
+		text.contentMenuProperty().setValue(createCodeAreaMenu());
 	}
 
-	private void enableCutAction(boolean state) {
-		cutButton.setDisable(!state);
-		cutMenuItem.setDisable(!state);
-	}
-
-	private void enableCopyAction(boolean state) {
-		copyButton.setDisable(!state);
-		copyMenuItem.setDisable(!state);
-	}
-
-	private void enablePasteAction(boolean state) {
-		pasteButton.setDisable(!state);
-		pasteMenuItem.setDisable(!state);
+	private ContextMenu createCodeAreaMenu() {
+		ContextMenu menu = new ContextMenu();
+		menu.getItems().addAll(
+				toMenuItem(actions.get(CUT)), toMenuItem(actions.get(COPY)), toMenuItem(actions.get(PASTE)));
+		return menu;
 	}
 
 	/**
@@ -253,27 +236,6 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 
 	public void actionClose() {
 		dialogs.makeNotImplementedErrorDialog().show();
-	}
-
-	/**
-	 * Cuts selected text fragment.
-	 */
-	public void actionCut() {
-		text.cut();
-	}
-
-	/**
-	 * Copies selected text fragment.
-	 */
-	public void actionCopy() {
-		text.copy();
-	}
-
-	/**
-	 * Pastes selected text fragment.
-	 */
-	public void actionPaste() {
-		text.paste();
 	}
 
 	/**

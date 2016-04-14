@@ -75,42 +75,8 @@
                            </accelerator></MenuItem>
                      </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" text="%menu.edit">
+                  <Menu fx:id="editMenuItem" mnemonicParsing="false" text="%menu.edit">
                      <items>
-                        <MenuItem fx:id="cutMenuItem" mnemonicParsing="false" onAction="#actionCut" text="%menu.cut">
-                           <graphic>
-                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@images/cut_small.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator></MenuItem>
-                        <MenuItem fx:id="copyMenuItem" mnemonicParsing="false" onAction="#actionCopy" text="%menu.copy">
-                           <graphic>
-                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@images/copy_small.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator></MenuItem>
-                         <MenuItem fx:id="pasteMenuItem" mnemonicParsing="false" onAction="#actionPaste"
-                                   text="%menu.paste">
-                           <graphic>
-                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@images/paste_small.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator></MenuItem>
                         <MenuItem mnemonicParsing="false" onAction="#actionSelectAll" text="%menu.select-all">
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" />
@@ -227,7 +193,7 @@
                   </Menu>
                </menus>
             </MenuBar>
-            <ToolBar prefHeight="62.0" prefWidth="1024.0">
+             <ToolBar fx:id="toolbar" prefHeight="62.0" prefWidth="1024.0">
               <items>
                   <MenuButton mnemonicParsing="false" prefHeight="48.0" prefWidth="60.0">
                     <items>
@@ -255,43 +221,6 @@
                      </graphic>
                      <tooltip>
                         <Tooltip text="%toolbar.save" />
-                     </tooltip></Button>
-                  <Separator orientation="VERTICAL" />
-                  <Button fx:id="cutButton" mnemonicParsing="false" onAction="#actionCut" prefHeight="48.0"
-                          prefWidth="48.0">
-                     <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/cut_big.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <tooltip>
-                        <Tooltip text="%toolbar.cut" />
-                     </tooltip></Button>
-                  <Button fx:id="copyButton" mnemonicParsing="false" onAction="#actionCopy" prefHeight="48.0"
-                          prefWidth="48.0">
-                     <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/copy_big.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <tooltip>
-                        <Tooltip text="%toolbar.copy" />
-                     </tooltip></Button>
-                  <Button fx:id="pasteButton" mnemonicParsing="false" onAction="#actionPaste" prefHeight="48.0"
-                          prefWidth="48.0">
-                     <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/paste_big.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <tooltip>
-                        <Tooltip text="%toolbar.paste" />
                      </tooltip></Button>
                   <Separator orientation="VERTICAL" />
                  <Button mnemonicParsing="false" onAction="#actionInsertWikiLink" prefHeight="48.0" prefWidth="48.0">
