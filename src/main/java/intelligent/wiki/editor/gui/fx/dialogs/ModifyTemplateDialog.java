@@ -13,8 +13,7 @@
  */
 package intelligent.wiki.editor.gui.fx.dialogs;
 
-import intelligent.wiki.editor.bot.io.wiki.templatedata.TemplateArgument;
-import intelligent.wiki.editor.bot.io.wiki.templatedata.TemplateDeclaration;
+import intelligent.wiki.editor.io_impl.wiki.template_data.TemplateArgument;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -162,7 +161,20 @@ public class ModifyTemplateDialog extends InputDialog {
 	@Override
 	public String getInputtedResult() {
 		String templateName = addPrefixIfNotPresent(nameInput.getText(), wiki.getTemplateNamespacePrefix());
-		return new TemplateDeclaration(templateName, parameters).toString();
+		return createTemplateDeclaration(templateName);
+	}
+
+	private String createTemplateDeclaration(String templateName) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("{{").append(templateName);
+		if (!parameters.isEmpty()) {
+			sb.append(System.lineSeparator());
+			for (TemplateArgument current : parameters) {
+				sb.append("|").append(current).append(System.lineSeparator());
+			}
+		}
+		sb.append("}}");
+		return sb.toString();
 	}
 
 	private String addPrefixIfNotPresent(String arg, String prefix) {

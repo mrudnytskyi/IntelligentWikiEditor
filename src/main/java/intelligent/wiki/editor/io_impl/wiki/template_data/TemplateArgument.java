@@ -12,7 +12,9 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.bot.io.wiki.templatedata;
+package intelligent.wiki.editor.io_impl.wiki.template_data;
+
+import intelligent.wiki.editor.io_api.TemplateParameter;
 
 /**
  * Class, representing template argument: {@link TemplateParameter template parameter}

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,7 +11,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package intelligent.wiki.editor.bot.io.wiki;
+package intelligent.wiki.editor.io_api;
 
 /**
  * Enumeration, containing namespace constants, such as "0" stands for Main
@@ -21,7 +21,7 @@ package intelligent.wiki.editor.bot.io.wiki;
  * @author Myroslav Rudnytskyi
  * @version 23.04.2015
  */
-enum WikiNamespace {
+public enum WikiNamespace {
 	MAIN(0),
 	TEMPLATE(10),
 	CATEGORY(14);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,18 +11,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package intelligent.wiki.editor.bot.io.wiki;
-
-import intelligent.wiki.editor.bot.io.wiki.templatedata.TemplateParameter;
+package intelligent.wiki.editor.io_api;
 
 import java.io.IOException;
 import java.util.List;
 
 /**
- * Interface specifying set of Wikipedia operations. Implemented by {@link WikiFacade}.
- * It is useful option to enhance testability, as it can easily be mocked or stubbed.
- * Note, that it's methods can throw {@link IOException} and their results depend on
- * current configured language.
+ * Interface specifying set of Wikipedia operations. Note, that it's methods can throw
+ * {@link IOException} and their results depend on current configured language.
  *
  * @author Myroslav Rudnytskyi
  * @version 01.10.2015

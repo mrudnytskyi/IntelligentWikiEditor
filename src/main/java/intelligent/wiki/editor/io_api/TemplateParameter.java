@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,15 +11,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package intelligent.wiki.editor.bot.io.wiki.templatedata;
+package intelligent.wiki.editor.io_api;
 
 import java.util.Arrays;
 import java.util.Optional;
 
 /**
- * Interface for template parameter object. Implemented by {@link TemplateParameterImp}.
- * It is useful option to enhance testability, as it can easily be mocked or stubbed.
- * See <a href=https://www.mediawiki.org/wiki/Extension:TemplateData>"Param object" table</a> for details.
+ * Interface for template parameter object. See
+ * <a href=https://www.mediawiki.org/wiki/Extension:TemplateData>"Param object" table</a> for details.
  *
  * @author Myroslav Rudnytskyi
  * @version 17.10.2015
@@ -143,7 +142,7 @@ public interface TemplateParameter {
 			this.str = str;
 		}
 
-		static TemplateParameterType parse(String str) {
+		public static TemplateParameterType parse(String str) {
 			Optional<TemplateParameterType> searchResult =
 					Arrays.stream(values())
 							.filter(current -> current.toString().equals(str))

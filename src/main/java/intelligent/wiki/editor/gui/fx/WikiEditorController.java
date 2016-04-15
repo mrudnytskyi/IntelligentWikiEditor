@@ -13,12 +13,12 @@
  */
 package intelligent.wiki.editor.gui.fx;
 
-import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
-import intelligent.wiki.editor.common.io.FilesFacade;
 import intelligent.wiki.editor.core_api.ASTNode;
 import intelligent.wiki.editor.core_api.Project;
 import intelligent.wiki.editor.gui.fx.actions.JavaFxActions;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
+import intelligent.wiki.editor.io_api.WikiOperations;
+import intelligent.wiki.editor.io_impl.FilesFacade;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

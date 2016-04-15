@@ -11,13 +11,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package intelligent.wiki.editor.common.io;
+package intelligent.wiki.editor.io;
 
+import intelligent.wiki.editor.io_impl.FilesFacade;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Class for testing {@link intelligent.wiki.editor.common.io.FilesFacade} class.
+ * Class for testing {@link FilesFacade} class.
  *
  * @author Myroslav Rudnytskyi
  * @version 30.01.2016

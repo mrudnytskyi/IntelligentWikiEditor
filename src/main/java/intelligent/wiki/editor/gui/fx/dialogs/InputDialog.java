@@ -13,9 +13,9 @@
  */
 package intelligent.wiki.editor.gui.fx.dialogs;
 
-import intelligent.wiki.editor.bot.io.wiki.WikiFacade;
-import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
 import intelligent.wiki.editor.gui.fx.ResourceBundleFactory;
+import intelligent.wiki.editor.io_api.WikiOperations;
+import intelligent.wiki.editor.io_impl.wiki.WikiFacade;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,9 +11,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package intelligent.wiki.editor.bot.io.wiki;
+package intelligent.wiki.editor.io_impl.wiki;
 
-import intelligent.wiki.editor.bot.io.wiki.templatedata.TemplateParameter;
+import intelligent.wiki.editor.io_api.Language;
+import intelligent.wiki.editor.io_api.TemplateParameter;
+import intelligent.wiki.editor.io_api.WikiNamespace;
+import intelligent.wiki.editor.io_api.WikiOperations;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

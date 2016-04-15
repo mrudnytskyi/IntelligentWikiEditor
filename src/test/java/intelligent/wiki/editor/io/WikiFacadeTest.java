@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,8 +11,10 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package intelligent.wiki.editor.bot.io.wiki;
+package intelligent.wiki.editor.io;
 
+import intelligent.wiki.editor.io_api.WikiOperations;
+import intelligent.wiki.editor.io_impl.wiki.WikiFacade;
 import org.junit.Assert;
 import org.junit.Test;
 

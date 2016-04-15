@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.common.io;
+package intelligent.wiki.editor.io;
 
 import java.util.Arrays;
 import java.util.List;

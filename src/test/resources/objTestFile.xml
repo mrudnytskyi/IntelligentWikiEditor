@@ -1,4 +1,4 @@
-<intelligent.wiki.editor.common.io.XMLTestObject>
+<intelligent.wiki.editor.io.XMLTestObject>
   <number>1994</number>
   <array>
     <double>2.1</double>
@@ -13,4 +13,4 @@
       <string>~!@#$%^&amp;|:&quot;&lt;&gt;`\&apos;;/.,</string>
     </a>
   </list>
-</intelligent.wiki.editor.common.io.XMLTestObject>
+</intelligent.wiki.editor.io.XMLTestObject>

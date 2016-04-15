@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,13 +11,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package intelligent.wiki.editor.bot.io.wiki
+package intelligent.wiki.editor.io_impl.wiki
 
 import groovy.json.JsonSlurper
 import groovy.transform.PackageScope
 import groovy.util.slurpersupport.GPathResult
-import intelligent.wiki.editor.bot.io.wiki.templatedata.TemplateParameter
-import intelligent.wiki.editor.bot.io.wiki.templatedata.TemplateParameterBuilder
+import intelligent.wiki.editor.io_api.TemplateParameter
+import intelligent.wiki.editor.io_impl.wiki.template_data.TemplateParameterBuilder
 
 /**
  * This utility class provide some methods to work with

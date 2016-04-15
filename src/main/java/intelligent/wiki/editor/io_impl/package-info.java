@@ -13,9 +13,10 @@
  */
 
 /**
- * Package, containing classes for common use in many projects.
+ * Package, containing classes for interaction with environment: files,
+ * Internet, databases and so on.
  *
  * @author Myroslav Rudnytskyi
  * @version 30.01.2016
  */
-package intelligent.wiki.editor.common;
+package intelligent.wiki.editor.io_impl;

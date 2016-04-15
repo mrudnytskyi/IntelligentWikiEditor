@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,11 +11,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
+
 /**
- * Package, containing classes for interaction with Wikipedia
- * <a href=https://www.mediawiki.org/wiki/Extension:TemplateData>TemplateData extension</a>
+ * Package, containing APIs for interaction with environment: files,
+ * Internet, databases and so on.
  *
  * @author Myroslav Rudnytskyi
- * @version 17.10.2015
+ * @version 30.01.2016
  */
-package intelligent.wiki.editor.bot.io.wiki.templatedata;
+package intelligent.wiki.editor.io_api;

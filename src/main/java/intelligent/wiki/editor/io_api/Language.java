@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Myroslav Rudnytskyi
+ * Copyright (C) 2016 Myroslav Rudnytskyi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,7 +11,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package intelligent.wiki.editor.bot.io.wiki;
+package intelligent.wiki.editor.io_api;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -24,7 +24,7 @@ import java.util.Optional;
  * @author Myroslav Rudnytskyi
  * @version 27.10.2014
  */
-enum Language {
+public enum Language {
 	UKRAINIAN("uk", "Категорія:", "Шаблон:"),
 	ENGLISH("en", "Category:", "Template:");
 
@@ -38,7 +38,7 @@ enum Language {
 		this.templatePrefix = templatePrefix;
 	}
 
-	static Language createLanguage(Locale locale) {
+	public static Language createLanguage(Locale locale) {
 		assert locale != null;
 		String languageCode = locale.getLanguage();
 
@@ -52,15 +52,15 @@ enum Language {
 		throw new RuntimeException("Add new language constant for " + languageCode);
 	}
 
-	String getCode() {
+	public String getCode() {
 		return code;
 	}
 
-	String getCategoryPrefix() {
+	public String getCategoryPrefix() {
 		return categoryPrefix;
 	}
 
-	String getTemplatePrefix() {
+	public String getTemplatePrefix() {
 		return templatePrefix;
 	}
 

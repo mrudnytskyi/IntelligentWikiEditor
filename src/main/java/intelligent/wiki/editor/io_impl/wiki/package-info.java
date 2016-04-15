@@ -13,10 +13,10 @@
  */
 
 /**
- * Package, containing classes for interaction with environment: files,
- * Internet, databases and so on.
+ * Package, containing classes for interaction with Wikipedia using
+ * <a href=https://www.mediawiki.org/wiki/API:Main_page>MediaWiki API</a>
  *
  * @author Myroslav Rudnytskyi
- * @version 30.01.2016
+ * @version 09.10.2015
  */
-package intelligent.wiki.editor.common.io;
+package intelligent.wiki.editor.io_impl.wiki;

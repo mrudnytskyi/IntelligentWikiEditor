@@ -13,8 +13,6 @@
  */
 package intelligent.wiki.editor.spring;
 
-import intelligent.wiki.editor.bot.io.wiki.WikiFacade;
-import intelligent.wiki.editor.bot.io.wiki.WikiOperations;
 import intelligent.wiki.editor.core_api.ASTNode;
 import intelligent.wiki.editor.core_api.Parser;
 import intelligent.wiki.editor.core_api.Project;
@@ -23,6 +21,8 @@ import intelligent.wiki.editor.core_impl.sweble.SwebleParser;
 import intelligent.wiki.editor.gui.fx.TreeItemFactory;
 import intelligent.wiki.editor.gui.fx.WikiEditorController;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
+import intelligent.wiki.editor.io_api.WikiOperations;
+import intelligent.wiki.editor.io_impl.wiki.WikiFacade;
 import intelligent.wiki.editor.services_api.inspections.Problems;
 import intelligent.wiki.editor.services_impl.inspections.ProblemsHolder;
 import javafx.scene.control.TreeItem;
