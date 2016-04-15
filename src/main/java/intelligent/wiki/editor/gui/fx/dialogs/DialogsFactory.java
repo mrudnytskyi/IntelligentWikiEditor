@@ -18,6 +18,7 @@ import intelligent.wiki.editor.gui.fx.ResourceBundleFactory;
 import intelligent.wiki.editor.io_api.WikiOperations;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
@@ -80,16 +81,20 @@ public class DialogsFactory {
 
 	private Dialog makeErrorDialog(String title, String header, String content) {
 		log.severe(header + " " + content);
-		return prepareDialog(new Alert(AlertType.ERROR), title, header, content);
+		Alert dialog = new Alert(AlertType.ERROR);
+		dialog.setGraphic(new ImageView("images/error_big.png"));
+		return prepareDialog(dialog, title, header, content);
 	}
 
 	/**
-	 * Method is used to create (not show!) exit dialog.
+	 * Method is used to create exit dialog.
 	 *
 	 * @return dialog with question, "OK" and "Cancel" buttons
 	 */
 	public Dialog makeExitDialog() {
-		return setI18nStrings(new Alert(AlertType.CONFIRMATION),
+		Alert dialog = new Alert(AlertType.CONFIRMATION);
+		dialog.setGraphic(new ImageView("images/question_big.png"));
+		return setI18nStrings(dialog,
 				"question-dialog.title",
 				"question-dialog.header-text.exit",
 				"question-dialog.content-text.exit");
@@ -136,7 +141,9 @@ public class DialogsFactory {
 	 */
 	public Dialog makeAboutDialog() {
 		//TODO: expand message to show also used libraries and their license, version and so on
-		return prepareDialog(new Alert(AlertType.INFORMATION),
+		Alert dialog = new Alert(AlertType.INFORMATION);
+		dialog.setGraphic(new ImageView("images/info_big.png"));
+		return prepareDialog(dialog,
 				i18n.getString("info-dialog.title"),
 				i18n.getString("info-dialog.header-text.about"),
 				"version " + version + " Copyright (c) Myroslav Rudnytskyi, Kyiv, Ukraine, 2014-2016"
