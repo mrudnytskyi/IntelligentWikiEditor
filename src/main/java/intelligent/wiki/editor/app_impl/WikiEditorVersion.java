@@ -12,19 +12,33 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.common.app;
+package intelligent.wiki.editor.app_impl;
+
+import intelligent.wiki.editor.app_api.Version;
 
 /**
- * Interface provides access to the information about application version.
- *
  * @author Myroslav Rudnytskyi
  * @version 30.01.2016
  */
-public interface Version {
+public class WikiEditorVersion implements Version {
 
-	int getMajorVersion();
+	@Override
+	public int getMajorVersion() {
+		return 0;
+	}
 
-	int getMinorVersion();
+	@Override
+	public int getMinorVersion() {
+		return 1;
+	}
 
-	int getBuildNumber();
+	@Override
+	public int getBuildNumber() {
+		return 0;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%d.%d.%d", getMajorVersion(), getMinorVersion(), getBuildNumber());
+	}
 }

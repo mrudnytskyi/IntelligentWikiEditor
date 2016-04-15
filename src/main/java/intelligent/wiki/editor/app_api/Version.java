@@ -12,10 +12,19 @@
  * GNU General Public License for more details.
  */
 
+package intelligent.wiki.editor.app_api;
+
 /**
- * Package, containing classes, common for every application.
+ * Interface provides access to the information about application version.
  *
  * @author Myroslav Rudnytskyi
  * @version 30.01.2016
  */
-package intelligent.wiki.editor.common.app;
+public interface Version {
+
+	int getMajorVersion();
+
+	int getMinorVersion();
+
+	int getBuildNumber();
+}

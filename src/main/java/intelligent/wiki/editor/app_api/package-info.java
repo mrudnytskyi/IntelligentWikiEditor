@@ -12,28 +12,10 @@
  * GNU General Public License for more details.
  */
 
-package intelligent.wiki.editor.app;
-
-import intelligent.wiki.editor.common.app.Version;
-
 /**
+ * Package, containing APIs for application-level classes.
+ *
  * @author Myroslav Rudnytskyi
  * @version 30.01.2016
  */
-public class WikiEditorVersion implements Version {
-
-	@Override
-	public int getMajorVersion() {
-		return 0;
-	}
-
-	@Override
-	public int getMinorVersion() {
-		return 1;
-	}
-
-	@Override
-	public int getBuildNumber() {
-		return 0;
-	}
-}
+package intelligent.wiki.editor.app_api;

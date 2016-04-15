@@ -18,4 +18,4 @@
  * @author Myroslav Rudnytskyi
  * @version 30.01.2016
  */
-package intelligent.wiki.editor.app;
+package intelligent.wiki.editor.app_impl;
