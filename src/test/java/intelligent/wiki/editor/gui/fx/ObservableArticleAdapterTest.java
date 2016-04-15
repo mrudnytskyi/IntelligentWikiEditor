@@ -17,6 +17,7 @@ package intelligent.wiki.editor.gui.fx;
 import intelligent.wiki.editor.core_api.Article;
 import intelligent.wiki.editor.core_api.Parser;
 import intelligent.wiki.editor.core_api.Project;
+import intelligent.wiki.editor.services_api.inspections.Problems;
 import intelligent.wiki.editor.spring.TestConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,6 +53,11 @@ public class ObservableArticleAdapterTest {
 
 			@Override
 			public Parser getParser() {
+				return null;
+			}
+
+			@Override
+			public Problems getProblemsHolder() {
 				return null;
 			}
 		}, null);
