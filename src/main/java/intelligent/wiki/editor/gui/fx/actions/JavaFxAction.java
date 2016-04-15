@@ -26,7 +26,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -36,7 +35,7 @@ import java.util.ResourceBundle;
  * @version 07.04.2016
  */
 public class JavaFxAction implements Action {
-	private static final ResourceBundle i18n = ResourceBundleFactory.getBundle(new Locale("uk", "ua"));
+	private static final ResourceBundle i18n = ResourceBundleFactory.getBundle();
 	private final String text;
 	private final KeyCombination accelerator;
 	private final Image icon;

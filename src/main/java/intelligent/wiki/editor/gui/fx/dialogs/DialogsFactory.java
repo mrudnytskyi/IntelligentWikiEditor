@@ -24,7 +24,6 @@ import javafx.scene.layout.Priority;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -37,7 +36,7 @@ import java.util.logging.Logger;
  */
 public class DialogsFactory {
 
-	private static final ResourceBundle i18n = ResourceBundleFactory.getBundle(new Locale("uk", "ua"));
+	private static final ResourceBundle i18n = ResourceBundleFactory.getBundle();
 	private static final Logger log = Logger.getLogger(DialogsFactory.class.getName());
 	private final Version version;
 	private final WikiOperations wiki;

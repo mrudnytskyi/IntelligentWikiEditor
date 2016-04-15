@@ -22,8 +22,6 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
@@ -63,18 +61,12 @@ public class WikiEditor extends Application {
 	}
 
 	private Parent loadApplicationRoot() throws IOException {
-		SpringFXMLLoader loader = new SpringFXMLLoader(createI18n());
+		SpringFXMLLoader loader = new SpringFXMLLoader(ResourceBundleFactory.getBundle());
 		URL fxml = new File(WIKI_EDITOR_ROOT_FILE).toURI().toURL();
 		Parent applicationRoot = loader.load(fxml);
 		primaryStage.setOnCloseRequest(loader.getController());
 		LOG.info("Application root loaded successfully!");
 		return applicationRoot;
-	}
-
-	private ResourceBundle createI18n() {
-		//TODO fix for my computer: remove in production!
-		Locale current = Locale.getDefault().equals(new Locale("ru", "RU")) ? new Locale("uk") : Locale.getDefault();
-		return ResourceBundleFactory.getBundle(current);
 	}
 
 	private void showApplicationRoot(Parent root) {
