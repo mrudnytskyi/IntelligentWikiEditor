@@ -181,17 +181,6 @@ public class DialogsFactory {
 	}
 
 	/**
-	 * @param headingText text, placed in heading
-	 * @return created object of {@link ModifyHeadingDialog}
-	 */
-	public Dialog<String> makeInsertHeadingDialog(String headingText) {
-		return new ModifyHeadingDialog(headingText,
-				"insert-heading-dialog.title",
-				"insert-heading-dialog.header",
-				"insert-heading-dialog.content", i18n);
-	}
-
-	/**
 	 * @param captionText text, placed in template name text field
 	 * @return created object of {@link ModifyTemplateDialog}
 	 */

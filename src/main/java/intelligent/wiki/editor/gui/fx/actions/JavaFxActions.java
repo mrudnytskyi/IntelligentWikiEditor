@@ -18,6 +18,7 @@ import intelligent.wiki.editor.gui.actions.Action;
 import intelligent.wiki.editor.gui.actions.ActionId;
 import intelligent.wiki.editor.gui.actions.Actions;
 import intelligent.wiki.editor.gui.fx.ObservableCodeArea;
+import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -27,11 +28,15 @@ import javafx.scene.input.Clipboard;
 import org.reactfx.EventStreams;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Objects;
+import java.util.Optional;
 
 import static intelligent.wiki.editor.gui.actions.ActionId.*;
 import static intelligent.wiki.editor.gui.fx.actions.JavaFxActionBuilder.action;
+import static java.lang.String.join;
+import static java.lang.System.lineSeparator;
 
 /**
  * Action holder implementation for JavaFx.
@@ -45,8 +50,10 @@ public class JavaFxActions implements Actions {
 	private final ReadOnlyBooleanProperty alwaysFalse = new SimpleBooleanProperty(false);
 	private final BooleanProperty noSelection = new SimpleBooleanProperty();
 	private final BooleanProperty noStringInClipboard = new SimpleBooleanProperty();
+	private final DialogsFactory dialogs;
 
-	public JavaFxActions(ObservableCodeArea area, TreeView tree) {
+	public JavaFxActions(ObservableCodeArea area, TreeView tree, DialogsFactory dialogs) {
+		this.dialogs = Objects.requireNonNull(dialogs, "Null dialogs!");
 		Objects.requireNonNull(area, "Null code area!");
 		Objects.requireNonNull(tree, "Null tree view!");
 		initProperties(area);
@@ -73,23 +80,44 @@ public class JavaFxActions implements Actions {
 				.withTooltip("toolbar.request-focus-text").withDisabled(alwaysFalse)
 				.withHandler(event -> areaControl.requestFocus()).build());
 		init(SELECT_ALL, action().withText("menu.select-all").withAccelerator("Shortcut+A")
-				.withTooltip("toolbar.select-all").withDisabled(alwaysFalse).withHandler(event -> area.selectAll())
-				.build());
-
-//		init(, action().withText().withAccelerator().withIcon().withSmallIcon().withTooltip().withDisabled().withHandler().build());
-//		init(, action().withText().withAccelerator().withIcon().withSmallIcon().withTooltip().withDisabled().withHandler().build());
-//		init(, action().withText().withAccelerator().withIcon().withSmallIcon().withTooltip().withDisabled().withHandler().build());
-//		init(, action().withText().withAccelerator().withIcon().withSmallIcon().withTooltip().withDisabled().withHandler().build());
-//		init(, action().withText().withAccelerator().withIcon().withSmallIcon().withTooltip().withDisabled().withHandler().build());
-//		init(, action().withText().withAccelerator().withIcon().withSmallIcon().withTooltip().withDisabled().withHandler().build());
-//		init(, action().withText().withAccelerator().withIcon().withSmallIcon().withTooltip().withDisabled().withHandler().build());
-//		init(, action().withText().withAccelerator().withIcon().withSmallIcon().withTooltip().withDisabled().withHandler().build());
-//		init(, action().withText().withAccelerator().withIcon().withSmallIcon().withTooltip().withDisabled().withHandler().build());
-//		init(, action().withText().withAccelerator().withIcon().withSmallIcon().withTooltip().withDisabled().withHandler().build());
-//		init(, action().withText().withAccelerator().withIcon().withSmallIcon().withTooltip().withDisabled().withHandler().build());
-//		init(, action().withText().withAccelerator().withIcon().withSmallIcon().withTooltip().withDisabled().withHandler().build());
-//		init(, action().withText().withAccelerator().withIcon().withSmallIcon().withTooltip().withDisabled().withHandler().build());
-//		init(, action().withText().withAccelerator().withIcon().withSmallIcon().withTooltip().withDisabled().withHandler().build());
+				.withTooltip("toolbar.select-all").withDisabled(alwaysFalse)
+				.withHandler(event -> area.selectAll()).build());
+		init(INSERT_WIKI_LINK, action().withText("menu.insert-wiki-link").withAccelerator("Shortcut+f1")
+				.withIcon("images/wikilink_big.png").withSmallIcon("images/wikilink_small.png")
+				.withTooltip("toolbar.insert-wiki-link").withDisabled(alwaysFalse)
+				.withHandler(event -> insertWikiLink(area)).build());
+		init(INSERT_H2, action().withText("menu.insert-heading-2").withAccelerator("Shortcut+f2")
+				.withIcon("images/heading_2_big.png").withSmallIcon("images/heading_2_small.png")
+				.withTooltip("toolbar.insert-heading-2").withDisabled(alwaysFalse)
+				.withHandler(event -> insertHeading(area, 2)).build());
+		init(INSERT_H3, action().withText("menu.insert-heading-3").withAccelerator("Shortcut+f3")
+				.withIcon("images/heading_3_big.png").withSmallIcon("images/heading_3_small.png")
+				.withTooltip("toolbar.insert-heading-3").withDisabled(alwaysFalse)
+				.withHandler(event -> insertHeading(area, 3)).build());
+		init(INSERT_H4, action().withText("menu.insert-heading-4").withAccelerator("Shortcut+f4")
+				.withIcon("images/heading_4_big.png").withSmallIcon("images/heading_4_small.png")
+				.withTooltip("toolbar.insert-heading-4").withDisabled(alwaysFalse)
+				.withHandler(event -> insertHeading(area, 4)).build());
+		init(INSERT_H5, action().withText("menu.insert-heading-5").withAccelerator("Shortcut+f5")
+				.withIcon("images/heading_5_big.png").withSmallIcon("images/heading_5_small.png")
+				.withTooltip("toolbar.insert-heading-5").withDisabled(alwaysFalse)
+				.withHandler(event -> insertHeading(area, 5)).build());
+		init(INSERT_H6, action().withText("menu.insert-heading-6").withAccelerator("Shortcut+f6")
+				.withIcon("images/heading_6_big.png").withSmallIcon("images/heading_6_small.png")
+				.withTooltip("toolbar.insert-heading-6").withDisabled(alwaysFalse)
+				.withHandler(event -> insertHeading(area, 6)).build());
+		init(INSERT_EXTERNAL_LINK, action().withText("menu.insert-external-link").withAccelerator("Shortcut+f7")
+				.withIcon("images/link_big.png").withSmallIcon("images/link_small.png")
+				.withTooltip("toolbar.insert-external-link").withDisabled(alwaysFalse)
+				.withHandler(event -> insertExternalLink(area)).build());
+		init(INSERT_TEMPLATE, action().withText("menu.insert-template").withAccelerator("Shortcut+f8")
+				.withIcon("images/template_big.png").withSmallIcon("images/template_small.png")
+				.withTooltip("toolbar.insert-template").withDisabled(alwaysFalse)
+				.withHandler(event -> insertTemplate(area)).build());
+		init(ADD_CATEGORIES, action().withText("menu.add-categories").withAccelerator("Shortcut+f9")
+				.withIcon("images/category_big.png").withSmallIcon("images/category_small.png")
+				.withTooltip("toolbar.add-categories").withDisabled(alwaysFalse)
+				.withHandler(event -> addCategories()).build());
 	}
 
 	private void initProperties(ObservableCodeArea area) {
@@ -109,6 +137,46 @@ public class JavaFxActions implements Actions {
 			tree.getRoot().setExpanded(true);
 			tree.getFocusModel().focus(0);
 		}
+	}
+
+	private void insertWikiLink(ObservableCodeArea area) {
+		String selection = area.getSelectedCode();
+		Optional<String> result = dialogs.makeInsertWikiLinkDialog(selection, selection).showAndWait();
+		if (result.isPresent()) {
+			area.replaceSelection(result.get());
+		}
+	}
+
+	private void insertExternalLink(ObservableCodeArea area) {
+		String selection = area.getSelectedCode();
+		Optional<String> result = dialogs.makeInsertExternalLinkDialog(selection, selection).showAndWait();
+		if (result.isPresent()) {
+			area.replaceSelection(result.get());
+		}
+	}
+
+	private void insertHeading(ObservableCodeArea area, int headingType) {
+		String headingText = (area.getSelectedCode() == null) ? "" : area.getSelectedCode().trim();
+		String header = createHeader(headingType);
+		area.replaceSelection(join("", lineSeparator(), join(" ", header, headingText, header), lineSeparator()));
+	}
+
+	private String createHeader(int headingType) {
+		char[] headerChars = new char[headingType];
+		Arrays.fill(headerChars, '=');
+		return String.valueOf(headerChars);
+	}
+
+	private void insertTemplate(ObservableCodeArea area) {
+		String selection = area.getSelectedCode();
+		Optional<String> result = dialogs.makeInsertTemplateDialog(selection).showAndWait();
+		if (result.isPresent()) {
+			area.replaceSelection(result.get());
+		}
+	}
+
+	public void addCategories() {
+		dialogs.makeNotImplementedErrorDialog().show();
 	}
 
 	@Override

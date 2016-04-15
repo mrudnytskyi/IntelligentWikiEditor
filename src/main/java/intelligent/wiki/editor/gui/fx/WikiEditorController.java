@@ -77,9 +77,9 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	/**
 	 * Note, that parameters can not be <code>null</code>!
 	 *
-	 * @param wiki    object, performing operations with Wikipedia
-	 * @param dialogs object, creating dialogs
-	 * @param project project object
+	 * @param wiki      object, performing operations with Wikipedia
+	 * @param dialogs   object, creating dialogs
+	 * @param project   project object
 	 * @param treeItems factory for tree items
 	 */
 	public WikiEditorController(WikiOperations wiki, DialogsFactory dialogs, Project project, TreeItemFactory<ASTNode> treeItems) {
@@ -97,10 +97,9 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	public void initialize(URL location, ResourceBundle resources) {
 		i18n = resources;
 		text.codeProperty().addListener(updateTracker);
-		actions = new JavaFxActions(text, tree);
+		actions = new JavaFxActions(text, tree, dialogs);
 		createMainMenu();
-		toolbar.getItems().addAll(new Separator(Orientation.VERTICAL),
-				toButton(actions.get(CUT)), toButton(actions.get(COPY)), toButton(actions.get(PASTE)));
+		createToolBar();
 		text.contentMenuProperty().setValue(createCodeAreaMenu());
 	}
 
@@ -109,6 +108,18 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		menu.getItems().addAll(
 				toMenuItem(actions.get(CUT)), toMenuItem(actions.get(COPY)), toMenuItem(actions.get(PASTE)));
 		return menu;
+	}
+
+	private void createToolBar() {
+		toolbar.getItems().addAll(
+				new Separator(Orientation.VERTICAL),
+				toButton(actions.get(CUT)), toButton(actions.get(COPY)), toButton(actions.get(PASTE)),
+				new Separator(Orientation.VERTICAL),
+				toButton(actions.get(INSERT_H2)), toButton(actions.get(INSERT_H3)),
+				toButton(actions.get(INSERT_H4)), toButton(actions.get(INSERT_H5)),
+				toButton(actions.get(INSERT_H6)), toButton(actions.get(INSERT_WIKI_LINK)),
+				toButton(actions.get(INSERT_EXTERNAL_LINK)), toButton(actions.get(INSERT_TEMPLATE)),
+				toButton(actions.get(ADD_CATEGORIES)));
 	}
 
 	private void createMainMenu() {
@@ -124,7 +135,20 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 				toMenuItem(actions.get(REQUEST_FOCUS_TREE)), toMenuItem(actions.get(REQUEST_FOCUS_TEXT))
 		);
 
-		menubar.getMenus().addAll(editMenu, navigationMenu);
+		Menu sourceMenu = new Menu(i18n.getString("menu.source"), null,
+				toMenuItem(actions.get(INSERT_H2)),
+				toMenuItem(actions.get(INSERT_H3)),
+				toMenuItem(actions.get(INSERT_H4)),
+				toMenuItem(actions.get(INSERT_H5)),
+				toMenuItem(actions.get(INSERT_H6)),
+				new SeparatorMenuItem(),
+				toMenuItem(actions.get(INSERT_WIKI_LINK)),
+				toMenuItem(actions.get(INSERT_EXTERNAL_LINK)),
+				toMenuItem(actions.get(INSERT_TEMPLATE)),
+				new SeparatorMenuItem(),
+				toMenuItem(actions.get(ADD_CATEGORIES))
+		);
+		menubar.getMenus().addAll(editMenu, navigationMenu, sourceMenu);
 	}
 
 	/**
@@ -252,59 +276,6 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		dialogs.makeNotImplementedErrorDialog().show();
 	}
 
-	/**
-	 * Shows dialog to input article name for link. If there
-	 * is no selected text - this name will be also caption for link.
-	 */
-	public void actionInsertWikiLink() {
-		String selection = text.getSelectedCode();
-		Optional<String> result = dialogs.makeInsertWikiLinkDialog(selection, selection).showAndWait();
-		if (result.isPresent()) {
-			text.replaceSelection(result.get());
-		}
-	}
-
-	/**
-	 * Shows dialog to input data for constructing link.
-	 */
-	public void actionInsertExternalLink() {
-		String selection = text.getSelectedCode();
-		Optional<String> result = dialogs.makeInsertExternalLinkDialog(selection, selection).showAndWait();
-		if (result.isPresent()) {
-			text.replaceSelection(result.get());
-		}
-	}
-
-	/**
-	 * Shows dialog to choose type of inserted heading. If there
-	 * is no selected text - heading will have empty caption.
-	 */
-	public void actionInsertHeading() {
-		Optional<String> result = dialogs.makeInsertHeadingDialog(text.getSelectedCode()).showAndWait();
-		if (result.isPresent()) {
-			String newLine = System.lineSeparator();
-			text.replaceSelection(String.join("", newLine, result.get(), newLine));
-		}
-	}
-
-	public void actionInsertSnippet() {
-		dialogs.makeNotImplementedErrorDialog().show();
-	}
-
-	/**
-	 * Shows dialog to input data for constructing template.
-	 */
-	public void actionInsertTemplate() {
-		String selection = text.getSelectedCode();
-		Optional<String> result = dialogs.makeInsertTemplateDialog(selection).showAndWait();
-		if (result.isPresent()) {
-			text.replaceSelection(result.get());
-		}
-	}
-
-	public void actionAddCategories() {
-		dialogs.makeNotImplementedErrorDialog().show();
-	}
 
 	public void actionHelp() {
 		dialogs.makeNotImplementedErrorDialog().show();

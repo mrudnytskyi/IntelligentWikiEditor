@@ -49,7 +49,7 @@ numbers implemented)
 * [x] Insert wikipedia link (on another article) with auto-complete functionality
 * [x] Insert external link functionality
 * [x] Insert template (with parameters) with auto-complete functionality
-* [x] :gem: Insert headings functionality (partly, make 6 separate actions)
+* [x] Insert headings functionality
 * [ ] :gem: Insert category with auto-complete functionality
 * [ ] Insert image with auto-complete functionality
 * [ ] Insert snippet (text with source) functionality
