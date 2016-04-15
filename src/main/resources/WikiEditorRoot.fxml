@@ -10,7 +10,7 @@
    <top>
       <VBox maxHeight="90.0" minHeight="90.0" prefHeight="90.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
          <children>
-            <MenuBar>
+             <MenuBar fx:id="menubar">
               <menus>
                   <Menu mnemonicParsing="false" text="%menu.article">
                      <items>
@@ -74,19 +74,6 @@
                               <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator></MenuItem>
                      </items>
-                  </Menu>
-                  <Menu fx:id="editMenuItem" mnemonicParsing="false" text="%menu.edit">
-                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#actionSelectAll" text="%menu.select-all">
-                           <graphic>
-                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" />
-                           </graphic>
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator></MenuItem>
-                     </items>
-                  </Menu>
-                  <Menu fx:id="navigationMenuItem" mnemonicParsing="false" text="%menu.navigation">
                   </Menu>
                   <Menu mnemonicParsing="false" text="%menu.source">
                      <items>

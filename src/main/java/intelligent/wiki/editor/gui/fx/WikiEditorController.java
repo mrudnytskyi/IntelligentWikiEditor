@@ -60,11 +60,9 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	@Inject
 	private final WikiOperations wiki;
 	@FXML
-	public Menu editMenuItem;
-	@FXML
 	public ToolBar toolbar;
 	@FXML
-	public Menu navigationMenuItem;
+	public MenuBar menubar;
 	private ObservableArticle article;
 	private ResourceBundle i18n;
 	private File currentOpenedFile;
@@ -100,10 +98,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		i18n = resources;
 		text.codeProperty().addListener(updateTracker);
 		actions = new JavaFxActions(text, tree);
-		editMenuItem.getItems().addAll(
-				toMenuItem(actions.get(CUT)), toMenuItem(actions.get(COPY)), toMenuItem(actions.get(PASTE)));
-		navigationMenuItem.getItems().addAll(
-				toMenuItem(actions.get(REQUEST_FOCUS_TREE)), toMenuItem(actions.get(REQUEST_FOCUS_TEXT)));
+		createMainMenu();
 		toolbar.getItems().addAll(new Separator(Orientation.VERTICAL),
 				toButton(actions.get(CUT)), toButton(actions.get(COPY)), toButton(actions.get(PASTE)));
 		text.contentMenuProperty().setValue(createCodeAreaMenu());
@@ -114,6 +109,22 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		menu.getItems().addAll(
 				toMenuItem(actions.get(CUT)), toMenuItem(actions.get(COPY)), toMenuItem(actions.get(PASTE)));
 		return menu;
+	}
+
+	private void createMainMenu() {
+		Menu editMenu = new Menu(i18n.getString("menu.edit"), null,
+				toMenuItem(actions.get(CUT)),
+				toMenuItem(actions.get(COPY)),
+				toMenuItem(actions.get(PASTE)),
+				new SeparatorMenuItem(),
+				toMenuItem(actions.get(SELECT_ALL))
+		);
+
+		Menu navigationMenu = new Menu(i18n.getString("menu.navigation"), null,
+				toMenuItem(actions.get(REQUEST_FOCUS_TREE)), toMenuItem(actions.get(REQUEST_FOCUS_TEXT))
+		);
+
+		menubar.getMenus().addAll(editMenu, navigationMenu);
 	}
 
 	/**
@@ -239,13 +250,6 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 
 	public void actionClose() {
 		dialogs.makeNotImplementedErrorDialog().show();
-	}
-
-	/**
-	 * Selects all article text.
-	 */
-	public void actionSelectAll() {
-		text.selectAll();
 	}
 
 	/**

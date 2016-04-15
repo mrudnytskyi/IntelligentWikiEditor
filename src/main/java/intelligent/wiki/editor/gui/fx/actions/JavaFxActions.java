@@ -64,14 +64,17 @@ public class JavaFxActions implements Actions {
 		init(PASTE, action().withText("menu.paste").withAccelerator("Shortcut+V").withIcon("images/paste_big.png")
 				.withSmallIcon("images/paste_small.png").withTooltip("toolbar.paste")
 				.withDisabled(noStringInClipboard).withHandler(event -> area.paste()).build());
-		init(REQUEST_FOCUS_TREE, action().withText("menu.request_focus_tree").withAccelerator("alt+f1")
+		init(REQUEST_FOCUS_TREE, action().withText("menu.request-focus-tree").withAccelerator("alt+f1")
 				.withIcon("images/tree_big.png").withSmallIcon("images/tree_small.png")
-				.withTooltip("toolbar.request_focus_tree").withDisabled(alwaysFalse)
+				.withTooltip("toolbar.request-focus-tree").withDisabled(alwaysFalse)
 				.withHandler(event -> requestFocusTree(tree)).build());
-		init(REQUEST_FOCUS_TEXT, action().withText("menu.request_focus_text").withAccelerator("alt+f2")
+		init(REQUEST_FOCUS_TEXT, action().withText("menu.request-focus-text").withAccelerator("alt+f2")
 				.withIcon("images/text_big.png").withSmallIcon("images/text_small.png")
-				.withTooltip("toolbar.request_focus_text").withDisabled(alwaysFalse)
+				.withTooltip("toolbar.request-focus-text").withDisabled(alwaysFalse)
 				.withHandler(event -> areaControl.requestFocus()).build());
+		init(SELECT_ALL, action().withText("menu.select-all").withAccelerator("Shortcut+A")
+				.withTooltip("toolbar.select-all").withDisabled(alwaysFalse).withHandler(event -> area.selectAll())
+				.build());
 
 //		init(, action().withText().withAccelerator().withIcon().withSmallIcon().withTooltip().withDisabled().withHandler().build());
 //		init(, action().withText().withAccelerator().withIcon().withSmallIcon().withTooltip().withDisabled().withHandler().build());
