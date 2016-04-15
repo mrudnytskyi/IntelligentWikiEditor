@@ -14,7 +14,9 @@
 
 package intelligent.wiki.editor.gui.fx;
 
-import intelligent.wiki.editor.core_api.EmptyArticle;
+import intelligent.wiki.editor.core_api.Article;
+import intelligent.wiki.editor.core_api.Parser;
+import intelligent.wiki.editor.core_api.Project;
 import intelligent.wiki.editor.spring.TestConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +40,20 @@ public class ObservableArticleAdapterTest {
 
 	@Test(expected = NullPointerException.class)
 	public void testConstructorSecondArg() throws Exception {
-		new ObservableArticleAdapter(new EmptyArticle(), null);
+		new ObservableArticleAdapter(new Project() {
+			@Override
+			public void makeArticle(String title, String text) {
+			}
+
+			@Override
+			public Article getArticle() {
+				return null;
+			}
+
+			@Override
+			public Parser getParser() {
+				return null;
+			}
+		}, null);
 	}
 }
