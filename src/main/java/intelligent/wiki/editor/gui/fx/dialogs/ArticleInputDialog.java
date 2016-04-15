@@ -13,6 +13,7 @@
  */
 package intelligent.wiki.editor.gui.fx.dialogs;
 
+import intelligent.wiki.editor.io_api.WikiOperations;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -22,6 +23,9 @@ import javafx.scene.layout.Priority;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 /**
  * Class, representing dialog for inserting article name.
@@ -31,10 +35,12 @@ import java.io.IOException;
  */
 public class ArticleInputDialog extends InputDialog {
 
+	private final WikiOperations wiki;
 	private final TextField articleNameInput = TextFields.createClearableTextField();
 
-	protected ArticleInputDialog() {
-		super("article-input-dialog.title", "article-input-dialog.header", "article-input-dialog.content");
+	protected ArticleInputDialog(WikiOperations wiki, ResourceBundle i18n) {
+		super("article-input-dialog.title", "article-input-dialog.header", "article-input-dialog.content", i18n);
+		this.wiki = Objects.requireNonNull(wiki, "Null wiki operations!");
 		getDialogPane().getStyleClass().add("text-input-dialog");
 
 		initContent();
@@ -64,7 +70,7 @@ public class ArticleInputDialog extends InputDialog {
 
 		buildValidation(articleNameInput, "article-input-dialog.empty", "article-input-dialog.not-exists");
 
-		buildArticleAutocompletion(articleNameInput);
+		buildArticleAutocompletion();
 	}
 
 	@Override
@@ -82,5 +88,19 @@ public class ArticleInputDialog extends InputDialog {
 	@Override
 	public String getInputtedResult() {
 		return articleNameInput.getText();
+	}
+
+	private void buildArticleAutocompletion() {
+		TextFields.bindAutoCompletion(articleNameInput, param -> {
+			if (!param.getUserText().isEmpty()) {
+				try {
+					return wiki.getArticlesStartingWith(param.getUserText(), 10);
+				} catch (IOException e) {
+					log.warning("Autocompletion failed!");
+					log.severe(e.getMessage());
+				}
+			}
+			return Collections.emptyList();
+		});
 	}
 }

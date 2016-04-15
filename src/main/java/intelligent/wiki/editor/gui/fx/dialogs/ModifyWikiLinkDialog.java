@@ -14,6 +14,7 @@
 
 package intelligent.wiki.editor.gui.fx.dialogs;
 
+import intelligent.wiki.editor.io_api.WikiOperations;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
@@ -24,6 +25,9 @@ import javafx.scene.layout.Priority;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 /**
  * Class, representing dialog for inserting data to construct wiki link: article name and caption.
@@ -33,11 +37,14 @@ import java.io.IOException;
  */
 public class ModifyWikiLinkDialog extends InputDialog {
 
+	private final WikiOperations wiki;
 	private final TextField linkInput = TextFields.createClearableTextField();
 	private final TextField captionInput = TextFields.createClearableTextField();
 
-	protected ModifyWikiLinkDialog(String linkText, String captionText, String titleId, String headerId, String contentId) {
-		super(titleId, headerId, contentId);
+	protected ModifyWikiLinkDialog(String linkText, String captionText, String titleId, String headerId,
+								   String contentId, WikiOperations wiki, ResourceBundle i18n) {
+		super(titleId, headerId, contentId, i18n);
+		this.wiki = Objects.requireNonNull(wiki, "Null wiki operations!");
 		getDialogPane().getStyleClass().add("text-input-dialog");
 
 		initContent();
@@ -69,7 +76,7 @@ public class ModifyWikiLinkDialog extends InputDialog {
 
 		buildValidation(linkInput, "insert-wiki-link-dialog.empty", "insert-wiki-link-dialog.not-exists");
 
-		buildArticleAutocompletion(linkInput);
+		buildArticleAutocompletion();
 	}
 
 	private void initButtons() {
@@ -103,5 +110,19 @@ public class ModifyWikiLinkDialog extends InputDialog {
 		String nameWithCaption =
 				(name.equals(caption) || caption.trim().isEmpty()) ? name : String.join("|", name, caption);
 		return nameWithCaption.isEmpty() ? "" : String.join("", "[[", nameWithCaption, "]] ");
+	}
+
+	private void buildArticleAutocompletion() {
+		TextFields.bindAutoCompletion(linkInput, param -> {
+			if (!param.getUserText().isEmpty()) {
+				try {
+					return wiki.getArticlesStartingWith(param.getUserText(), 10);
+				} catch (IOException e) {
+					log.warning("Autocompletion failed!");
+					log.severe(e.getMessage());
+				}
+			}
+			return Collections.emptyList();
+		});
 	}
 }

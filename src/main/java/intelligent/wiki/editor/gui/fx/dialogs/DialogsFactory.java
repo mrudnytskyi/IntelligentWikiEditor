@@ -13,7 +13,9 @@
  */
 package intelligent.wiki.editor.gui.fx.dialogs;
 
+import intelligent.wiki.editor.app_api.Version;
 import intelligent.wiki.editor.gui.fx.ResourceBundleFactory;
+import intelligent.wiki.editor.io_api.WikiOperations;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
@@ -22,6 +24,7 @@ import javafx.scene.layout.Priority;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
@@ -35,6 +38,13 @@ public class DialogsFactory {
 
 	private static final ResourceBundle i18n = ResourceBundleFactory.getBundle(new Locale("uk", "ua"));
 	private static final Logger log = Logger.getLogger(DialogsFactory.class.getName());
+	private final Version version;
+	private final WikiOperations wiki;
+
+	public DialogsFactory(Version version, WikiOperations wiki) {
+		this.wiki = Objects.requireNonNull(wiki, "Null wiki operations!");
+		this.version = Objects.requireNonNull(version, "Null version object!");
+	}
 
 	private static Dialog prepareDialog(Dialog dialog, String title, String header, String content) {
 		dialog.setTitle(title);
@@ -129,7 +139,7 @@ public class DialogsFactory {
 		return prepareDialog(new Alert(AlertType.INFORMATION),
 				i18n.getString("info-dialog.title"),
 				i18n.getString("info-dialog.header-text.about"),
-				"Copyright (c) Myroslav Rudnytskyi, Kyiv, Ukraine, 2015"
+				"version " + version + " Copyright (c) Myroslav Rudnytskyi, Kyiv, Ukraine, 2014-2016"
 		);
 	}
 
@@ -137,11 +147,11 @@ public class DialogsFactory {
 	 * @return created object of {@link ArticleInputDialog}
 	 */
 	public Dialog<String> makeArticleNameInputDialog() {
-		return new ArticleInputDialog();
+		return new ArticleInputDialog(wiki, i18n);
 	}
 
 	/**
-	 * @param linkText text, placed in link text field
+	 * @param linkText    text, placed in link text field
 	 * @param captionText text, placed in caption text field
 	 * @return created object of {@link ModifyWikiLinkDialog}
 	 */
@@ -149,11 +159,11 @@ public class DialogsFactory {
 		return new ModifyWikiLinkDialog(linkText, captionText,
 				"insert-wiki-link-dialog.title",
 				"insert-wiki-link-dialog.header",
-				"insert-wiki-link-dialog.content");
+				"insert-wiki-link-dialog.content", wiki, i18n);
 	}
 
 	/**
-	 * @param urlText text, placed in url text field
+	 * @param urlText     text, placed in url text field
 	 * @param captionText text, placed in caption text field
 	 * @return created object of {@link ModifyLinkDialog}
 	 */
@@ -161,7 +171,7 @@ public class DialogsFactory {
 		return new ModifyLinkDialog(urlText, captionText,
 				"insert-link-dialog.title",
 				"insert-link-dialog.header",
-				"insert-link-dialog.content");
+				"insert-link-dialog.content", i18n);
 	}
 
 	/**
@@ -172,7 +182,7 @@ public class DialogsFactory {
 		return new ModifyHeadingDialog(headingText,
 				"insert-heading-dialog.title",
 				"insert-heading-dialog.header",
-				"insert-heading-dialog.content");
+				"insert-heading-dialog.content", i18n);
 	}
 
 	/**
@@ -183,6 +193,6 @@ public class DialogsFactory {
 		return new ModifyTemplateDialog(captionText,
 				"insert-template-dialog.title",
 				"insert-template-dialog.header",
-				"insert-template-dialog.content");
+				"insert-template-dialog.content", wiki, i18n);
 	}
 }

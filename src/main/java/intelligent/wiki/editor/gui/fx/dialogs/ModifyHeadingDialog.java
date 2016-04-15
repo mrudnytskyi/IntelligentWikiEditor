@@ -18,6 +18,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 
 import java.util.Arrays;
+import java.util.ResourceBundle;
 
 /**
  * Class, representing dialog to insert headingText.
@@ -31,8 +32,8 @@ public class ModifyHeadingDialog extends InputDialog {
 	private final String headingText;
 	private final ToggleGroup radioButtons = new ToggleGroup();
 
-	protected ModifyHeadingDialog(String headingText, String titleId, String headerId, String contentId) {
-		super(titleId, headerId, contentId);
+	protected ModifyHeadingDialog(String headingText, String titleId, String headerId, String contentId, ResourceBundle i18n) {
+		super(titleId, headerId, contentId, i18n);
 
 		this.headingText = headingText == null ? "" : headingText.trim();
 		getDialogPane().getStyleClass().add("choice-dialog");

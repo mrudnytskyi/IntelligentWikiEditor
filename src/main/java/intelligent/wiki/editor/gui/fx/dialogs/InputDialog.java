@@ -13,21 +13,15 @@
  */
 package intelligent.wiki.editor.gui.fx.dialogs;
 
-import intelligent.wiki.editor.gui.fx.ResourceBundleFactory;
-import intelligent.wiki.editor.io_api.WikiOperations;
-import intelligent.wiki.editor.io_impl.wiki.WikiFacade;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationResult;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Locale;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
@@ -39,14 +33,14 @@ import java.util.logging.Logger;
  */
 public abstract class InputDialog extends Dialog<String> {
 
-	protected final ResourceBundle i18n = ResourceBundleFactory.getBundle(new Locale("uk", "ua"));
+	protected final ResourceBundle i18n;
 	protected final Logger log = Logger.getLogger(InputDialog.class.getName());
 	protected final GridPane content = new GridPane();
-	protected final WikiOperations wiki = new WikiFacade(new Locale("uk"));
 	private final TextArea preview = new TextArea();
 	protected ButtonType okType;
 
-	protected InputDialog(String titleId, String headerId, String contentId) {
+	protected InputDialog(String titleId, String headerId, String contentId, ResourceBundle i18n) {
+		this.i18n = Objects.requireNonNull(i18n, "Null resource bundle!");
 		DialogsFactory.setI18nStrings(this, titleId, headerId, contentId);
 		buildContentPane();
 		buildButtons();
@@ -77,34 +71,6 @@ public abstract class InputDialog extends Dialog<String> {
 	 * @return inputted text
 	 */
 	public abstract String getInputtedResult();
-
-	protected void buildArticleAutocompletion(TextField requireAutocompletion) {
-		TextFields.bindAutoCompletion(requireAutocompletion, param -> {
-			if (!param.getUserText().isEmpty()) {
-				try {
-					return wiki.getArticlesStartingWith(param.getUserText(), 10);
-				} catch (IOException e) {
-					log.warning("Autocompletion failed!");
-					log.severe(e.getMessage());
-				}
-			}
-			return Collections.emptyList();
-		});
-	}
-
-	protected void buildTemplateAutocompletion(TextField requireAutocompletion) {
-		TextFields.bindAutoCompletion(requireAutocompletion, param -> {
-			if (!param.getUserText().isEmpty()) {
-				try {
-					return wiki.getTemplatesStartingWith(param.getUserText(), 10);
-				} catch (IOException e) {
-					log.warning("Autocompletion failed!");
-					log.severe(e.getMessage());
-				}
-			}
-			return Collections.emptyList();
-		});
-	}
 
 	protected void buildValidation(Control requireValidation, String emptyId, String validationId) {
 		new ValidationSupport().registerValidator(requireValidation, true, Validator.combine(

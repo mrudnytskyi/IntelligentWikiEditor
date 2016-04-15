@@ -13,6 +13,7 @@
  */
 package intelligent.wiki.editor.spring;
 
+import intelligent.wiki.editor.app_impl.WikiEditorVersion;
 import intelligent.wiki.editor.core_api.ASTNode;
 import intelligent.wiki.editor.core_api.Parser;
 import intelligent.wiki.editor.core_api.Project;
@@ -47,7 +48,12 @@ public class Config {
 
 	@Bean
 	public DialogsFactory dialogsFactory() {
-		return new DialogsFactory();
+		return new DialogsFactory(version(), wikiOperations());
+	}
+
+	@Bean
+	public WikiEditorVersion version() {
+		return new WikiEditorVersion();
 	}
 
 	@Bean

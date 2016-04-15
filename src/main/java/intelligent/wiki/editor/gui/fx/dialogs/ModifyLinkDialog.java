@@ -23,6 +23,8 @@ import javafx.scene.layout.Priority;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.controlsfx.control.textfield.TextFields;
 
+import java.util.ResourceBundle;
+
 /**
  * Class, representing dialog for inserting data to construct link: url and caption.
  *
@@ -34,8 +36,9 @@ public class ModifyLinkDialog extends InputDialog {
 	private final TextField urlInput = TextFields.createClearableTextField();
 	private final TextField captionInput = TextFields.createClearableTextField();
 
-	protected ModifyLinkDialog(String urlText, String captionText, String titleId, String headerId, String contentId) {
-		super(titleId, headerId, contentId);
+	protected ModifyLinkDialog(
+			String urlText, String captionText, String titleId, String headerId, String contentId, ResourceBundle i18n) {
+		super(titleId, headerId, contentId, i18n);
 		getDialogPane().getStyleClass().add("text-input-dialog");
 
 		initContent();

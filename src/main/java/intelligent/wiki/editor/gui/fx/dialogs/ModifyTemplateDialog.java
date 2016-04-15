@@ -13,6 +13,7 @@
  */
 package intelligent.wiki.editor.gui.fx.dialogs;
 
+import intelligent.wiki.editor.io_api.WikiOperations;
 import intelligent.wiki.editor.io_impl.wiki.template_data.TemplateArgument;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -25,6 +26,9 @@ import javafx.scene.layout.Priority;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 /**
@@ -35,12 +39,15 @@ import java.util.stream.Collectors;
  */
 public class ModifyTemplateDialog extends InputDialog {
 
+	private final WikiOperations wiki;
 	private final TableView<TemplateArgument> parametersTable = new TableView<>();
 	private final TextField nameInput = TextFields.createClearableTextField();
 	private ObservableList<TemplateArgument> parameters = FXCollections.observableArrayList();
 
-	protected ModifyTemplateDialog(String captionText, String titleId, String headerId, String contentId) {
-		super(titleId, headerId, contentId);
+	protected ModifyTemplateDialog(
+			String captionText, String titleId, String headerId, String contentId, WikiOperations wiki, ResourceBundle i18n) {
+		super(titleId, headerId, contentId, i18n);
+		this.wiki = Objects.requireNonNull(wiki, "Null wiki operations!");
 		getDialogPane().getStyleClass().add("text-input-dialog");
 
 		initContent();
@@ -119,7 +126,7 @@ public class ModifyTemplateDialog extends InputDialog {
 
 		buildValidation(nameInput, "insert-template-dialog.empty", "insert-template-dialog.not-exists");
 
-		buildTemplateAutocompletion(nameInput);
+		buildTemplateAutocompletion();
 	}
 
 	private void initButtons() {
@@ -179,6 +186,20 @@ public class ModifyTemplateDialog extends InputDialog {
 
 	private String addPrefixIfNotPresent(String arg, String prefix) {
 		return arg.startsWith(prefix) ? arg.trim() : (prefix + arg).trim();
+	}
+
+	private void buildTemplateAutocompletion() {
+		TextFields.bindAutoCompletion(nameInput, param -> {
+			if (!param.getUserText().isEmpty()) {
+				try {
+					return wiki.getTemplatesStartingWith(param.getUserText(), 10);
+				} catch (IOException e) {
+					log.warning("Autocompletion failed!");
+					log.severe(e.getMessage());
+				}
+			}
+			return Collections.emptyList();
+		});
 	}
 
 	class EditingCell extends TableCell<TemplateArgument, String> {
