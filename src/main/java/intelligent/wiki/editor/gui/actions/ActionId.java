@@ -21,5 +21,5 @@ package intelligent.wiki.editor.gui.actions;
  * @version 14.04.2016
  */
 public enum ActionId {
-	CUT, COPY, PASTE
+	CUT, COPY, PASTE, REQUEST_FOCUS_TREE, REQUEST_FOCUS_TEXT
 }

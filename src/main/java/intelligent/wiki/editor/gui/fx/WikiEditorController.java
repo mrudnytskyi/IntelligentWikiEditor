@@ -63,6 +63,8 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	public Menu editMenuItem;
 	@FXML
 	public ToolBar toolbar;
+	@FXML
+	public Menu navigationMenuItem;
 	private ObservableArticle article;
 	private ResourceBundle i18n;
 	private File currentOpenedFile;
@@ -97,9 +99,11 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	public void initialize(URL location, ResourceBundle resources) {
 		i18n = resources;
 		text.codeProperty().addListener(updateTracker);
-		actions = new JavaFxActions(text);
+		actions = new JavaFxActions(text, tree);
 		editMenuItem.getItems().addAll(
 				toMenuItem(actions.get(CUT)), toMenuItem(actions.get(COPY)), toMenuItem(actions.get(PASTE)));
+		navigationMenuItem.getItems().addAll(
+				toMenuItem(actions.get(REQUEST_FOCUS_TREE)), toMenuItem(actions.get(REQUEST_FOCUS_TEXT)));
 		toolbar.getItems().addAll(new Separator(Orientation.VERTICAL),
 				toButton(actions.get(CUT)), toButton(actions.get(COPY)), toButton(actions.get(PASTE)));
 		text.contentMenuProperty().setValue(createCodeAreaMenu());

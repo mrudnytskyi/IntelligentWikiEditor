@@ -86,6 +86,8 @@
                            </accelerator></MenuItem>
                      </items>
                   </Menu>
+                  <Menu fx:id="navigationMenuItem" mnemonicParsing="false" text="%menu.navigation">
+                  </Menu>
                   <Menu mnemonicParsing="false" text="%menu.source">
                      <items>
                         <MenuItem mnemonicParsing="false" onAction="#actionInsertWikiLink" text="%menu.insert-link">
