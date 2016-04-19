@@ -34,15 +34,15 @@ terminal window:
 java -jar editor.jar
 ```
 
-## Features
-* [x] Multiple platforms support: Windows, Linux and Mac
+## Features and TODOs
+* [x] Multiple platforms support: web application and Windows, Linux and Mac apps (partly, only Windows app only)
 * [x] Integrated Design Environment (IDE) based graphical-user interface (GUI)
 * [x] Simple text editor functionality with `New`, `Open file`, `Open URL`, `Save`, `Save as`, `Close`, `Close all`
 actions (partly, no close)
 * [x] :gem: Simple text area with `Cut`, `Copy`, `Paste`, `Select all` and `Undo/redo` actions with hot keys (partly,
-no popup menu yet)
+no undo/redo yet)
 * [ ] Local editing history
-* [ ] Rich text area with extended text manipulations actions (delete line with hot key, etc)
+* [ ] :gem: Rich text area with extended text selection, manipulation, navigation and so on actions (delete line with hot key, etc)
 * [x] :gem: Rich IDE area with syntax highlighting, wiki-text fragments folding and line numbers showing (partly, only line
 numbers implemented)
 * [ ] Offline (without Internet connection) work support for auto-complete functions
@@ -57,20 +57,21 @@ numbers implemented)
 * [ ] Automatic image, templates and categories search
 * [ ] :gem: Automatic wiki links creation ([wikification](https://en.wikipedia.org/wiki/Wikification))
 * [x] :gem: AST preview with `Filter`, `Go to`, `Delete` actions (partly, just view)
-* [ ] :gem: Enabling many tabs editing
+* [ ] Enabling many tabs editing
 * [x] Internationalization support (partly, just english and ukrainian)
 * [ ] Application settings
 * [ ] Implement user guide and context help
 * [ ] Automatic article stub generating (see [first version](https://github.com/mrudnytskyi/WikiBot) for details)
 * [ ] :gem: Article preview
 * [ ] :gem: Article inspections and AST transformers
-* [ ] Spell checker for article text
+* [ ] :gem: Spell checker for article text
 * [ ] Article wiki-text formatting
 * [ ] :gem: Smart search and replace
 * [ ] Show special symbols functionality
 * [ ] Recent opened files history
 * [ ] Toolbar with often used actions and statusbar with article text statistics
 * [ ] Bookmarks manipulating
+* [ ] TODOs manipulating
 
 ## Credits
 * [Spring](https://spring.io) Framework [IoC](https://en.wikipedia.org/wiki/Inversion_of_control) container
@@ -81,5 +82,4 @@ used to produce maintainable code
 * Framework [JUnit](http://junit.org) proves that anything in the project works as expected :bug:
 * Programming language [Groovy](http://www.groovy-lang.org) deals with JSON and XML parsing
 * Framework [Commons Validator](https://commons.apache.org/proper/commons-validator/) helps to validate input data
-* Connector for [MySQL](https://www.mysql.com) provides access to the database
 * Library [Xstream](http://x-stream.github.io) used to simplify work with XML files
