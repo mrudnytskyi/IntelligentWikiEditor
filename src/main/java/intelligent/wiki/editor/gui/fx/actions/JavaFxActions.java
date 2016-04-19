@@ -18,11 +18,13 @@ import intelligent.wiki.editor.gui.actions.Action;
 import intelligent.wiki.editor.gui.actions.ActionId;
 import intelligent.wiki.editor.gui.actions.Actions;
 import intelligent.wiki.editor.gui.fx.ObservableCodeArea;
+import intelligent.wiki.editor.gui.fx.WikiEditorController;
 import intelligent.wiki.editor.gui.fx.dialogs.DialogsFactory;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Control;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.Clipboard;
 import org.reactfx.EventStreams;
@@ -51,76 +53,23 @@ public class JavaFxActions implements Actions {
 	private final BooleanProperty noSelection = new SimpleBooleanProperty();
 	private final BooleanProperty noStringInClipboard = new SimpleBooleanProperty();
 	private final DialogsFactory dialogs;
+	private final ObservableCodeArea area;
+	private final TabPane toolTabPaneBottom;
+	private final TabPane toolTabPaneLeft;
+	private final TreeView tree;
 
-	public JavaFxActions(ObservableCodeArea area, TreeView tree, DialogsFactory dialogs) {
+	public JavaFxActions(WikiEditorController controller, DialogsFactory dialogs) {
 		this.dialogs = Objects.requireNonNull(dialogs, "Null dialogs!");
-		Objects.requireNonNull(area, "Null code area!");
-		Objects.requireNonNull(tree, "Null tree view!");
-		initProperties(area);
-		initActions(area, tree);
+		Objects.requireNonNull(controller, "Null root pane!!");
+		area = controller.getText();
+		toolTabPaneBottom = controller.getToolTabPaneBottom();
+		toolTabPaneLeft = controller.getToolTabPaneLeft();
+		tree = controller.getTree();
+		initProperties();
+		initActions();
 	}
 
-	private void initActions(ObservableCodeArea area, TreeView tree) {
-		Control areaControl = (Control) area;
-		init(CUT, action().withText("menu.cut").withAccelerator("Shortcut+X").withIcon("images/cut_big.png")
-				.withSmallIcon("images/cut_small.png").withTooltip("toolbar.cut")
-				.withDisabled(noSelection).withHandler(event -> area.cut()).build());
-		init(COPY, action().withText("menu.copy").withAccelerator("Shortcut+C").withIcon("images/copy_big.png")
-				.withSmallIcon("images/copy_small.png").withTooltip("toolbar.copy")
-				.withDisabled(noSelection).withHandler(event -> area.copy()).build());
-		init(PASTE, action().withText("menu.paste").withAccelerator("Shortcut+V").withIcon("images/paste_big.png")
-				.withSmallIcon("images/paste_small.png").withTooltip("toolbar.paste")
-				.withDisabled(noStringInClipboard).withHandler(event -> area.paste()).build());
-		init(REQUEST_FOCUS_TREE, action().withText("menu.request-focus-tree").withAccelerator("alt+f1")
-				.withIcon("images/tree_big.png").withSmallIcon("images/tree_small.png")
-				.withTooltip("toolbar.request-focus-tree").withDisabled(alwaysFalse)
-				.withHandler(event -> requestFocusTree(tree)).build());
-		init(REQUEST_FOCUS_TEXT, action().withText("menu.request-focus-text").withAccelerator("alt+f2")
-				.withIcon("images/text_big.png").withSmallIcon("images/text_small.png")
-				.withTooltip("toolbar.request-focus-text").withDisabled(alwaysFalse)
-				.withHandler(event -> areaControl.requestFocus()).build());
-		init(SELECT_ALL, action().withText("menu.select-all").withAccelerator("Shortcut+A")
-				.withTooltip("toolbar.select-all").withDisabled(alwaysFalse)
-				.withHandler(event -> area.selectAll()).build());
-		init(INSERT_WIKI_LINK, action().withText("menu.insert-wiki-link").withAccelerator("Shortcut+f1")
-				.withIcon("images/wikilink_big.png").withSmallIcon("images/wikilink_small.png")
-				.withTooltip("toolbar.insert-wiki-link").withDisabled(alwaysFalse)
-				.withHandler(event -> insertWikiLink(area)).build());
-		init(INSERT_H2, action().withText("menu.insert-heading-2").withAccelerator("Shortcut+f2")
-				.withIcon("images/heading_2_big.png").withSmallIcon("images/heading_2_small.png")
-				.withTooltip("toolbar.insert-heading-2").withDisabled(alwaysFalse)
-				.withHandler(event -> insertHeading(area, 2)).build());
-		init(INSERT_H3, action().withText("menu.insert-heading-3").withAccelerator("Shortcut+f3")
-				.withIcon("images/heading_3_big.png").withSmallIcon("images/heading_3_small.png")
-				.withTooltip("toolbar.insert-heading-3").withDisabled(alwaysFalse)
-				.withHandler(event -> insertHeading(area, 3)).build());
-		init(INSERT_H4, action().withText("menu.insert-heading-4").withAccelerator("Shortcut+f4")
-				.withIcon("images/heading_4_big.png").withSmallIcon("images/heading_4_small.png")
-				.withTooltip("toolbar.insert-heading-4").withDisabled(alwaysFalse)
-				.withHandler(event -> insertHeading(area, 4)).build());
-		init(INSERT_H5, action().withText("menu.insert-heading-5").withAccelerator("Shortcut+f5")
-				.withIcon("images/heading_5_big.png").withSmallIcon("images/heading_5_small.png")
-				.withTooltip("toolbar.insert-heading-5").withDisabled(alwaysFalse)
-				.withHandler(event -> insertHeading(area, 5)).build());
-		init(INSERT_H6, action().withText("menu.insert-heading-6").withAccelerator("Shortcut+f6")
-				.withIcon("images/heading_6_big.png").withSmallIcon("images/heading_6_small.png")
-				.withTooltip("toolbar.insert-heading-6").withDisabled(alwaysFalse)
-				.withHandler(event -> insertHeading(area, 6)).build());
-		init(INSERT_EXTERNAL_LINK, action().withText("menu.insert-external-link").withAccelerator("Shortcut+f7")
-				.withIcon("images/link_big.png").withSmallIcon("images/link_small.png")
-				.withTooltip("toolbar.insert-external-link").withDisabled(alwaysFalse)
-				.withHandler(event -> insertExternalLink(area)).build());
-		init(INSERT_TEMPLATE, action().withText("menu.insert-template").withAccelerator("Shortcut+f8")
-				.withIcon("images/template_big.png").withSmallIcon("images/template_small.png")
-				.withTooltip("toolbar.insert-template").withDisabled(alwaysFalse)
-				.withHandler(event -> insertTemplate(area)).build());
-		init(ADD_CATEGORIES, action().withText("menu.add-categories").withAccelerator("Shortcut+f9")
-				.withIcon("images/category_big.png").withSmallIcon("images/category_small.png")
-				.withTooltip("toolbar.add-categories").withDisabled(alwaysFalse)
-				.withHandler(event -> addCategories()).build());
-	}
-
-	private void initProperties(ObservableCodeArea area) {
+	private void initProperties() {
 		EventStreams.ticks(Duration.ofMillis(200)).subscribe(tick -> {
 			noStringInClipboard.setValue(!Clipboard.getSystemClipboard().hasString());
 			noSelection.setValue(area.getSelectedCode().isEmpty());
@@ -131,28 +80,121 @@ public class JavaFxActions implements Actions {
 		actions.put(id, action);
 	}
 
-	private void requestFocusTree(TreeView tree) {
-		if (tree.getRoot() != null) {
-			tree.requestFocus();
-			tree.getRoot().setExpanded(true);
-			tree.getFocusModel().focus(0);
-		}
+	private void initActions() {
+		Control areaControl = (Control) area;
+		init(CUT, cutAction());
+		init(COPY, copyAction());
+		init(PASTE, pasteAction());
+		init(REQUEST_FOCUS_TREE, requestFocusTreeAction());
+		init(REQUEST_FOCUS_TEXT, requestFocusTextAction(areaControl));
+		init(SELECT_ALL, selectAllAction());
+		init(INSERT_WIKI_LINK, insertWikiLinkAction());
+		// wikipedia uses H1 for articles titles
+		init(INSERT_H2, insertHeading2Action());
+		init(INSERT_H3, insertHeading3Action());
+		init(INSERT_H4, insertHeading4Action());
+		init(INSERT_H5, insertHeading5Action());
+		init(INSERT_H6, insertHeading6Action());
+		init(INSERT_EXTERNAL_LINK, insertExternalLinkAction());
+		init(INSERT_TEMPLATE, insertTemplateAction());
+		init(ADD_CATEGORIES, addCategoriesAction());
+		init(REQUEST_FOCUS_PREVIEW, requestFocusPreviewAction());
+		init(REQUEST_FOCUS_INSPECTIONS, requestFocusInspectionsAction());
 	}
 
-	private void insertWikiLink(ObservableCodeArea area) {
-		String selection = area.getSelectedCode();
-		Optional<String> result = dialogs.makeInsertWikiLinkDialog(selection, selection).showAndWait();
-		if (result.isPresent()) {
-			area.replaceSelection(result.get());
-		}
+	private JavaFxAction cutAction() {
+		return action().withText("menu.cut").withAccelerator("Shortcut+X").withIcon("images/cut_big.png")
+				.withSmallIcon("images/cut_small.png").withTooltip("toolbar.cut")
+				.withDisabled(noSelection).withHandler(event -> area.cut()).build();
 	}
 
-	private void insertExternalLink(ObservableCodeArea area) {
-		String selection = area.getSelectedCode();
-		Optional<String> result = dialogs.makeInsertExternalLinkDialog(selection, selection).showAndWait();
-		if (result.isPresent()) {
-			area.replaceSelection(result.get());
-		}
+	private JavaFxAction copyAction() {
+		return action().withText("menu.copy").withAccelerator("Shortcut+C").withIcon("images/copy_big.png")
+				.withSmallIcon("images/copy_small.png").withTooltip("toolbar.copy")
+				.withDisabled(noSelection).withHandler(event -> area.copy()).build();
+	}
+
+	private JavaFxAction pasteAction() {
+		return action().withText("menu.paste").withAccelerator("Shortcut+V").withIcon("images/paste_big.png")
+				.withSmallIcon("images/paste_small.png").withTooltip("toolbar.paste")
+				.withDisabled(noStringInClipboard).withHandler(event -> area.paste()).build();
+	}
+
+	private JavaFxAction requestFocusTreeAction() {
+		return action().withText("menu.request-focus-tree").withAccelerator("shift+f2")
+				.withIcon("images/tree_big.png").withSmallIcon("images/tree_small.png")
+				.withTooltip("toolbar.request-focus-tree").withDisabled(alwaysFalse)
+				.withHandler(event -> {
+					final int AST_TAB_INDEX = 0;
+					toolTabPaneLeft.getSelectionModel().select(AST_TAB_INDEX);
+					if (tree.getRoot() != null) {
+						toolTabPaneLeft.getSelectionModel().select(0);
+						tree.requestFocus();
+						tree.getRoot().setExpanded(true);
+						tree.getFocusModel().focus(0);
+					}
+				}).build();
+	}
+
+	private JavaFxAction requestFocusTextAction(Control areaControl) {
+		return action().withText("menu.request-focus-text").withAccelerator("shift+f1")
+				.withIcon("images/text_big.png").withSmallIcon("images/text_small.png")
+				.withTooltip("toolbar.request-focus-text").withDisabled(alwaysFalse)
+				.withHandler(event -> areaControl.requestFocus()).build();
+	}
+
+	private JavaFxAction selectAllAction() {
+		return action().withText("menu.select-all").withAccelerator("Shortcut+A")
+				.withTooltip("toolbar.select-all").withDisabled(alwaysFalse)
+				.withHandler(event -> area.selectAll()).build();
+	}
+
+	private JavaFxAction insertWikiLinkAction() {
+		return action().withText("menu.insert-wiki-link").withAccelerator("Shortcut+f1")
+				.withIcon("images/wikilink_big.png").withSmallIcon("images/wikilink_small.png")
+				.withTooltip("toolbar.insert-wiki-link").withDisabled(alwaysFalse)
+				.withHandler(event -> {
+					String selection = area.getSelectedCode();
+					Optional<String> result = dialogs.makeInsertWikiLinkDialog(selection, selection).showAndWait();
+					if (result.isPresent()) {
+						area.replaceSelection(result.get());
+					}
+				}).build();
+	}
+
+	private JavaFxAction insertHeading2Action() {
+		return action().withText("menu.insert-heading-2").withAccelerator("Shortcut+f2")
+				.withIcon("images/heading_2_big.png").withSmallIcon("images/heading_2_small.png")
+				.withTooltip("toolbar.insert-heading-2").withDisabled(alwaysFalse)
+				.withHandler(event -> insertHeading(area, 2)).build();
+	}
+
+	private JavaFxAction insertHeading3Action() {
+		return action().withText("menu.insert-heading-3").withAccelerator("Shortcut+f3")
+				.withIcon("images/heading_3_big.png").withSmallIcon("images/heading_3_small.png")
+				.withTooltip("toolbar.insert-heading-3").withDisabled(alwaysFalse)
+				.withHandler(event -> insertHeading(area, 3)).build();
+	}
+
+	private JavaFxAction insertHeading4Action() {
+		return action().withText("menu.insert-heading-4").withAccelerator("Shortcut+f4")
+				.withIcon("images/heading_4_big.png").withSmallIcon("images/heading_4_small.png")
+				.withTooltip("toolbar.insert-heading-4").withDisabled(alwaysFalse)
+				.withHandler(event -> insertHeading(area, 4)).build();
+	}
+
+	private JavaFxAction insertHeading5Action() {
+		return action().withText("menu.insert-heading-5").withAccelerator("Shortcut+f5")
+				.withIcon("images/heading_5_big.png").withSmallIcon("images/heading_5_small.png")
+				.withTooltip("toolbar.insert-heading-5").withDisabled(alwaysFalse)
+				.withHandler(event -> insertHeading(area, 5)).build();
+	}
+
+	private JavaFxAction insertHeading6Action() {
+		return action().withText("menu.insert-heading-6").withAccelerator("Shortcut+f6")
+				.withIcon("images/heading_6_big.png").withSmallIcon("images/heading_6_small.png")
+				.withTooltip("toolbar.insert-heading-6").withDisabled(alwaysFalse)
+				.withHandler(event -> insertHeading(area, 6)).build();
 	}
 
 	private void insertHeading(ObservableCodeArea area, int headingType) {
@@ -167,16 +209,57 @@ public class JavaFxActions implements Actions {
 		return String.valueOf(headerChars);
 	}
 
-	private void insertTemplate(ObservableCodeArea area) {
-		String selection = area.getSelectedCode();
-		Optional<String> result = dialogs.makeInsertTemplateDialog(selection).showAndWait();
-		if (result.isPresent()) {
-			area.replaceSelection(result.get());
-		}
+	private JavaFxAction insertExternalLinkAction() {
+		return action().withText("menu.insert-external-link").withAccelerator("Shortcut+f7")
+				.withIcon("images/link_big.png").withSmallIcon("images/link_small.png")
+				.withTooltip("toolbar.insert-external-link").withDisabled(alwaysFalse)
+				.withHandler(event -> {
+					String selection = area.getSelectedCode();
+					Optional<String> result = dialogs.makeInsertExternalLinkDialog(selection, selection).showAndWait();
+					if (result.isPresent()) {
+						area.replaceSelection(result.get());
+					}
+				}).build();
 	}
 
-	public void addCategories() {
-		dialogs.makeNotImplementedErrorDialog().show();
+	private JavaFxAction insertTemplateAction() {
+		return action().withText("menu.insert-template").withAccelerator("Shortcut+f8")
+				.withIcon("images/template_big.png").withSmallIcon("images/template_small.png")
+				.withTooltip("toolbar.insert-template").withDisabled(alwaysFalse)
+				.withHandler(event -> {
+					String selection = area.getSelectedCode();
+					Optional<String> result = dialogs.makeInsertTemplateDialog(selection).showAndWait();
+					if (result.isPresent()) {
+						area.replaceSelection(result.get());
+					}
+				}).build();
+	}
+
+	private JavaFxAction addCategoriesAction() {
+		return action().withText("menu.add-categories").withAccelerator("Shortcut+f9")
+				.withIcon("images/category_big.png").withSmallIcon("images/category_small.png")
+				.withTooltip("toolbar.add-categories").withDisabled(alwaysFalse)
+				.withHandler(event -> dialogs.makeNotImplementedErrorDialog().show()).build();
+	}
+
+	private JavaFxAction requestFocusPreviewAction() {
+		return action().withText("menu.request-focus-preview").withAccelerator("shift+f3")
+				.withIcon("images/preview_big.png").withSmallIcon("images/preview_small.png")
+				.withTooltip("toolbar.request-focus-preview").withDisabled(alwaysFalse)
+				.withHandler(event -> {
+					final int PREVIEW_TAB_INDEX = 1;
+					toolTabPaneLeft.getSelectionModel().select(PREVIEW_TAB_INDEX);
+				}).build();
+	}
+
+	private JavaFxAction requestFocusInspectionsAction() {
+		return action().withText("menu.request-focus-inspections").withAccelerator("shift+f4")
+				.withIcon("images/inspection_big.png").withSmallIcon("images/inspection_small.png")
+				.withTooltip("toolbar.request-focus-inspections").withDisabled(alwaysFalse)
+				.withHandler(event -> {
+					final int INSPECTION_TAB_INDEX = 0;
+					toolTabPaneBottom.getSelectionModel().select(INSPECTION_TAB_INDEX);
+				}).build();
 	}
 
 	@Override

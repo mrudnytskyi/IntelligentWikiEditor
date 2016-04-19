@@ -6,164 +6,240 @@
 <?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="600.0" prefWidth="1024.0" stylesheets="@WarmStyle.css"
-            xmlns="http://javafx.com/javafx/8" fx:controller="intelligent.wiki.editor.gui.fx.WikiEditorController">
-   <top>
-      <VBox maxHeight="90.0" minHeight="90.0" prefHeight="90.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
-         <children>
-             <MenuBar fx:id="menubar">
-              <menus>
-                  <Menu mnemonicParsing="false" text="%menu.article">
-                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#actionNew" text="%menu.new">
-                           <graphic>
-                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@images/new_small.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator></MenuItem>
-                        <Menu mnemonicParsing="false" text="%menu.open">
-                          <items>
-                             <MenuItem mnemonicParsing="false" onAction="#actionOpenFile" text="%menu.open-file">
-                                 <accelerator>
-                                    <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                                 </accelerator></MenuItem>
-                             <MenuItem mnemonicParsing="false" onAction="#actionOpenURL" text="%menu.open-url">
-                                 <accelerator>
-                                    <KeyCodeCombination alt="UP" code="U" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                                 </accelerator></MenuItem>
-                          </items>
-                           <graphic>
-                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@images/open_small.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Menu>
-                        <MenuItem mnemonicParsing="false" onAction="#actionSave" text="%menu.save">
-                           <graphic>
-                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@images/save_small.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator></MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#actionSaveAs" text="%menu.save-as">
-                           <graphic>
-                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@images/save_small.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
-                           </accelerator></MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#actionClose" text="%menu.close">
-                           <graphic>
-                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" />
-                           </graphic>
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator></MenuItem>
-                     </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="%menu.application">
-                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#actionHelp" text="%menu.help">
-                           <graphic>
-                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@images/question_small.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="F1" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
-                           </accelerator></MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#actionAbout" text="%menu.about">
-                           <graphic>
-                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@images/info_small.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic></MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#actionQuit" text="%menu.quit">
-                           <graphic>
-                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@images/exit_small.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                           </accelerator></MenuItem>
-                     </items>
-                  </Menu>
-               </menus>
-            </MenuBar>
-             <ToolBar fx:id="toolbar" prefHeight="62.0" prefWidth="1024.0">
-              <items>
-                  <MenuButton mnemonicParsing="false" prefHeight="48.0" prefWidth="60.0">
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#actionOpenFile" text="%menu.open-file"/>
-                        <MenuItem mnemonicParsing="false" onAction="#actionOpenURL" text="%menu.open-url"/>
-                    </items>
-                     <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/open_big.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <tooltip>
-                        <Tooltip text="%toolbar.open" />
-                     </tooltip>
-                  </MenuButton>
-                 <Button mnemonicParsing="false" onAction="#actionSave" prefHeight="48.0" prefWidth="48.0">
-                     <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/save_big.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <tooltip>
-                        <Tooltip text="%toolbar.save" />
-                     </tooltip></Button>
-                  <Separator orientation="VERTICAL" />
-              </items>
-            </ToolBar>
-         </children>
-      </VBox>
-   </top>
-   <center>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <children>
-            <SplitPane dividerPositions="0.23385518590998042" prefHeight="600.0" prefWidth="1042.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <items>
-                   <TreeView fx:id="tree" prefHeight="598.0" prefWidth="155.0"/>
-                     <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-                       <tabs>
-                           <Tab fx:id="tab">
-                           <content>
-                              <WikiMarkupArea fx:id="text" prefHeight="200.0" prefWidth="200.0" />
-                           </content>
-                        </Tab>
-                    </tabs>
-                  </TabPane>
-               </items>
-            </SplitPane>
-         </children>
-      </AnchorPane>
-   </center>
+			xmlns="http://javafx.com/javafx/8" fx:controller="intelligent.wiki.editor.gui.fx.WikiEditorController">
+	<top>
+		<VBox maxHeight="90.0" minHeight="90.0" prefHeight="90.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
+			<children>
+				<MenuBar fx:id="menubar">
+					<menus>
+						<Menu mnemonicParsing="false" text="%menu.article">
+							<items>
+								<MenuItem mnemonicParsing="false" onAction="#actionNew" text="%menu.new">
+									<graphic>
+										<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true"
+												   preserveRatio="true">
+											<image>
+												<Image url="@images/new_small.png"/>
+											</image>
+										</ImageView>
+									</graphic>
+									<accelerator>
+										<KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP"
+															shortcut="UP"/>
+									</accelerator>
+								</MenuItem>
+								<Menu mnemonicParsing="false" text="%menu.open">
+									<items>
+										<MenuItem mnemonicParsing="false" onAction="#actionOpenFile"
+												  text="%menu.open-file">
+											<accelerator>
+												<KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP"
+																	shift="UP" shortcut="UP"/>
+											</accelerator>
+										</MenuItem>
+										<MenuItem mnemonicParsing="false" onAction="#actionOpenURL"
+												  text="%menu.open-url">
+											<accelerator>
+												<KeyCodeCombination alt="UP" code="U" control="DOWN" meta="UP"
+																	shift="UP" shortcut="UP"/>
+											</accelerator>
+										</MenuItem>
+									</items>
+									<graphic>
+										<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true"
+												   preserveRatio="true">
+											<image>
+												<Image url="@images/open_small.png"/>
+											</image>
+										</ImageView>
+									</graphic>
+								</Menu>
+								<MenuItem mnemonicParsing="false" onAction="#actionSave" text="%menu.save">
+									<graphic>
+										<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true"
+												   preserveRatio="true">
+											<image>
+												<Image url="@images/save_small.png"/>
+											</image>
+										</ImageView>
+									</graphic>
+									<accelerator>
+										<KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP"
+															shortcut="UP"/>
+									</accelerator>
+								</MenuItem>
+								<MenuItem mnemonicParsing="false" onAction="#actionSaveAs" text="%menu.save-as">
+									<graphic>
+										<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true"
+												   preserveRatio="true">
+											<image>
+												<Image url="@images/save_small.png"/>
+											</image>
+										</ImageView>
+									</graphic>
+									<accelerator>
+										<KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN"
+															shortcut="UP"/>
+									</accelerator>
+								</MenuItem>
+								<MenuItem mnemonicParsing="false" onAction="#actionClose" text="%menu.close">
+									<graphic>
+										<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true"
+												   preserveRatio="true"/>
+									</graphic>
+									<accelerator>
+										<KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP"
+															shortcut="UP"/>
+									</accelerator>
+								</MenuItem>
+							</items>
+						</Menu>
+						<Menu mnemonicParsing="false" text="%menu.application">
+							<items>
+								<MenuItem mnemonicParsing="false" onAction="#actionHelp" text="%menu.help">
+									<graphic>
+										<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true"
+												   preserveRatio="true">
+											<image>
+												<Image url="@images/question_small.png"/>
+											</image>
+										</ImageView>
+									</graphic>
+									<accelerator>
+										<KeyCodeCombination alt="UP" code="F1" control="DOWN" meta="UP" shift="DOWN"
+															shortcut="UP"/>
+									</accelerator>
+								</MenuItem>
+								<MenuItem mnemonicParsing="false" onAction="#actionAbout" text="%menu.about">
+									<graphic>
+										<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true"
+												   preserveRatio="true">
+											<image>
+												<Image url="@images/info_small.png"/>
+											</image>
+										</ImageView>
+									</graphic>
+								</MenuItem>
+								<MenuItem mnemonicParsing="false" onAction="#actionQuit" text="%menu.quit">
+									<graphic>
+										<ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true"
+												   preserveRatio="true">
+											<image>
+												<Image url="@images/exit_small.png"/>
+											</image>
+										</ImageView>
+									</graphic>
+									<accelerator>
+										<KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP"
+															shortcut="UP"/>
+									</accelerator>
+								</MenuItem>
+							</items>
+						</Menu>
+					</menus>
+				</MenuBar>
+				<ToolBar fx:id="toolbar" prefHeight="62.0" prefWidth="1024.0">
+					<items>
+						<MenuButton mnemonicParsing="false" prefHeight="48.0" prefWidth="60.0">
+							<items>
+								<MenuItem mnemonicParsing="false" onAction="#actionOpenFile" text="%menu.open-file"/>
+								<MenuItem mnemonicParsing="false" onAction="#actionOpenURL" text="%menu.open-url"/>
+							</items>
+							<graphic>
+								<ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@images/open_big.png"/>
+									</image>
+								</ImageView>
+							</graphic>
+							<tooltip>
+								<Tooltip text="%toolbar.open"/>
+							</tooltip>
+						</MenuButton>
+						<Button mnemonicParsing="false" onAction="#actionSave" prefHeight="48.0" prefWidth="48.0">
+							<graphic>
+								<ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@images/save_big.png"/>
+									</image>
+								</ImageView>
+							</graphic>
+							<tooltip>
+								<Tooltip text="%toolbar.save"/>
+							</tooltip>
+						</Button>
+						<Separator orientation="VERTICAL"/>
+					</items>
+				</ToolBar>
+			</children>
+		</VBox>
+	</top>
+	<center>
+		<AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+			<children>
+				<SplitPane dividerPositions="0.78" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0"
+						   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+						   AnchorPane.topAnchor="0.0">
+					<items>
+						<SplitPane dividerPositions="0.23385518590998042" prefHeight="600.0" prefWidth="1042.0"
+								   AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+								   AnchorPane.rightAnchor="0.0"
+								   AnchorPane.topAnchor="0.0">
+							<items>
+								<TabPane fx:id="toolTabPaneLeft" tabClosingPolicy="UNAVAILABLE" side="LEFT">
+									<tabs>
+										<Tab text="%tool-window-1.name">
+											<content>
+												<TreeView fx:id="tree" prefHeight="598.0" prefWidth="155.0"/>
+											</content>
+											<graphic>
+												<ImageView>
+													<image>
+														<Image url="@images/tree_small.png"/>
+													</image>
+												</ImageView>
+											</graphic>
+										</Tab>
+										<Tab text="%tool-window-2.name">
+											<content/>
+											<graphic>
+												<ImageView>
+													<image>
+														<Image url="@images/preview_small.png"/>
+													</image>
+												</ImageView>
+											</graphic>
+										</Tab>
+									</tabs>
+								</TabPane>
+								<TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+									<tabs>
+										<Tab fx:id="tab">
+											<content>
+												<WikiMarkupArea fx:id="text" prefHeight="200.0" prefWidth="200.0"/>
+											</content>
+										</Tab>
+									</tabs>
+								</TabPane>
+							</items>
+						</SplitPane>
+						<TabPane fx:id="toolTabPaneBottom" tabClosingPolicy="UNAVAILABLE" side="BOTTOM">
+							<tabs>
+								<Tab text="%tool-window-3.name">
+									<content/>
+									<graphic>
+										<ImageView>
+											<image>
+												<Image url="@images/inspection_small.png"/>
+											</image>
+										</ImageView>
+									</graphic>
+								</Tab>
+							</tabs>
+						</TabPane>
+					</items>
+				</SplitPane>
+			</children>
+		</AnchorPane>
+	</center>
 </BorderPane>

@@ -60,9 +60,9 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	@Inject
 	private final WikiOperations wiki;
 	@FXML
-	public ToolBar toolbar;
+	private ToolBar toolbar;
 	@FXML
-	public MenuBar menubar;
+	private MenuBar menubar;
 	private ObservableArticle article;
 	private ResourceBundle i18n;
 	private File currentOpenedFile;
@@ -73,6 +73,10 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	@FXML
 	private TreeView<ASTNode> tree;
 	private JavaFxActions actions;
+	@FXML
+	private TabPane toolTabPaneLeft;
+	@FXML
+	private TabPane toolTabPaneBottom;
 
 	/**
 	 * Note, that parameters can not be <code>null</code>!
@@ -90,6 +94,22 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		article = new ObservableArticleAdapter(project, treeItems);
 	}
 
+	public TabPane getToolTabPaneBottom() {
+		return toolTabPaneBottom;
+	}
+
+	public TabPane getToolTabPaneLeft() {
+		return toolTabPaneLeft;
+	}
+
+	public TreeView<ASTNode> getTree() {
+		return tree;
+	}
+
+	public ObservableCodeArea getText() {
+		return text;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -97,7 +117,7 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 	public void initialize(URL location, ResourceBundle resources) {
 		i18n = resources;
 		text.codeProperty().addListener(updateTracker);
-		actions = new JavaFxActions(text, tree, dialogs);
+		actions = new JavaFxActions(this, dialogs);
 		createMainMenu();
 		createToolBar();
 		text.contentMenuProperty().setValue(createCodeAreaMenu());
@@ -132,7 +152,10 @@ public class WikiEditorController implements Initializable, EventHandler<WindowE
 		);
 
 		Menu navigationMenu = new Menu(i18n.getString("menu.navigation"), null,
-				toMenuItem(actions.get(REQUEST_FOCUS_TREE)), toMenuItem(actions.get(REQUEST_FOCUS_TEXT))
+				toMenuItem(actions.get(REQUEST_FOCUS_TEXT)),
+				toMenuItem(actions.get(REQUEST_FOCUS_TREE)),
+				toMenuItem(actions.get(REQUEST_FOCUS_PREVIEW)),
+				toMenuItem(actions.get(REQUEST_FOCUS_INSPECTIONS))
 		);
 
 		Menu sourceMenu = new Menu(i18n.getString("menu.source"), null,
