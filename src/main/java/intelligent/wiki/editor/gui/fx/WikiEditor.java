@@ -54,6 +54,7 @@ public class WikiEditor extends Application {
 		try {
 			return loadApplicationRoot();
 		} catch (IOException e) {
+			e.printStackTrace();
 			LOG.severe("Fatal exception: can not load GUI because " + e);
 			System.exit(1);
 		}
