@@ -12,6 +12,8 @@ the source and build it manually. Note, that Java 8u40 or later is required.
 
 (c) Rudnytskyi Myroslav, 2014 - 2016
 
+[![Join the chat at https://gitter.im/mrudnytskyi/IntelligentWikiEditor](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mrudnytskyi/IntelligentWikiEditor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## Installation guide
 ### Java version check
 First of all, verify that necessary Java version is installed. To get java version, try following command in a
