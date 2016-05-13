@@ -36,11 +36,16 @@
 	</scm>
 
 	<properties>
+		<!-- Project properties -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.runner.class>intelligent.wiki.editor.gui.fx.WikiEditor</project.runner.class>
+		<!-- Maven plugins properties -->
 		<maven.compiler.version>2.3.2</maven.compiler.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+		<maven.assembly.version>2.6</maven.assembly.version>
+		<maven.jar.version>2.6</maven.jar.version>
 		<!-- Dependencies versions -->
 		<dependency.injection.version>1</dependency.injection.version>
 		<commons.validation.version>1.4.1</commons.validation.version>
@@ -135,8 +140,42 @@
 						<encoding>${maven.compiler.encoding}</encoding>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>${maven.assembly.version}</version>
+					<configuration>
+						<descriptorRefs>
+							<descriptorRef>jar-with-dependencies</descriptorRef>
+						</descriptorRefs>
+						<archive>
+							<manifest>
+								<mainClass>${project.runner.class}</mainClass>
+							</manifest>
+						</archive>
+					</configuration>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>${maven.jar.version}</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>${maven.assembly.version}</version>
+			</plugin>
+		</plugins>
 	</build>
-
 </project>

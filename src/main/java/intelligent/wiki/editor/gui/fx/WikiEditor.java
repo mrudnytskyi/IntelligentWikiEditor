@@ -19,9 +19,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.logging.Logger;
 
 /**
@@ -33,7 +31,7 @@ import java.util.logging.Logger;
  */
 public class WikiEditor extends Application {
 
-	private static final String WIKI_EDITOR_ROOT_FILE = "src/main/resources/WikiEditorRoot.fxml";
+	private static final String WIKI_EDITOR_ROOT_FILE = "/WikiEditorRoot.fxml";
 	private static final Logger LOG = Logger.getLogger(WikiEditor.class.getName());
 
 	private Stage primaryStage;
@@ -63,8 +61,7 @@ public class WikiEditor extends Application {
 
 	private Parent loadApplicationRoot() throws IOException {
 		SpringFXMLLoader loader = new SpringFXMLLoader(ResourceBundleFactory.getBundle());
-		URL fxml = new File(WIKI_EDITOR_ROOT_FILE).toURI().toURL();
-		Parent applicationRoot = loader.load(fxml);
+		Parent applicationRoot = loader.load(getClass().getResource(WIKI_EDITOR_ROOT_FILE));
 		primaryStage.setOnCloseRequest(loader.getController());
 		LOG.info("Application root loaded successfully!");
 		return applicationRoot;
