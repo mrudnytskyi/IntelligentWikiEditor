@@ -19,7 +19,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
 /**
@@ -35,6 +38,12 @@ public class WikiEditor extends Application {
 	private static final Logger LOG = Logger.getLogger(WikiEditor.class.getName());
 
 	private Stage primaryStage;
+
+	private static String getStackTrace(Exception e) {
+		ByteArrayOutputStream stackTrace = new ByteArrayOutputStream();
+		e.printStackTrace(new PrintStream(stackTrace));
+		return new String(stackTrace.toByteArray(), StandardCharsets.UTF_8);
+	}
 
 	/**
 	 * Method, called on wiki editor GUI start-up.
@@ -52,8 +61,7 @@ public class WikiEditor extends Application {
 		try {
 			return loadApplicationRoot();
 		} catch (IOException e) {
-			e.printStackTrace();
-			LOG.severe("Fatal exception: can not load GUI because " + e);
+			LOG.severe("Fatal exception: can not load GUI because " + getStackTrace(e));
 			System.exit(1);
 		}
 		return null; // unreachable
