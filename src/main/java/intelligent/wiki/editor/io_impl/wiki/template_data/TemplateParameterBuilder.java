@@ -13,6 +13,8 @@
  */
 package intelligent.wiki.editor.io_impl.wiki.template_data;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import intelligent.wiki.editor.io_api.TemplateParameter;
 
 /**
@@ -44,9 +46,7 @@ public class TemplateParameterBuilder {
 	 * @throws IllegalArgumentException if parameter is null or empty
 	 */
 	public static TemplateParameterBuilder parameterWithName(String name) {
-		if (name == null || name.isEmpty()) {
-			throw new IllegalArgumentException("Illegal template parameter: " + name);
-		}
+		Preconditions.checkArgument(!Strings.isNullOrEmpty(name));
 
 		TemplateParameterBuilder builder = new TemplateParameterBuilder();
 		builder.name = name;
