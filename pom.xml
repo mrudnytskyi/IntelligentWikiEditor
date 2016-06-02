@@ -49,6 +49,8 @@
 		<commons.validation.version>1.4.1</commons.validation.version>
 		<groovy.version>2.4.5</groovy.version>
 		<sweble.version>2.0.0</sweble.version>
+		<hibernate.version>5.1.0.Final</hibernate.version>
+		<mysql.version>5.1.34</mysql.version>
 		<json.support.version>1.0.4</json.support.version>
 		<xstream.version>1.4.8</xstream.version>
 		<controls.fx.version>8.40.9</controls.fx.version>
@@ -96,6 +98,18 @@
 			<groupId>org.sweble.wikitext</groupId>
 			<artifactId>swc-engine</artifactId>
 			<version>${sweble.version}</version>
+		</dependency>
+		<!-- Database -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+		<!-- MySQL database driver -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.version}</version>
 		</dependency>
 		<!-- Spring framework -->
 		<dependency>
