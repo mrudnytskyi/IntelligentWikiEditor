@@ -14,7 +14,7 @@
 
 package intelligent.wiki.editor.gui.fx.dialogs;
 
-import intelligent.wiki.editor.io_api.WikiOperations;
+import intelligent.wiki.editor.io_api.wiki.WikiOperations;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;

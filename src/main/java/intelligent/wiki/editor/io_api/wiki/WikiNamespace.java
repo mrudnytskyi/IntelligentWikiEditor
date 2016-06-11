@@ -11,7 +11,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package intelligent.wiki.editor.io_api;
+package intelligent.wiki.editor.io_api.wiki;
 
 /**
  * Enumeration, containing namespace constants, such as "0" stands for Main

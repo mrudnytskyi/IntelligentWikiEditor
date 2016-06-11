@@ -15,7 +15,7 @@ package intelligent.wiki.editor.io_impl.wiki.template_data;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import intelligent.wiki.editor.io_api.TemplateParameter;
+import intelligent.wiki.editor.io_api.wiki.template_data.TemplateParameter;
 
 /**
  * Class implements

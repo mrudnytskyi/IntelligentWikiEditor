@@ -14,7 +14,7 @@
 
 package intelligent.wiki.editor.io_impl.wiki.template_data;
 
-import intelligent.wiki.editor.io_api.TemplateParameter;
+import intelligent.wiki.editor.io_api.wiki.template_data.TemplateParameter;
 
 /**
  * Class, representing template argument: {@link TemplateParameter template parameter}
