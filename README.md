@@ -85,3 +85,4 @@ used to produce maintainable code
 * Programming language [Groovy](http://www.groovy-lang.org) deals with JSON and XML parsing
 * Framework [Commons Validator](https://commons.apache.org/proper/commons-validator/) helps to validate input data
 * Library [Xstream](http://x-stream.github.io) used to simplify work with XML files
+* [PostgreSQL](https://www.postgresql.org) and [Hibernate](http://hibernate.org) provide access to the database
