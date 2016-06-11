@@ -13,10 +13,10 @@
  */
 package intelligent.wiki.editor.io_impl.wiki;
 
-import intelligent.wiki.editor.io_api.Language;
-import intelligent.wiki.editor.io_api.TemplateParameter;
-import intelligent.wiki.editor.io_api.WikiNamespace;
-import intelligent.wiki.editor.io_api.WikiOperations;
+import intelligent.wiki.editor.io_api.wiki.Language;
+import intelligent.wiki.editor.io_api.wiki.WikiNamespace;
+import intelligent.wiki.editor.io_api.wiki.WikiOperations;
+import intelligent.wiki.editor.io_api.wiki.template_data.TemplateParameter;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

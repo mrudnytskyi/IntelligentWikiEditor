@@ -16,7 +16,7 @@ package intelligent.wiki.editor.io_impl.wiki
 import groovy.json.JsonSlurper
 import groovy.transform.PackageScope
 import groovy.util.slurpersupport.GPathResult
-import intelligent.wiki.editor.io_api.TemplateParameter
+import intelligent.wiki.editor.io_api.wiki.template_data.TemplateParameter
 import intelligent.wiki.editor.io_impl.wiki.template_data.TemplateParameterBuilder
 
 /**

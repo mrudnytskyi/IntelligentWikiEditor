@@ -11,9 +11,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package intelligent.wiki.editor.io;
+package intelligent.wiki.editor.io.wiki;
 
-import intelligent.wiki.editor.io_api.WikiOperations;
+import intelligent.wiki.editor.io_api.wiki.WikiOperations;
 import intelligent.wiki.editor.io_impl.wiki.WikiFacade;
 import org.junit.Assert;
 import org.junit.Test;

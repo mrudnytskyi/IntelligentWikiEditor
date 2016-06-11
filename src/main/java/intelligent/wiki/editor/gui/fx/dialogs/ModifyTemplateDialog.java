@@ -13,7 +13,7 @@
  */
 package intelligent.wiki.editor.gui.fx.dialogs;
 
-import intelligent.wiki.editor.io_api.WikiOperations;
+import intelligent.wiki.editor.io_api.wiki.WikiOperations;
 import intelligent.wiki.editor.io_impl.wiki.template_data.TemplateArgument;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

@@ -11,7 +11,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-package intelligent.wiki.editor.io_api;
+package intelligent.wiki.editor.io_api.wiki;
+
+import intelligent.wiki.editor.io_api.wiki.template_data.TemplateParameter;
 
 import java.io.IOException;
 import java.util.List;

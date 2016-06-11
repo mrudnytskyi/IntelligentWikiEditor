@@ -15,7 +15,7 @@ package intelligent.wiki.editor.gui.fx.dialogs;
 
 import intelligent.wiki.editor.app_api.Version;
 import intelligent.wiki.editor.gui.fx.ResourceBundleFactory;
-import intelligent.wiki.editor.io_api.WikiOperations;
+import intelligent.wiki.editor.io_api.wiki.WikiOperations;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
