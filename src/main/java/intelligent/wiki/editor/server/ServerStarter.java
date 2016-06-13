@@ -15,9 +15,7 @@
 package intelligent.wiki.editor.server;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,10 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Myroslav Rudnytskyi
  * @version 20.05.2016
  */
-@Configuration
 @RestController
-@EnableAutoConfiguration
-@ComponentScan
+@SpringBootApplication
 public class ServerStarter {
 
 	public static void main(String[] args) {
