@@ -1,5 +1,5 @@
 # Warning
-Due to global changes in project architecture, these repository is not developed anymore: migration to [SmartWikiEditor](https://github.com/mrudnytskyi/SmartWikiEditor) repo sterted.
+Due to global changes in project architecture, these repository is not developed anymore: migration to [SmartWikiEditor](https://github.com/mrudnytskyi/SmartWikiEditor) repo started.
 
 # IntelligentWikiEditor
 ## What is it?
